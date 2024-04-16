@@ -1,0 +1,14 @@
+
+
+.indicator{
+  
+    background-color: rgb(140, 184, 211);
+    display: flex;
+    align-items: center;
+  }
+  
+  .indicator h2{
+    font-size: 20px;
+    margin-left: 50px;
+  }
+  

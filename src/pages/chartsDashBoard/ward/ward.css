@@ -1,0 +1,43 @@
+.dashBoardPage {
+    overflow: auto ;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* margin: 10px; */
+    border-radius: 20px;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 5px;
+    border: 1px solid;
+    display: flex;
+    flex-wrap: wrap;
+}
+.dashBoardPage2 {
+    overflow: auto ;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px;
+    border-radius: 20px;
+    padding: 5px;
+    border: 1px solid;
+}
+.parentOdCircles {
+    display: inline-flex;
+}
+
+.houseHoldBox{
+    border: 1px solid;
+    /* width: auto; */
+    padding: 5px;
+    background-color: #000000;
+    color: #FFFFFF;
+    border-radius: 10px 10px 0 0;
+    border-bottom: none;
+    width: 100px;
+    margin-left: 2rem;
+    margin-right: 1rem;
+}
+
+.houseHoldText {
+    text-align: center;
+}
+
