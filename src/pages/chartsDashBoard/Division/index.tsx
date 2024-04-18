@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import TablewithPagination from "../../../components/common/Tables";
 import { useSelector } from "react-redux";
 import { IsAuthenticated } from "../../../Authentication/useAuth";
@@ -8,6 +8,8 @@ import HalfDonutCircle from "../../../components/common/Reviewbars";
 import Titlebar from "../../../components/common/titlebar";
 import { AvatarDropdown } from "../../../components/common/menuDropDown";
 import "./division.css";
+import { postRequest } from "../../../Authentication/axiosrequest";
+import { IReportsMasterData } from "../../../utilities/interfacesOrtype";
 
 let tableBody = [
   {
@@ -31,13 +33,14 @@ for (let i = 0; i <= 500; i++) {
 }
 
 export default function DivisionReportComponent() {
-  const [originalData, setOriginalData] = useState<any>(tableBody);
-  const [copyOfOriginalData, setCopyOriginalData] = useState<any>(tableBody);
+  const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
+  const [copyOfOriginalData, setCopyOriginalData] = useState<IReportsMasterData[]>([]);
+
+  const [urlSearchParam, setUrlSearchParam] = useSearchParams();  // retrieve url query params
 
   const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
   
   const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState(tableBody);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(100);
@@ -46,11 +49,34 @@ export default function DivisionReportComponent() {
 
   const [{ Role, Mobile, loginCode }] = IsAuthenticated();
 
+  
+  useEffect(() => {
+    getInitialData();
+  }, []);
+
+  const getInitialData = async () => {
+    let body = {
+      DataType: 'GPD',
+      DistrictName: urlSearchParam.get("DistrictName"),
+      TalukName: urlSearchParam.get("TalukName")
+    }
+    setLoading(true);
+    let apiRes = await postRequest("getStagesWiseData", body);
+    if(apiRes?.code == 200){
+      setLoading(false);
+      setOriginalData(apiRes?.data);
+      setCopyOriginalData(apiRes?.data);
+    } else {
+      setLoading(false);
+      alert(apiRes?.response?.data?.message || "Please try again.")
+    }
+  }; 
+
   const navigate = useNavigate();
   const { currentPath } = useSelector((state: any) => state.path);
 
-  const handleChangeRoutes = () => {
-    navigate(`/ward/${currentPath}`);
+  const handleChangeRoutes = (obj : IReportsMasterData) => {
+    navigate(`/ward/${currentPath}?DistrictName=${obj.DistrictName}&TalukName=${obj.TalukName}&GpName=${obj.GramPanchayatName}`);
   };
 
   const onPageChange = (page: number) => {
@@ -64,21 +90,20 @@ export default function DivisionReportComponent() {
   const currentItems = copyOfOriginalData.slice(startIndex, endIndex);
 
   let headers = [
-    "Division",
+    "Gp/DivisionName",
     "UnAssigned",
     "Scheduled",
     "Completed",
     "TotalCount",
   ];
 
-  const filteredData = (currentItems || []).filter((item: any) => {
+  const filteredData = (currentItems || []).filter((item) => {
     return (
-      item?.Division?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item?.GramPanchayatName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.UnAssigned?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.Scheduled?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.Completed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.CreatedMobile?.toLowerCase().includes(searchTerm.toLowerCase())
+      item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
   return (
@@ -104,20 +129,20 @@ export default function DivisionReportComponent() {
           <HalfDonutCircle onClick={undefined} title={"Completed"} />
         </div>
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Students Complpeted"} />
+          <HalfDonutCircle onClick={undefined} title={"Students Completed"} />
         </div>
       </div>
         <Row className="flex m-1">
           <Col md={2} xs={12} className="border rounded-xl bg-blue-300">
-            Zone Name: {"Name"}
+            District Name: {urlSearchParam.get("DistrictName")}
           </Col>
           <Col md={2} xs={12} className="border rounded-xl bg-blue-300">
-            District Name: {"Name"}
+            Zone/Taluk Name: {urlSearchParam.get("TalukName")}
           </Col>
         </Row>
         <TablewithPagination
           onClick={handleChangeRoutes}
-          title={"Division"}
+          title={"Gp/Division"}
           headers={headers}
           tableBody={filteredData}
           currentCount={filteredData.length || 0}

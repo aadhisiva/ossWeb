@@ -1,49 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TablewithPagination from "../../../components/common/Tables";
+import { Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import TablewithPagination from "../../../components/common/Tables";
 import { IsAuthenticated } from "../../../Authentication/useAuth";
 import HalfDonutCircle from "../../../components/common/Reviewbars";
 import Titlebar from "../../../components/common/titlebar";
 import { AvatarDropdown } from "../../../components/common/menuDropDown";
+import { postRequest } from "../../../Authentication/axiosrequest";
+import { IReportsMasterData } from "../../../utilities/interfacesOrtype";
+import SpinnerLoader from "../../../components/common/spinner/spinner";
 import "./district.css";
-import { Col, Row } from "react-bootstrap";
-import { SearchBox } from "../../../components/common/searchBox";
 
-let tableBody = [
-  {
-    District: "DistrictTable",
-    UnAssigned: "DistrictTable",
-    Scheduled: "DistrictTable",
-    Completed: "DistrictTable",
-    TotalCount: "DistrictTable",
-  },
+let headers = [
+  "DistrictName",
+  "UnAssigned",
+  "Scheduled",
+  "Completed",
+  "TotalCount",
 ];
-
-for (let i = 0; i <= 500; i++) {
-  let eachRow = {
-    District: `DistrictTable ${i}`,
-    UnAssigned: `UnAssgned ${i}`,
-    Scheduled: `Scheduled ${i}`,
-    Completed: `Completed ${i}`,
-    TotalCount: `DistrictTable ${i}`,
-  };
-  tableBody.push(eachRow);
-}
-
 export default function DistrictReportComponent() {
-  const [originalData, setOriginalData] = useState<any>(tableBody);
-  const [copyOfOriginalData, setCopyOriginalData] = useState<any>(tableBody);
+  const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
+  const [copyOfOriginalData, setCopyOriginalData] = useState<IReportsMasterData[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState(tableBody);
 
   const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-
-  console.log("itemsPerPage",itemsPerPage)
   const totalPages = Math.ceil(copyOfOriginalData.length / itemsPerPage);
 
   const [{ Role, Mobile, loginCode }] = IsAuthenticated();
@@ -51,8 +36,29 @@ export default function DistrictReportComponent() {
   const navigate = useNavigate();
   const { currentPath } = useSelector((state: any) => state.path);
 
-  const handleChangeRoutes = () => {
-    navigate(`/Zone/${currentPath}`);
+  useEffect(() => {
+    getInitialData();
+  }, []);
+
+  const getInitialData = async () => {
+    let body = {
+      DataType: 'DD'
+    }
+    setLoading(true);
+    let apiRes = await postRequest("getStagesWiseData", body);
+    if(apiRes?.code == 200){
+      setLoading(false);
+      setOriginalData(apiRes?.data);
+      setCopyOriginalData(apiRes?.data);
+    } else {
+      setLoading(false);
+      alert(apiRes?.response?.data?.message || "Please try again.")
+    }
+  }; 
+
+
+  const handleChangeRoutes = (obj: IReportsMasterData) => {
+    navigate(`/Zone/${currentPath}?DistrictName=${obj?.DistrictName}`);
   };
 
   const onPageChange = (page: number) => {
@@ -65,26 +71,19 @@ export default function DistrictReportComponent() {
   const endIndex = startIndex + itemsPerPage;
   const currentItems = copyOfOriginalData.slice(startIndex, endIndex);
   
-    const filteredData = (currentItems || []).filter((item: any) => {
+    const filteredData = (currentItems || []).filter((item) => {
       return (
-        item?.District?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item?.DistrictName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item?.UnAssigned?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item?.Scheduled?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item?.Completed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item?.CreatedMobile?.toLowerCase().includes(searchTerm.toLowerCase())
+        item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     });
 
-  let headers = [
-    "District",
-    "UnAssigned",
-    "Scheduled",
-    "Completed",
-    "TotalCount",
-  ];
   return (
     <React.Fragment>
+      <SpinnerLoader isLoading={isLoading} />
       <Titlebar
         title={`District ${currentPath}`}
         Component={
@@ -106,13 +105,13 @@ export default function DistrictReportComponent() {
           <HalfDonutCircle onClick={undefined} title={"Completed"} />
         </div>
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Students Complpeted"} />
+          <HalfDonutCircle onClick={undefined} title={"Students Completed"} />
         </div>
       </div>
       <Row className="m-2">
         <TablewithPagination
           onClick={handleChangeRoutes}
-          title={"UnAssigned"}
+          title={"District"}
           headers={headers}
           tableBody={filteredData}
           currentCount={filteredData.length || 0}

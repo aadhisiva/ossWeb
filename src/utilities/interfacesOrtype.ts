@@ -60,6 +60,20 @@ export interface IMasterData {
     VillageName?: string; 
     VillageCode?: string; 
 }
+export interface IReportsMasterData {
+    DistrictCode?: string;
+    DistrictName?: string;
+    TalukName?:string; 
+    TalukCode?:string; 
+    GramPanchayatCode?:string; 
+    GramPanchayatName?:string; 
+    VillageName?: string; 
+    VillageCode?: string; 
+    UnAssigned?: string; 
+    Completed?: string; 
+    Scheduled?: string; 
+    TotalCount?: string; 
+}
 export interface IModalFromEdit {
     title?: string;
     onHide?: () => void;
@@ -102,7 +116,7 @@ export interface ItableWithPagination {
     currentPage?: number | any;
     onPageChange?: any;
     totalCount?: string | any;
-    onClick?: () => void;
+    onClick?: any;
     title?: string;
     headers?: String[];
     tableBody?: any[];

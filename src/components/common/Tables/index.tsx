@@ -22,7 +22,6 @@ function TablewithPagination({
   itemsPerPage,
   setItemsPerPage,
 }: ItableWithPagination) {
-  const navigate = useNavigate();
 
   return (
     <React.Fragment>
@@ -37,30 +36,33 @@ function TablewithPagination({
           <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </Col>
       </Row>
-      <Table responsive hover>
-        <thead>
-          <tr className="trHead">
-            {(headers || []).map((tableHeader, index) => (
-              <th
-                style={{ backgroundColor: "grey" }}
-                className="th"
-                key={index}
-              >
-                {tableHeader}
-              </th>
-            ))}
-          </tr>
+      <Table responsive hover className="m-2" size="sm">
+        <thead className="urbanThead">
+          {(headers || []).map((tableHeader, index) => (
+            <th className="urbanTh p-1" key={index}>
+              {tableHeader}
+            </th>
+          ))}
         </thead>
         <tbody>
-          {(tableBody || []).map((obj: any, index) => (
-            <tr onClick={onClick} title={title} key={index}>
+          {(tableBody || []).map((obj, index) => (
+            <tr onClick={() => onClick(obj)} title={title} key={index}>
               <td className="tableRowStart">
-                {(obj?.Taluk || obj?.District) + " " + index}
+                {(
+                  obj?.VillageName ||
+                  obj?.GramPanchayatName ||
+                  obj?.TalukName ||
+                  obj?.DistrictName
+                ) ??
+                  "N/A"}
               </td>
-              <td>{obj?.UnAssigned + " " + index}</td>
-              <td>{obj?.Scheduled + " " + index}</td>
-              <td>{obj?.Completed + " " + index}</td>
-              <td className="tableRowEnd">{obj?.TotalCount + " " + index}</td>
+              <td>{obj?.UnAssigned ?? "N/A"}</td>
+              <td>{obj?.Scheduled ?? "N/A"}</td>
+              <td>{obj?.Completed ?? "N/A"}</td>
+              <td className="tableRowEnd">
+                <div>{obj?.TotalCount ?? "N/A"}</div>
+                <div>{">"}</div>
+              </td>
             </tr>
           ))}
         </tbody>

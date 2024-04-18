@@ -11,26 +11,24 @@
   border-radius: 20px;
   overflow: hidden;
 }
-
-.trHead {
-  background-color: black;
-  border: 1px solid;
+  
+.urbanThead {
+  /* background-color: black; */
+  height: 20px;
+  border: 2px green;
   border-bottom: 50px;
 }
-.th {
-  color:blue;
-  border: 1px solid;
-  border-radius: 50px;
+.urbanTh {
+  background-color: rgb(110 231 183);
+  border: 2px rgb(72, 80, 42);
+  border-radius: 10px;
   text-align: center;
   
 }
-.td{
-  border: 1px solid;
-  border-radius: 50px;
+tr{
   text-align: center;
-
+  cursor: pointer;
 }
-tr{text-align: center;}
 
 .tableRowStart {
   border-top-left-radius: 10px;
@@ -39,4 +37,7 @@ tr{text-align: center;}
 .tableRowEnd {
   border-bottom-right-radius: 10px;
   border-top-right-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+
 }

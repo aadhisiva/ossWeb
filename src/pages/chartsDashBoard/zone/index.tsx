@@ -1,48 +1,31 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
-import TablewithPagination from '../../../components/common/Tables';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useSelector } from 'react-redux';
-import { IsAuthenticated } from '../../../Authentication/useAuth';
 import { Col, Row } from 'react-bootstrap';
+import TablewithPagination from '../../../components/common/Tables';
+import { IsAuthenticated } from '../../../Authentication/useAuth';
 import HalfDonutCircle from '../../../components/common/Reviewbars';
 import Titlebar from '../../../components/common/titlebar';
 import { AvatarDropdown } from '../../../components/common/menuDropDown';
+import { postRequest } from '../../../Authentication/axiosrequest';
+import SpinnerLoader from '../../../components/common/spinner/spinner';
+import { IMasterData, IReportsMasterData } from '../../../utilities/interfacesOrtype';
 import "./zone.css";
 
-let tableBody = [
-  {
-      District: "TalukTable",
-      UnAssigned: "TalukTable",
-      Scheduled: "TalukTable",
-      Completed: "TalukTable",
-      TotalCount: "TalukTable",
-  }
-];
-
-for(let i=0; i <= 500; i++){
- let eachRow =  {
-District: ` Taluk ${i}`,
-    UnAssigned:`UnAssgned ${i}`,
-    Scheduled: `Scheduled ${i}`,
-    Completed: `Completed ${i}`,
-    TotalCount: `TalukTable${i}`,
-}
-tableBody.push(eachRow)
-}
-
+let headers = ["Zone/TalukName", "UnAssigned", "Scheduled", "Completed", "TotalCount"];
 
 export default function ZoneReportComponent() {
-  const [originalData, setOriginalData] = useState<any>(tableBody);
-  const [copyOfiginalData, setCopyOriginalData] = useState<any>(tableBody);
+  const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
+  const [copyOfiginalData, setCopyOriginalData] = useState<IReportsMasterData[]>([]);
+  
+  const [urlSearchParam, setUrlSearchParam] = useSearchParams();  // retrieve url query params
 
   const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
 
   const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState(tableBody);
-
   
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const totalPages = Math.ceil(copyOfiginalData.length / itemsPerPage);
 
@@ -50,9 +33,30 @@ export default function ZoneReportComponent() {
   
   const navigate = useNavigate();
   const { currentPath } = useSelector((state: any) => state.path);
+
+  useEffect(() => {
+    getInitialData();
+  }, []);
+
+  const getInitialData = async () => {
+    let body = {
+      DataType: 'TD',
+      DistrictName: urlSearchParam.get("DistrictName")
+    }
+    setLoading(true);
+    let apiRes = await postRequest("getStagesWiseData", body);
+    if(apiRes?.code == 200){
+      setLoading(false);
+      setOriginalData(apiRes?.data);
+      setCopyOriginalData(apiRes?.data);
+    } else {
+      setLoading(false);
+      alert(apiRes?.response?.data?.message || "Please try again.")
+    }
+  }; 
   
-  const handleChangeRoutes = () => {
-    navigate(`/Division/${currentPath}`);
+  const handleChangeRoutes = (obj: IReportsMasterData) => {
+    navigate(`/Division/${currentPath}?DistrictName=${obj.DistrictName}&TalukName=${obj.TalukName}`);
   };
 
   const onPageChange = (page: number) => {
@@ -65,20 +69,19 @@ export default function ZoneReportComponent() {
   const endIndex = startIndex + itemsPerPage;
   const currentItems = copyOfiginalData.slice(startIndex, endIndex);
   
-  const filteredData = (currentItems || []).filter((item: any) => {
+  const filteredData = (currentItems || [])?.filter((item) => {
     return (
-      item?.Ward?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.UnAssigned?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.Scheduled?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.Completed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.CreatedMobile?.toLowerCase().includes(searchTerm.toLowerCase())
+      item?.TalukName?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
+      item?.UnAssigned?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
+      item?.Scheduled?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
+      item?.Completed?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
+      item?.TotalCount?.toLowerCase().includes(searchTerm?.toLowerCase())
     );
   });
   
-  let headers = ["Taluk", "UnAssigned", "Scheduled", "Completed", "TotalCount"];
   return (
-    <>
+    <React.Fragment>
+      <SpinnerLoader isLoading={isLoading} />
        <Titlebar
         title={`Zone ${currentPath}`}
         Component={
@@ -105,11 +108,11 @@ export default function ZoneReportComponent() {
       </div>
       <div>
         <Row className='flex m-1'>
-            <Col md={2} xs={12} className='border rounded-xl bg-blue-300'>District : {"Name"}</Col>
+            <Col md={2} xs={12} className='border rounded-xl bg-blue-300'>District : {urlSearchParam.get("DistrictName")}</Col>
         </Row>
         <TablewithPagination 
           onClick={handleChangeRoutes} 
-          title={"Taluk"}  
+          title={"Taluk/Zone"}  
           headers={headers} 
           tableBody={filteredData}
           currentCount={filteredData.length|| 0}
@@ -124,7 +127,7 @@ export default function ZoneReportComponent() {
           />
       </div>
   
-    </>
+    </React.Fragment>
   );
 }
 

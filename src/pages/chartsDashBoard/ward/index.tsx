@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import TablewithPagination from "../../../components/common/Tables";
 import { useSelector } from "react-redux";
-import { IsAuthenticated } from "../../../Authentication/useAuth";import { IMasterData } from "../../../utilities/interfacesOrtype";
+import { IsAuthenticated } from "../../../Authentication/useAuth";import { IMasterData, IReportsMasterData } from "../../../utilities/interfacesOrtype";
 import { Col, Row } from "react-bootstrap";
 import HalfDonutCircle from "../../../components/common/Reviewbars";
 import Titlebar from "../../../components/common/titlebar";
 import { AvatarDropdown } from "../../../components/common/menuDropDown";
 import "./ward.css";
+import { postRequest } from "../../../Authentication/axiosrequest";
 
 let tableBody = [
   {
@@ -31,8 +32,10 @@ for (let i = 0; i <= 500; i++) {
 }
 
 export default function WardReportComponent() {
-  const [originalData, setOriginalData] = useState<any>(tableBody);
-  const [copyOfOriginalData, setCopyOriginalData] = useState<any>(tableBody);
+  const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
+  const [copyOfOriginalData, setCopyOriginalData] = useState<IReportsMasterData[]>([]);
+
+  const [urlSearchParam, setUrlSearchParam] = useSearchParams(); // retrieve url query params
 
   const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
 
@@ -49,8 +52,31 @@ export default function WardReportComponent() {
   const navigate = useNavigate();
   const { currentPath } = useSelector((state: any) => state.path);
 
+  useEffect(() => {
+    getInitialData();
+  }, []);
+
+  const getInitialData = async () => {
+    let body = {
+      DataType: 'VD',
+      DistrictName: urlSearchParam.get("DistrictName"),
+      TalukName: urlSearchParam.get("TalukName"),
+      GpName: urlSearchParam.get("GpName")
+    }
+    setLoading(true);
+    let apiRes = await postRequest("getStagesWiseData", body);
+    if(apiRes?.code == 200){
+      setLoading(false);
+      setOriginalData(apiRes?.data);
+      setCopyOriginalData(apiRes?.data);
+    } else {
+      setLoading(false);
+      alert(apiRes?.response?.data?.message || "Please try again.")
+    }
+  }; 
+
   const handleChangeRoutes = () => {
-    navigate(`//${currentPath}`);
+    navigate(`/`);
   };
 
   const onPageChange = (page: number) => {
@@ -64,17 +90,16 @@ export default function WardReportComponent() {
   const currentItems = copyOfOriginalData.slice(startIndex, endIndex);
 
   
-  const filteredData = (currentItems || []).filter((item: any) => {
+  const filteredData = (currentItems || []).filter((item) => {
     return (
-      item?.Ward?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item?.VillageName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.UnAssigned?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.Scheduled?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.Completed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.CreatedMobile?.toLowerCase().includes(searchTerm.toLowerCase())
+      item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
-  let headers = ["ward", "UnAssigned", "Scheduled", "Completed", "TotalCount"];
+  let headers = ["Village/wardName", "UnAssigned", "Scheduled", "Completed", "TotalCount"];
   return (
     <React.Fragment>
       <Titlebar
@@ -98,23 +123,23 @@ export default function WardReportComponent() {
           <HalfDonutCircle onClick={undefined} title={"Completed"} />
         </div>
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Students Complpeted"} />
+          <HalfDonutCircle onClick={undefined} title={"Students Completed"} />
         </div>
       </div>
       <Row className="flex m-1">
-        <Col md={2} xs={12} className="border rounded-xl bg-blue-300">
-          Division Name: {"Name"}
+        <Col md={3} xs={12} className="border rounded-xl bg-blue-300">
+          District Name: {urlSearchParam.get("DistrictName")}
         </Col>
-        <Col md={2} xs={12} className="border rounded-xl bg-blue-300">
-          Zone Name: {"Name"}
+        <Col md={3} xs={12} className="border rounded-xl bg-blue-300">
+          Taluk/Zone Name: {urlSearchParam.get("TalukName")}
         </Col>
-        <Col md={2} xs={12} className="border rounded-xl bg-blue-300">
-          District Name: {"Name"}
+        <Col md={3} xs={12} className="border rounded-xl bg-blue-300">
+          Gp/Division Name: {urlSearchParam.get("GpName")}
         </Col>
       </Row>
       <TablewithPagination
         onClick={handleChangeRoutes}
-        title={"ward"}
+        title={"Village/Ward"}
         headers={headers}
         tableBody={filteredData}
         currentCount={filteredData.length || 0}
