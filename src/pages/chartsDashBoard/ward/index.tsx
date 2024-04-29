@@ -108,7 +108,7 @@ export default function WardReportComponent() {
           <AvatarDropdown
             username={"SuperAdmin"}
             dropDown={[
-              { routeName: "AssignMent", routePath: "/AssignMent/Zone" },
+              { routeName: "Assignment", routePath: "/Assignment/Zone" },
             ]}
           />
         }
@@ -127,13 +127,13 @@ export default function WardReportComponent() {
         </div>
       </div>
       <Row className="flex m-1">
-        <Col md={3} xs={12} className="border rounded-xl bg-blue-300">
+        <Col md={3} xs={12} className="border rounded-xl bg-[#13678C] text-white">
           District Name: {urlSearchParam.get("DistrictName")}
         </Col>
-        <Col md={3} xs={12} className="border rounded-xl bg-blue-300">
+        <Col md={3} xs={12} className="border rounded-xl bg-[#13678C] text-white">
           Taluk/Zone Name: {urlSearchParam.get("TalukName")}
         </Col>
-        <Col md={3} xs={12} className="border rounded-xl bg-blue-300">
+        <Col md={3} xs={12} className="border rounded-xl bg-[#13678C] text-white">
           Gp/Division Name: {urlSearchParam.get("GpName")}
         </Col>
       </Row>

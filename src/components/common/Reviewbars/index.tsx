@@ -1,7 +1,7 @@
 import "./halfDonutCircle.css";
 
 export default function HalfDonutCircle({ onClick, title }: any) {
-  const myObject = { "--percentage": 50, "--fill": "#0669AD" } as {
+  const myObject = { "--percentage": 50, "--fill": "#0f172a" } as {
     [key: string]: any;
   };
   return (

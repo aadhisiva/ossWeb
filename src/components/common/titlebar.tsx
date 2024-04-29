@@ -21,7 +21,7 @@ export default function Titlebar({ title, Component }: ITitleBar) {
     navigate(DASHBOARD);
   };
   return (
-    <div className="h-8 bg-emerald-300">
+    <div className="h-8 bg-[#8CB8D3]">
       <Row className="w-full">
         <Col
           md={1}

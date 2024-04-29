@@ -90,7 +90,7 @@ export default function DistrictReportComponent() {
           <AvatarDropdown
             username={"SuperAdmin"}
             dropDown={[
-              { routeName: "AssignMent", routePath: "/AssignMent/Zone" },
+              { routeName: "Assignent", routePath: "/Assignment/Zone" },
             ]}
           />
         }

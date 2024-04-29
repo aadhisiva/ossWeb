@@ -6,10 +6,11 @@
   width: 100%;
   table-layout: auto;
   border: 1px solid;
-  background-color: rgb(66, 99, 99);
+  background-color: #13678C;
   margin: 5px;
   border-radius: 20px;
   overflow: hidden;
+  padding: 10px;
 }
   
 .urbanThead {
@@ -19,7 +20,7 @@
   border-bottom: 50px;
 }
 .urbanTh {
-  background-color: rgb(110 231 183);
+  background-color: #ffffff;
   border: 2px rgb(72, 80, 42);
   border-radius: 10px;
   text-align: center;

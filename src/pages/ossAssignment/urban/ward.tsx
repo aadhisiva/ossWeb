@@ -280,12 +280,12 @@ export default function WardComponent() {
             />
           </Col>
           <Col md={3} sm={6}>
-            <Button onClick={handleCLickAdd}>
+            <Button style={{backgroundColor: '#13678C'}} onClick={handleCLickAdd}>
               Add User
             </Button>
           </Col>
           <Col md={3} sm={6}>
-            <Button onClick={handleClearFilters}>Clear Filters</Button>
+            <Button style={{backgroundColor: '#13678C'}} onClick={handleClearFilters}>Clear Filters</Button>
           </Col>
         </Row>
         <Row className="searchWithDroopDown">
@@ -302,7 +302,7 @@ export default function WardComponent() {
         {showAssignMent ? 
         (
           <Row className="m-4">
-          <Table hover className="bg-green-200 pn-2" size="sm">
+          <Table hover className="pn-2" size="sm">
             <thead className="urbanThead">
               <th className="urbanTh p-1">District</th>
               <th className="urbanTh p-1">Zone</th>
@@ -321,7 +321,7 @@ export default function WardComponent() {
                 <td className="tableRowEnd">
                   <Button
                     className="mr-1"
-                    variant="primary"
+                    style={{backgroundColor: '#13678C'}}
                     onClick={() => handleCLickModify(obj, "Assign")}
                   >
                     Assign

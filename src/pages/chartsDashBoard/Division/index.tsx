@@ -11,26 +11,6 @@ import "./division.css";
 import { postRequest } from "../../../Authentication/axiosrequest";
 import { IReportsMasterData } from "../../../utilities/interfacesOrtype";
 
-let tableBody = [
-  {
-    District: "DivisionTable",
-    UnAssigned: "DistrictTable",
-    Scheduled: "DistrictTable",
-    Completed: "DistrictTable",
-    TotalCount: "DivisionTable",
-  },
-];
-
-for (let i = 0; i <= 500; i++) {
-  let eachRow = {
-    District: `DivisionTable ${i}`,
-    UnAssigned: `UnAssgned ${i}`,
-    Scheduled: `Scheduled ${i}`,
-    Completed: `Completed ${i}`,
-    TotalCount: `DivisionTable ${i}`,
-  };
-  tableBody.push(eachRow);
-}
 
 export default function DivisionReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -114,7 +94,7 @@ export default function DivisionReportComponent() {
           <AvatarDropdown
             username={"SuperAdmin"}
             dropDown={[
-              { routeName: "AssignMent", routePath: "/AssignMent/Zone" },
+              { routeName: "Assignment", routePath: "/Assignment/Zone" },
             ]}
           />
         }
@@ -133,10 +113,10 @@ export default function DivisionReportComponent() {
         </div>
       </div>
         <Row className="flex m-1">
-          <Col md={2} xs={12} className="border rounded-xl bg-blue-300">
+          <Col md={2} xs={12} className="border rounded-xl bg-[#13678C] text-white">
             District Name: {urlSearchParam.get("DistrictName")}
           </Col>
-          <Col md={2} xs={12} className="border rounded-xl bg-blue-300">
+          <Col md={2} xs={12} className="border rounded-xl bg-[#13678C] text-white">
             Zone/Taluk Name: {urlSearchParam.get("TalukName")}
           </Col>
         </Row>

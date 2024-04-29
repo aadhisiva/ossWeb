@@ -45,13 +45,11 @@
 };
   
   .urbanThead {
-    /* background-color: black; */
     height: 20px;
     border: 2px green;
     border-bottom: 50px;
   }
   .urbanTh {
-    background-color: rgb(110 231 183);
     border: 2px rgb(72, 80, 42);
     border-radius: 15px;
     text-align: center;

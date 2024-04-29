@@ -73,6 +73,7 @@ export enum ASSIGNMENT {
 
 
 export const roleArrangeMent = (role: string) => {
+    console.log("role", role);
     switch (role) {
         case ROLES.SUPER_ADMIN:
             return {

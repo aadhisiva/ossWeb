@@ -88,7 +88,7 @@ export default function ZoneReportComponent() {
           <AvatarDropdown
             username={"SuperAdmin"}
             dropDown={[
-              { routeName: "AssignMent", routePath: "/AssignMent/Zone" },
+              { routeName: "Assignment", routePath: "/Assignment/Zone" },
             ]}
           />
         }
@@ -108,7 +108,7 @@ export default function ZoneReportComponent() {
       </div>
       <div>
         <Row className='flex m-1'>
-            <Col md={2} xs={12} className='border rounded-xl bg-blue-300'>District : {urlSearchParam.get("DistrictName")}</Col>
+            <Col md={2} xs={12} className='border rounded-xl bg-[#13678C] text-white'>District : {urlSearchParam.get("DistrictName")}</Col>
         </Row>
         <TablewithPagination 
           onClick={handleChangeRoutes} 

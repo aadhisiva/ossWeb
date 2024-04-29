@@ -3,7 +3,7 @@ import { Col, Image, Row } from "react-bootstrap";
 
 export default function Header({ userRole }: {userRole: string}) {
   return (
-    <div className="bg-slate-500 sticky z-1 top-0">
+    <div className="bg-[#124F8C] sticky z-1 top-0">
       <Row className="h-12 w-full items-center">
         <Col md={2} xs={4} className="text-left">
           <Image

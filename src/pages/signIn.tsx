@@ -79,12 +79,6 @@ export default function SignIn({ auth }: any) {
         if (!OtpNo) return alert("Provide Otp.");
         if (!Role) return alert("Select Role.");
 
-        let originalCaptcha = captch.split(" ").join("");
-        if (captchValue.length !== 6)
-          return alert("Please Enter Correct Captcha.");
-        // captch checking here
-        if (originalCaptcha !== captchValue)
-          return alert("Captcha Failed. Please Try Again");
         let check = OtpNo === Otp;
         if (!check) return alert("Otp Verification Failed.");
 
@@ -115,12 +109,12 @@ export default function SignIn({ auth }: any) {
       } else {
         if (!OtpNo) return alert("Provide Otp.");
 
-        let originalCaptcha = captch.split(" ").join("");
-        if (captchValue.length !== 6)
-          return alert("Please Enter Correct Captcha.");
-        // captch checking here
-        if (originalCaptcha !== captchValue)
-          return alert("Captcha Failed. Please Try Again");
+        // let originalCaptcha = captch.split(" ").join("");
+        // if (captchValue.length !== 6)
+        //   return alert("Please Enter Correct Captcha.");
+        // // captch checking here
+        // if (originalCaptcha !== captchValue)
+        //   return alert("Captcha Failed. Please Try Again");
 
         let check = OtpNo === Otp;
         if (!check) return alert("Otp Verification Failed.");
@@ -248,14 +242,8 @@ export default function SignIn({ auth }: any) {
                   RESEND OTP {timer > 0 && `(${timer})`}
                 </a>
               </div>
-              <CustomCaptch
-                setFreshCaptch={setFreshCaptch}
-                setCaptchaValue={setCaptchaValue}
-                captch={captch}
-                captchValue={captchValue}
-              />
             </Row>
-            <Button disabled={isbuttonActive} type="submit">
+            <Button disabled={isbuttonActive} color="#269DA5" type="submit">
               Submit
             </Button>
           </Form>

@@ -18,6 +18,7 @@
     border-radius: 20px;
     padding: 5px;
     border: 1px solid;
+    background-color: #13678C;
 }
 .parentOdCircles {
     display: inline-flex;
@@ -28,7 +29,7 @@
     border: 1px solid;
     /* width: auto; */
     padding: 5px;
-    background-color: #000000;
+    background-color: #13678C;
     color: #FFFFFF;
     border-radius: 10px 10px 0 0;
     border-bottom: none;

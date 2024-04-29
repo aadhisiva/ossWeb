@@ -3,7 +3,7 @@ import { Col, Image, Row } from "react-bootstrap";
 
 export default function Footer() {
   return (
-    <div className="h-10 w-screen fixed bottom-0 bg-slate-500">
+    <div className="h-10 w-screen fixed bottom-0 bg-[#124F8C]">
       <Row className="h-10 flex items-center justify-center w-full">
         <Col className="text-center text-sm text-white flex flex-row justify-center">
           Government of Karnataka 2024, <br />
