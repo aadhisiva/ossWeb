@@ -14,6 +14,7 @@ import { IMasterData } from "../../../utilities/interfacesOrtype";
 import DivisionModal from "../../../components/common/Modals/divisionModal";
 import TableRowsPerPageDropDown from "../../../components/common/tableRowsPerPage";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
+import { TableWithSorting } from "../../../components/common/tableWithPagination";
 
 export default function DivisionComponent() {
   const [district, setDistrict] = useState("");
@@ -195,6 +196,39 @@ export default function DivisionComponent() {
     }
   };
 
+  const columns = [
+    {
+      label: "Name",
+      key: "Name",
+      sorting: true,
+    }, 
+    {
+      label: "Mobile",
+      key: "Mobile",
+      sorting: true,
+    }, 
+    {
+      label: "District",
+      key: "DistrictName",
+      sorting: true,
+    }, 
+    {
+      label: "Zone",
+      key: "TalukName",
+      sorting: true,
+    }, 
+    {
+      label: "Division",
+      key: "GramPanchayatName",
+      sorting: true,
+    }, 
+    {
+      label: "Action",
+      key: "Action",
+      sorting: false,
+    }, 
+  ];
+
   return (
     <React.Fragment>
       {editForm && rednerForm()}
@@ -293,6 +327,11 @@ export default function DivisionComponent() {
               <tr className="spacer"></tr>
             </tbody>
           </Table>
+          <TableWithSorting
+           filteredData={filteredData}
+           handleCLickModify={handleCLickModify}
+           columns={columns}
+          />
           <CustomPagination
             currentCount={filteredData.length || 0}
             onPageChange={onPageChange}

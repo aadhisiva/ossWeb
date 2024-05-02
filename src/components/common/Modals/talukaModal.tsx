@@ -37,6 +37,7 @@ export default function TalukModal({
           TalukCode: stateData?.TalukCode,
           CreatedRole: userRole,
           CreatedMobile: Mobile,
+          ListType: "Taluk",
           AssigningType: ROLES.TALUK_OFFICER
         };
         handleSubmitForm(forApiBody);
