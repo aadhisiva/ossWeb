@@ -20,7 +20,6 @@ import { postRequest } from "../../../Authentication/axiosrequest";
 import { ASSIGNMENT } from "../../../utilities/roles";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
-import { TableWithSorting } from "../../../components/common/tableWithPagination";
 
 export default function WardComponent() {
   const [district, setDistrict] = useState("");
@@ -198,76 +197,6 @@ export default function WardComponent() {
       setGpDropDown(gpData);
     }
   };
-  const AssignColumns = [
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    },
-    {
-      label: "Taluk",
-      key: "TalukName",
-      sorting: true,
-    },
-    {
-      label: "GramaPanchayat",
-      key: "GramaPanchayat",
-      sorting: true,
-    },
-    {
-      label: "Village",
-      key: "VillageName",
-      sorting: true,
-    },
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    },
-  ];
-
-  const AssignedColumns = [
-    {
-      label: "Role",
-      key: "Role",
-      sorting: true,
-    },
-    {
-      label: "Name",
-      key: "Name",
-      sorting: true,
-    },
-    {
-      label: "Mobile",
-      key: "Mobile",
-      sorting: true,
-    },
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    },
-    {
-      label: "Taluk",
-      key: "TalukName",
-      sorting: true,
-    },
-    {
-      label: "GramaPanchayat",
-      key: "GramaPanchayat",
-      sorting: true,
-    },
-    {
-      label: "Village",
-      key: "VillageName",
-      sorting: true,
-    },
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    },
-  ];
 
   const handleDivisionSelect = (value: string) => {
     if(division !== value){
@@ -373,7 +302,7 @@ export default function WardComponent() {
         {showAssignMent ? 
         (
           <Row className="m-4">
-          {/* <Table hover className="pn-2" size="sm">
+          <Table hover className="pn-2" size="sm">
             <thead className="urbanThead">
               <th className="urbanTh p-1">District</th>
               <th className="urbanTh p-1">Zone</th>
@@ -402,12 +331,7 @@ export default function WardComponent() {
               ))}
               <tr className="spacer"></tr>
             </tbody>
-          </Table> */}
-          <TableWithSorting
-          columns={AssignColumns}
-          filteredData={filteredData}
-          handleCLickModify={handleCLickModify}
-          />
+          </Table>
           <CustomPagination
             currentCount={filteredData.length || 0}
             onPageChange={onPageChange}
@@ -419,7 +343,7 @@ export default function WardComponent() {
         </Row>
         ): (
           <Row className="m-4">
-          {/* <Table hover className="bg-green-200 pn-2" size="sm">
+          <Table hover className="bg-green-200 pn-2" size="sm">
             <thead className="urbanThead">
               <th className="urbanTh p-1">Role</th>
               <th className="urbanTh p-1">Name</th>
@@ -458,12 +382,7 @@ export default function WardComponent() {
               ))}
               <tr className="spacer"></tr>
             </tbody>
-          </Table> */}
-          <TableWithSorting
-          columns={AssignedColumns}
-          filteredData={filteredData}
-          handleCLickModify={handleCLickModify}
-          />
+          </Table>
           <CustomPagination
             currentCount={filteredData.length || 0}
             onPageChange={onPageChange}

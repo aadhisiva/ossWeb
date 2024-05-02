@@ -41,7 +41,6 @@ export default function WardModal({
         VillageCode: stateData?.VillageCode,
         CreatedRole: userRole,
         CreatedMobile: Mobile,
-        ListType: "Village",
         Type: "Urban",
       };
       handleSubmitForm(forApiBody);

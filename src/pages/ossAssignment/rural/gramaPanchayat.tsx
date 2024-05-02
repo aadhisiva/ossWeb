@@ -15,7 +15,6 @@ import { ASSIGNMENT } from "../../../utilities/roles";
 import GpModal from "../../../components/common/Modals/gpModal";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
-import { TableWithSorting } from "../../../components/common/tableWithPagination";
 
 export default function GramaPanchyatAssignMent() {
   const [district, setDistrict] = useState("");
@@ -193,39 +192,6 @@ export default function GramaPanchyatAssignMent() {
     }
   };
 
-  const columns = [
-    {
-      label: "Name",
-      key: "Name",
-      sorting: true,
-    }, 
-    {
-      label: "Mobile",
-      key: "Mobile",
-      sorting: true,
-    }, 
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    }, 
-    {
-      label: "Taluk",
-      key: "TalukName",
-      sorting: true,
-    }, 
-    {
-      label: "GramaPanchayat",
-      key: "GramPanchayatName",
-      sorting: true,
-    }, 
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    }, 
-  ];
-
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
@@ -291,11 +257,38 @@ export default function GramaPanchyatAssignMent() {
           </Col>
         </Row>
         <Row className="m-4">
-        <TableWithSorting
-           filteredData={filteredData}
-           handleCLickModify={handleCLickModify}
-           columns={columns}
-          />
+          <Table hover className="pn-2" size="sm">
+            <thead className="urbanThead">
+              <th className="urbanTh p-1">Name</th>
+              <th className="urbanTh p-1">Mobile Number</th>
+              <th className="urbanTh p-1">District</th>
+              <th className="urbanTh p-1">Taluk</th>
+              <th className="urbanTh p-1">GramaPanchayat</th>
+              <th className="urbanTh p-1">Action</th>
+            </thead>
+            <tbody>
+              <tr className="spacer"></tr>
+              {(filteredData || []).map((obj: any) => (
+                <tr>
+                  <td className="tableRowStart">{obj?.Name ?? "N/A"}</td>
+                  <td>{obj?.Mobile ?? "N/A"}</td>
+                  <td>{obj?.DistrictName ?? "N/A"}</td>
+                  <td>{obj?.TalukName ?? "N/A"}</td>
+                  <td>{obj?.GramPanchayatName ?? "N/A"}</td>
+                  <td className="tableRowEnd">
+                    <Button
+                      className="mr-1"
+                      style={{backgroundColor: '#13678C'}}
+                      onClick={() => handleCLickModify(obj, "Modify")}
+                    >
+                      Modify
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+              <tr className="spacer"></tr>
+            </tbody>
+          </Table>
           <CustomPagination
             currentCount={filteredData.length || 0}
             onPageChange={onPageChange}

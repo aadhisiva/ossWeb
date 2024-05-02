@@ -41,7 +41,6 @@ export default function VillageModal({
           VillageCode: stateData?.VillageCode,
           CreatedRole: userRole,
           CreatedMobile: Mobile,
-          ListType: "Village",
           Type: "Rural"
         };
         handleSubmitForm(forApiBody);

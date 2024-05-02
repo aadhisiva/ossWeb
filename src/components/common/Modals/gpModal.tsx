@@ -40,7 +40,6 @@ export default function GpModal({
           GpOrWard: stateData?.GramPanchayatCode,
           CreatedRole: userRole,
           CreatedMobile: Mobile,
-          ListType: "Gp",
           AssigningType: ROLES.GP_OFFICER
         };
         handleSubmitForm(forApiBody);

@@ -13,7 +13,6 @@ import { ASSIGNMENT } from "../../../utilities/roles";
 import TalukModal from "../../../components/common/Modals/talukaModal";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
-import { TableWithSorting } from "../../../components/common/tableWithPagination";
 
 export default function TalukAssignMent() {
   const [district, setDistrict] = useState("");
@@ -155,34 +154,6 @@ export default function TalukAssignMent() {
     }
   };
 
-  const columns = [
-    {
-      label: "Name",
-      key: "Name",
-      sorting: true,
-    }, 
-    {
-      label: "Mobile",
-      key: "Mobile",
-      sorting: true,
-    }, 
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    }, 
-    {
-      label: "Taluk",
-      key: "TalukName",
-      sorting: true,
-    }, 
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    }, 
-  ];
-
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
@@ -272,11 +243,6 @@ export default function TalukAssignMent() {
               <tr className="spacer"></tr>
             </tbody>
           </Table>
-          <TableWithSorting
-           filteredData={filteredData}
-           handleCLickModify={handleCLickModify}
-           columns={columns}
-          />
           <CustomPagination
             currentCount={filteredData.length || 0}
             onPageChange={onPageChange}

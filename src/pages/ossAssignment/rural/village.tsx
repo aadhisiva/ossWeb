@@ -17,7 +17,6 @@ import VillageModal from "../../../components/common/Modals/villageModal";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import TableRowsPerPageDropDown from "../../../components/common/tableRowsPerPage";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
-import { TableWithSorting } from "../../../components/common/tableWithPagination";
 
 export default function VillageAssignMent() {
   const [district, setDistrict] = useState("");
@@ -118,8 +117,8 @@ export default function VillageAssignMent() {
   const handleClearFilters = () => {
     setDistrict("");
     setTaluk("");
-    setPanchayat("");
-    setVillage("");
+      setPanchayat("");
+      setVillage("");
   };
 
   const handleCLickModify = async (obj: any, title: string) => {
@@ -238,77 +237,6 @@ export default function VillageAssignMent() {
     }
   };
 
-  const AssignColumns = [
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    },
-    {
-      label: "Taluk",
-      key: "TalukName",
-      sorting: true,
-    },
-    {
-      label: "GramaPanchayat",
-      key: "GramaPanchayat",
-      sorting: true,
-    },
-    {
-      label: "Village",
-      key: "VillageName",
-      sorting: true,
-    },
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    },
-  ];
-
-  const AssignedColumns = [
-    {
-      label: "Role",
-      key: "Role",
-      sorting: true,
-    },
-    {
-      label: "Name",
-      key: "Name",
-      sorting: true,
-    },
-    {
-      label: "Mobile",
-      key: "Mobile",
-      sorting: true,
-    },
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    },
-    {
-      label: "Taluk",
-      key: "TalukName",
-      sorting: true,
-    },
-    {
-      label: "GramaPanchayat",
-      key: "GramaPanchayat",
-      sorting: true,
-    },
-    {
-      label: "Village",
-      key: "VillageName",
-      sorting: true,
-    },
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    },
-  ];
-
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
@@ -386,20 +314,10 @@ export default function VillageAssignMent() {
             />
           </Col>
           <Col md={3} sm={6}>
-            <Button
-              style={{ backgroundColor: "#13678C" }}
-              onClick={handleCLickAdd}
-            >
-              Add User
-            </Button>
+            <Button style={{backgroundColor: '#13678C'}} onClick={handleCLickAdd}>Add User</Button>
           </Col>
           <Col md={3} sm={6}>
-            <Button
-              style={{ backgroundColor: "#13678C" }}
-              onClick={handleClearFilters}
-            >
-              Clear Filters
-            </Button>
+            <Button style={{backgroundColor: '#13678C'}} onClick={handleClearFilters}>Clear Filters</Button>
           </Col>
         </Row>
         <Row className="searchWithDroopDown">
@@ -415,11 +333,38 @@ export default function VillageAssignMent() {
         </Row>
         {showAssignMent ? (
           <Row className="m-4">
-            <TableWithSorting
-              columns={AssignColumns}
-              filteredData={filteredData}
-              handleCLickModify={handleCLickModify}
-            />
+            <Table hover className="pn-2" size="sm">
+              <thead className="urbanThead">
+                <th className="urbanTh p-1">District</th>
+                <th className="urbanTh p-1">Taluk</th>
+                <th className="urbanTh p-1">GramaPanchayat</th>
+                <th className="urbanTh p-1">Village</th>
+                <th className="urbanTh p-1">Action</th>
+              </thead>
+              <tbody>
+                <tr className="spacer"></tr>
+                {(filteredData || []).map((obj: any) => (
+                  <tr>
+                    <td className="tableRowStart">
+                      {obj?.DistrictName ?? "N/A"}
+                    </td>
+                    <td>{obj?.TalukName ?? "N/A"}</td>
+                    <td>{obj?.GramPanchayatName ?? "N/A"}</td>
+                    <td>{obj?.VillageName ?? "N/A"}</td>
+                    <td className="tableRowEnd">
+                      <Button
+                        className="mr-1"
+                        style={{backgroundColor: '#13678C'}}
+                        onClick={() => handleCLickModify(obj, "Assign")}
+                      >
+                        Assign
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+                <tr className="spacer"></tr>
+              </tbody>
+            </Table>
             <CustomPagination
               currentCount={filteredData.length || 0}
               onPageChange={onPageChange}
@@ -431,7 +376,7 @@ export default function VillageAssignMent() {
           </Row>
         ) : (
           <Row className="m-4">
-            {/* <Table hover className="bg-green-200 pn-2" size="sm">
+            <Table hover className="bg-green-200 pn-2" size="sm">
               <thead className="urbanThead">
                 <th className="urbanTh p-1">Role</th>
                 <th className="urbanTh p-1">Name</th>
@@ -440,6 +385,8 @@ export default function VillageAssignMent() {
                 <th className="urbanTh p-1">Taluk</th>
                 <th className="urbanTh p-1">GramaPanchayat</th>
                 <th className="urbanTh p-1">Village</th>
+                <th className="urbanTh p-1">CreatedRole</th>
+                <th className="urbanTh p-1">CreatedMobile</th>
                 <th className="urbanTh p-1">Action</th>
               </thead>
               <tbody>
@@ -468,12 +415,7 @@ export default function VillageAssignMent() {
                 ))}
                 <tr className="spacer"></tr>
               </tbody>
-            </Table> */}
-            <TableWithSorting
-              columns={AssignedColumns}
-              filteredData={filteredData}
-              handleCLickModify={handleCLickModify}
-            />
+            </Table>
             <CustomPagination
               currentCount={filteredData.length || 0}
               onPageChange={onPageChange}

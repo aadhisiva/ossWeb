@@ -15,7 +15,6 @@ import { ASSIGNMENT } from "../../../utilities/roles";
 import DistrictModal from "../../../components/common/Modals/districtModal";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
-import { TableWithSorting } from "../../../components/common/tableWithPagination";
 
 export default function DistrictAssignMent() {
   const [district, setDistrict] = useState("");
@@ -130,29 +129,6 @@ export default function DistrictAssignMent() {
     );
   });
 
-  const columns = [
-    {
-      label: "Name",
-      key: "Name",
-      sorting: true,
-    }, 
-    {
-      label: "Mobile",
-      key: "Mobile",
-      sorting: true,
-    }, 
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    }, 
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    }, 
-  ];
-
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
@@ -202,11 +178,37 @@ export default function DistrictAssignMent() {
           </Col>
         </Row>
         <Row className="m-4">
-          <TableWithSorting
-           filteredData={filteredData}
-           handleCLickModify={handleCLickModify}
-           columns={columns}
-          />
+          <Table hover size="sm">
+            <thead className="urbanThead">
+              <th className="urbanTh p-1">Name
+              <i className="bi bi-arrow-bar-down"></i>
+              <i className="bi bi-arrow-bar-up"></i>
+              </th>
+              <th className="urbanTh p-1">Mobile Number</th>
+              <th className="urbanTh p-1">District</th>
+              <th className="urbanTh p-1">Action</th>
+            </thead>
+            <tbody>
+              <tr className="spacer"></tr>
+              {(filteredData || []).map((obj: any) => (
+                <tr>
+                  <td className="tableRowStart">{obj?.Name ?? "N/A"}</td>
+                  <td>{obj?.Mobile ?? "N/A"}</td>
+                  <td>{obj?.DistrictName ?? "N/A"}</td>
+                  <td className="tableRowEnd">
+                    <Button
+                      className="mr-1"
+                      style={{backgroundColor: '#13678C'}}
+                      onClick={() => handleCLickModify(obj, "Modify")}
+                    >
+                      Modify
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+              <tr className="spacer"></tr>
+            </tbody>
+          </Table>
           <CustomPagination
             currentCount={filteredData.length || 0}
             onPageChange={onPageChange}

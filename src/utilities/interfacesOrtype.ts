@@ -60,11 +60,6 @@ export interface IMasterData {
     VillageName?: string; 
     VillageCode?: string; 
 }
-export interface ITableColumns {
-    label : string,
-    sorting: boolean,
-    key: string,
-}
 export interface IReportsMasterData {
     DistrictCode?: string;
     DistrictName?: string;

@@ -33,7 +33,6 @@ export default function ZoneModal({
           TalukCode: stateData?.TalukCode,
           CreatedRole: userRole,
           CreatedMobile: Mobile,
-          ListType: "Taluk",
           AssigningType: ROLES.ZONE_OFFICER
         };
         handleSubmitForm(forApiBody);

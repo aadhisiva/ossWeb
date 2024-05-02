@@ -41,7 +41,6 @@ export default function DivisionModal({
         GpOrWard: stateData?.GramPanchayatCode,
         CreatedRole: userRole,
         CreatedMobile: Mobile,
-        ListType: "Gp",
         AssigningType: ROLES.DIVISION_OFFICER
       };
       handleSubmitForm(forApiBody);
