@@ -33,6 +33,7 @@ export default function DistrictModal({
           DistrictCode: stateData?.DistrictCode,
           CreatedRole: userRole,
           CreatedMobile: Mobile,
+          ListType: "District",
           AssigningType: stateData?.DistrictName == "BBMP" ? ROLES.BBMP_HEAD : ROLES.DISTRICT_OFFICER
         };
         handleSubmitForm(forApiBody);
