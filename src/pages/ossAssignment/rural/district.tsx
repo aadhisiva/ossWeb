@@ -16,6 +16,7 @@ import DistrictModal from "../../../components/common/Modals/districtModal";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
 import { TableWithSorting } from "../../../components/common/tableWithPagination";
+import ResuableModal from "../../../components/common/Modals/selectOneRow";
 
 export default function DistrictAssignMent() {
   const [district, setDistrict] = useState("");
@@ -27,8 +28,11 @@ export default function DistrictAssignMent() {
 
   const [isLoading, setLoading] = useState(false);
   const [editForm, setEditForm] = useState(false);
+  const [addForm, setAddForm] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
+
   const [formData, setFormData] = useState({});
+  const [editFormData, setEditFormData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -60,9 +64,7 @@ export default function DistrictAssignMent() {
     let filterData = originalData;
     // filter rural/urban
     if (district) {
-      filterData = filterData.filter(
-        (obj) => obj.DistrictName === district
-      );
+      filterData = filterData.filter((obj) => obj.DistrictName === district);
     }
     setCopyOriginalData(filterData);
   }, [district]);
@@ -82,28 +84,40 @@ export default function DistrictAssignMent() {
   };
 
   const handleCLickModify = async (obj: any, title: string) => {
-    setFormData(obj);
-    setEditForm(true);
-    setModalTitle(title);
+    if (!obj?.DistrictCode) return alert("Something Went Wrong.");
+    if(obj.count < 1) return alert("You have to add user first.");
+    let getData = await postRequest("getAllWithCode", {
+      ListType: "District",
+      DistrictCode: obj?.DistrictCode
+    });
+    if(getData?.code == 200){
+      setEditFormData(getData?.data);
+      setEditForm(true);
+      setModalTitle(title);
+    } else {
+      alert(getData?.response?.data?.message || "Please try again.")
+    };
   };
 
   const handleCLickAdd = async () => {
     if (!district) return alert("Select District.");
     let find: any = originalData.find(
-      (obj: any) => obj.DistrictCode == district
+      (obj: any) => obj.DistrictName == district
     );
+    delete find?.Name;
+    delete find?.Mobile;
     setFormData(find);
-    setEditForm(true);
+    setAddForm(true);
     setModalTitle("Add");
   };
 
   const handleSubmitForm = async (values: any) => {
     let res = await postRequest("assignMentProcess", values);
     if (res.code === 200) {
-      setEditForm(false);
+      setAddForm(false);
       await getAllMaster();
     } else {
-      setEditForm(false);
+      setAddForm(false);
       alert(res?.response?.data?.message || "Please try again.");
     }
   };
@@ -111,9 +125,21 @@ export default function DistrictAssignMent() {
   const rednerForm = () => {
     return (
       <DistrictModal
-        show={editForm}
+        show={addForm}
         title={modalTitle}
         formData={formData}
+        handleSubmitForm={handleSubmitForm}
+        onHide={() => setAddForm(false)}
+      />
+    );
+  };
+
+  const rednerEditForm = () => {
+    return (
+      <ResuableModal
+        show={editForm}
+        title={modalTitle}
+        formData={editFormData}
         handleSubmitForm={handleSubmitForm}
         onHide={() => setEditForm(false)}
       />
@@ -135,28 +161,34 @@ export default function DistrictAssignMent() {
       label: "Name",
       key: "Name",
       sorting: true,
-    }, 
+    },
     {
       label: "Mobile",
       key: "Mobile",
       sorting: true,
-    }, 
+    },
+    {
+      label: "AssignedCount",
+      key: "count",
+      sorting: true,
+    },
     {
       label: "District",
       key: "DistrictName",
       sorting: true,
-    }, 
+    },
     {
       label: "Action",
       key: "Action",
       sorting: false,
-    }, 
+    },
   ];
 
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
-      {editForm && rednerForm()}
+      {addForm && rednerForm()}
+      {editForm && rednerEditForm()}
       <Titlebar
         title={`District Assignment`}
         Component={
@@ -184,10 +216,20 @@ export default function DistrictAssignMent() {
             />
           </Col>
           <Col md={3} sm={6}>
-            <Button style={{backgroundColor: '#13678C'}} onClick={handleCLickAdd}>Add User</Button>
+            <Button
+              style={{ backgroundColor: "#13678C" }}
+              onClick={handleCLickAdd}
+            >
+              Add User
+            </Button>
           </Col>
           <Col md={3} sm={6}>
-            <Button style={{backgroundColor: '#13678C'}} onClick={handleClearFilters}>Clear Filters</Button>
+            <Button
+              style={{ backgroundColor: "#13678C" }}
+              onClick={handleClearFilters}
+            >
+              Clear Filters
+            </Button>
           </Col>
         </Row>
         <Row className="searchWithDroopDown">
@@ -203,9 +245,9 @@ export default function DistrictAssignMent() {
         </Row>
         <Row className="m-4">
           <TableWithSorting
-           filteredData={filteredData}
-           handleCLickModify={handleCLickModify}
-           columns={columns}
+            filteredData={filteredData}
+            handleCLickModify={handleCLickModify}
+            columns={columns}
           />
           <CustomPagination
             currentCount={filteredData.length || 0}

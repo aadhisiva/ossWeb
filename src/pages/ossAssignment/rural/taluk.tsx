@@ -14,6 +14,7 @@ import TalukModal from "../../../components/common/Modals/talukaModal";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
 import { TableWithSorting } from "../../../components/common/tableWithPagination";
+import ResuableModal from "../../../components/common/Modals/selectOneRow";
 
 export default function TalukAssignMent() {
   const [district, setDistrict] = useState("");
@@ -26,9 +27,12 @@ export default function TalukAssignMent() {
   const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
 
   const [isLoading, setLoading] = useState(false);
+
+  const [addForm, setAddForm] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [formData, setFormData] = useState({});
+  const [editFormData, setEditFormData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -100,8 +104,11 @@ export default function TalukAssignMent() {
     let find: any = originalData.find(
       (obj) => obj.DistrictName === district && obj.TalukName === taluk
     );
+
+    delete find?.Name;
+    delete find?.Mobile;
     setFormData(find);
-    setEditForm(true);
+    setAddForm(true);
     setModalTitle("Add");
   };
 
@@ -119,10 +126,21 @@ export default function TalukAssignMent() {
   const rednerForm = () => {
     return (
       <TalukModal
+        show={addForm}
+        title={modalTitle}
+        formData={formData}
+        handleSubmitForm={handleSubmitForm}
+        onHide={() => setAddForm(false)}
+      />
+    );
+  };
+
+  const rednerEditForm = () => {
+    return (
+      <ResuableModal
         show={editForm}
         title={modalTitle}
-        saveType={"DO"}
-        formData={formData}
+        formData={editFormData}
         handleSubmitForm={handleSubmitForm}
         onHide={() => setEditForm(false)}
       />
@@ -133,6 +151,7 @@ export default function TalukAssignMent() {
     return (
       item?.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.Mobile?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item?.count?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.DistrictName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.CreatedMobile?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item?.TalukName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -160,33 +179,39 @@ export default function TalukAssignMent() {
       label: "Name",
       key: "Name",
       sorting: true,
-    }, 
+    },
     {
       label: "Mobile",
       key: "Mobile",
       sorting: true,
-    }, 
+    },
+    {
+      label: "AssignedCount",
+      key: "count",
+      sorting: true,
+    },
     {
       label: "District",
       key: "DistrictName",
       sorting: true,
-    }, 
+    },
     {
       label: "Taluk",
       key: "TalukName",
       sorting: true,
-    }, 
+    },
     {
       label: "Action",
       key: "Action",
       sorting: false,
-    }, 
+    },
   ];
 
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
-      {editForm && rednerForm()}
+      {addForm && rednerForm()}
+      {editForm && rednerEditForm()}
       <Titlebar
         title={`Taluk Assignment`}
         Component={
@@ -224,10 +249,20 @@ export default function TalukAssignMent() {
             />
           </Col>
           <Col md={3} sm={6}>
-            <Button style={{backgroundColor: '#13678C'}} onClick={handleCLickAdd}>Add User</Button>
+            <Button
+              style={{ backgroundColor: "#13678C" }}
+              onClick={handleCLickAdd}
+            >
+              Add User
+            </Button>
           </Col>
           <Col md={3} sm={6}>
-            <Button style={{backgroundColor: '#13678C'}} onClick={handleClearFilters}>Clear Filters</Button>
+            <Button
+              style={{ backgroundColor: "#13678C" }}
+              onClick={handleClearFilters}
+            >
+              Clear Filters
+            </Button>
           </Col>
         </Row>
         <Row className="searchWithDroopDown">
@@ -261,7 +296,7 @@ export default function TalukAssignMent() {
                   <td className="tableRowEnd">
                     <Button
                       className="mr-1"
-                      style={{backgroundColor: '#13678C'}}
+                      style={{ backgroundColor: "#13678C" }}
                       onClick={() => handleCLickModify(obj, "Modify")}
                     >
                       Modify
@@ -273,9 +308,9 @@ export default function TalukAssignMent() {
             </tbody>
           </Table>
           <TableWithSorting
-           filteredData={filteredData}
-           handleCLickModify={handleCLickModify}
-           columns={columns}
+            filteredData={filteredData}
+            handleCLickModify={handleCLickModify}
+            columns={columns}
           />
           <CustomPagination
             currentCount={filteredData.length || 0}

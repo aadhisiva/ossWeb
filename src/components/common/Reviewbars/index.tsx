@@ -1,16 +1,25 @@
 import "./halfDonutCircle.css";
+interface IHalfDonut {
+  onClick?: any;
+  title?: string;
+  percentage?: any;
+};
 
-export default function HalfDonutCircle({ onClick, title }: any) {
-  const myObject = { "--percentage": 50, "--fill": "#0f172a" } as {
-    [key: string]: any;
-  };
+export default function HalfDonutCircle({ onClick, title, percentage }:IHalfDonut) {
+
+  const donutCircle = (percentage: any) => {
+    return { "--percentage": Number(percentage), "--fill": "#0f172a" } as {
+      [key: string]: any;
+    }; 
+  }
+ 
   return (
     <div className="reviewBorder" onClick={onClick}>
       <div className="single-graph margin">
-        <span className="graphTitle">{"70%"}</span>
-        <div className="graph" data-name="Completed" style={myObject}></div>
-        <div className="graph" data-name="Average" style={myObject}></div>
-        <div className="graph" data-name="Low" style={myObject}></div>
+        <span className="graphTitle">{percentage}</span>
+        <div className="graph" data-name="Completed" style={donutCircle(percentage)}></div>
+        <div className="graph" data-name="Average" style={donutCircle(percentage)}></div>
+        <div className="graph" data-name="Low" style={donutCircle(percentage)}></div>
       </div>
         <span className="graphTitle">{title}</span>
       {/* <div className="identifier">

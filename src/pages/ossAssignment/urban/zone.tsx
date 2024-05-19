@@ -21,6 +21,8 @@ import { ASSIGNMENT } from "../../../utilities/roles";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
 import { TableWithSorting } from "../../../components/common/tableWithPagination";
+import DistrictModal from "../../../components/common/Modals/districtModal";
+import ResuableModal from "../../../components/common/Modals/selectOneRow";
 
 export default function ZoneComponent() {
   const [district, setDistrict] = useState("");
@@ -33,9 +35,13 @@ export default function ZoneComponent() {
   const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
 
   const [isLoading, setLoading] = useState(false);
+
+  const [addForm, setAddForm] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
+  
   const [formData, setFormData] = useState({});
+  const [editFormData, setEditFormData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -108,8 +114,10 @@ export default function ZoneComponent() {
   const handleCLickAdd = async () => {
     if(!district || !zone) return alert("Select Fields.");
     let find: any = originalData.find((obj) => obj.DistrictName === district && obj.TalukName === zone);
+    delete find?.Name;
+    delete find?.Mobile;
     setFormData(find);
-    setEditForm(true);
+    setAddForm(true);
     setModalTitle('Add');
   };
 
@@ -126,11 +134,22 @@ export default function ZoneComponent() {
 
   const rednerForm = () => {
     return (
-      <ZoneModal
+      <DistrictModal
+        show={addForm}
+        title={modalTitle}
+        formData={formData}
+        handleSubmitForm={handleSubmitForm}
+        onHide={() => setAddForm(false)}
+      />
+    );
+  };
+
+  const rednerEditForm = () => {
+    return (
+      <ResuableModal
         show={editForm}
         title={modalTitle}
-        saveType={"DO"}
-        formData={formData}
+        formData={editFormData}
         handleSubmitForm={handleSubmitForm}
         onHide={() => setEditForm(false)}
       />
@@ -168,6 +187,11 @@ export default function ZoneComponent() {
       label: "Mobile",
       key: "Mobile",
       sorting: true,
+    },
+    {
+      label: "AssignedCount",
+      key: "count",
+      sorting: true,
     }, 
     {
       label: "District",
@@ -189,7 +213,8 @@ export default function ZoneComponent() {
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
-      {editForm && rednerForm()}
+      {addForm && rednerForm()}
+      {editForm && rednerEditForm()}
       <Titlebar
         title={`Zone Assignment`}
         Component={

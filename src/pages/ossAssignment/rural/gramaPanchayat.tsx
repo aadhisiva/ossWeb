@@ -16,6 +16,7 @@ import GpModal from "../../../components/common/Modals/gpModal";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
 import { TableWithSorting } from "../../../components/common/tableWithPagination";
+import ResuableModal from "../../../components/common/Modals/selectOneRow";
 
 export default function GramaPanchyatAssignMent() {
   const [district, setDistrict] = useState("");
@@ -32,9 +33,12 @@ export default function GramaPanchyatAssignMent() {
 
   const [isLoading, setLoading] = useState(false);
 
+  const [addForm, setAddForm] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
+  
   const [formData, setFormData] = useState({});
+  const [editFormData, setEditFormData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -117,8 +121,10 @@ export default function GramaPanchyatAssignMent() {
         obj.TalukName === taluk &&
         obj.GramPanchayatName == panchayat
     );
+    delete find?.Name;
+    delete find?.Mobile;
     setFormData(find);
-    setEditForm(true);
+    setAddForm(true);
     setModalTitle("Add");
   };
 
@@ -132,19 +138,30 @@ export default function GramaPanchyatAssignMent() {
       alert(res?.response?.data?.message || "Please try again.");
     }
   };
-
-  const rednerForm = () => {
-    return (
-      <GpModal
-        show={editForm}
-        title={modalTitle}
-        saveType={"DO"}
-        formData={formData}
-        handleSubmitForm={handleSubmitForm}
-        onHide={() => setEditForm(false)}
-      />
-    );
-  };
+    
+    const rednerForm = () => {
+      return (
+        <GpModal
+          show={addForm}
+          title={modalTitle}
+          formData={formData}
+          handleSubmitForm={handleSubmitForm}
+          onHide={() => setAddForm(false)}
+        />
+      );
+    };
+  
+    const rednerEditForm = () => {
+      return (
+        <ResuableModal
+          show={editForm}
+          title={modalTitle}
+          formData={editFormData}
+          handleSubmitForm={handleSubmitForm}
+          onHide={() => setEditForm(false)}
+        />
+      );
+    };
 
   const filteredData = (currentItems || []).filter((item: any) => {
     return (
@@ -205,6 +222,11 @@ export default function GramaPanchyatAssignMent() {
       sorting: true,
     }, 
     {
+      label: "AssignedCount",
+      key: "count",
+      sorting: true,
+    },
+    {
       label: "District",
       key: "DistrictName",
       sorting: true,
@@ -229,7 +251,8 @@ export default function GramaPanchyatAssignMent() {
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
-      {editForm && rednerForm()}
+      {addForm && rednerForm()}
+      {editForm && rednerEditForm()}
       <Titlebar
         title={`GramaPanchayat AssignMent`}
         Component={

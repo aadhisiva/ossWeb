@@ -15,6 +15,7 @@ import DivisionModal from "../../../components/common/Modals/divisionModal";
 import TableRowsPerPageDropDown from "../../../components/common/tableRowsPerPage";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
 import { TableWithSorting } from "../../../components/common/tableWithPagination";
+import ResuableModal from "../../../components/common/Modals/selectOneRow";
 
 export default function DivisionComponent() {
   const [district, setDistrict] = useState("");
@@ -31,9 +32,12 @@ export default function DivisionComponent() {
 
   const [isLoading, setLoading] = useState(false);
 
+  const [addForm, setAddForm] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
+  
   const [formData, setFormData] = useState({});
+  const [editFormData, setEditFormData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -119,6 +123,8 @@ export default function DivisionComponent() {
         obj.TalukName === zone &&
         obj.GramPanchayatName === division
     );
+    delete find?.Name;
+    delete find?.Mobile;
     setFormData(find);
     setEditForm(true);
     setModalTitle("Add");
@@ -138,15 +144,27 @@ export default function DivisionComponent() {
   const rednerForm = () => {
     return (
       <DivisionModal
+        show={addForm}
+        title={modalTitle}
+        formData={formData}
+        handleSubmitForm={handleSubmitForm}
+        onHide={() => setAddForm(false)}
+      />
+    );
+  };
+
+  const rednerEditForm = () => {
+    return (
+      <ResuableModal
         show={editForm}
         title={modalTitle}
-        saveType={"DO"}
-        formData={formData}
+        formData={editFormData}
         handleSubmitForm={handleSubmitForm}
         onHide={() => setEditForm(false)}
       />
     );
   };
+
 
   const filteredData = (currentItems || []).filter((item) => {
     return (
@@ -206,6 +224,11 @@ export default function DivisionComponent() {
       label: "Mobile",
       key: "Mobile",
       sorting: true,
+    },
+    {
+      label: "AssignedCount",
+      key: "count",
+      sorting: true,
     }, 
     {
       label: "District",
@@ -231,7 +254,8 @@ export default function DivisionComponent() {
 
   return (
     <React.Fragment>
-      {editForm && rednerForm()}
+       {addForm && rednerForm()}
+      {editForm && rednerEditForm()}
       <SpinnerLoader isLoading={isLoading} />
       <Titlebar
         title={`Division AssignMent`}

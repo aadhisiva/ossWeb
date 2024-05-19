@@ -21,6 +21,7 @@ import { ASSIGNMENT } from "../../../utilities/roles";
 import { IMasterData } from "../../../utilities/interfacesOrtype";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
 import { TableWithSorting } from "../../../components/common/tableWithPagination";
+import ResuableModal from "../../../components/common/Modals/selectOneRow";
 
 export default function WardComponent() {
   const [district, setDistrict] = useState("");
@@ -38,11 +39,12 @@ export default function WardComponent() {
   const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
 
   const [isLoading, setLoading] = useState(false);
-  const [showAssignMent, setAssignMent] = useState(true);
 
-  const [tableData, setTableData] = useState();
+  const [addForm, setAddForm] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
+
+  const [editFormData, setEditFormData] = useState([]);
   const [formData, setFormData] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,7 +61,7 @@ export default function WardComponent() {
     let res = await postRequest("getMasterWithAssigned", {
       LoginType: ASSIGNMENT.VILLAGE,
       Codes: userCodes,
-      DataType: showAssignMent ? "" : "Assigned"
+      DataType: ""
     });
     if (res?.code === 200) {
       setOriginalData(res?.data);
@@ -73,7 +75,7 @@ export default function WardComponent() {
 
   useEffect(() => {
     getAllMaster();
-  }, [showAssignMent]);
+  }, []);
 
   useEffect(() => {
     let filterData = originalData;
@@ -136,13 +138,15 @@ export default function WardComponent() {
   const handleCLickAdd = async () => {
     if(!district || !zone || !division || !ward) return alert("Select Fields.");
     let find: any = originalData.find((obj) => obj.DistrictName == district && obj.TalukName === zone && obj.GramPanchayatName == division && obj.VillageName == ward);
+    delete find?.Name;
+    delete find?.Mobile;
     setFormData(find);
-    setEditForm(true);
+    setAddForm(true);
     setModalTitle('Add');
   };
 
   const handleSubmitForm = async (values: any) => {
-      let res = await postRequest(showAssignMent ? "addToSurveyUser" : "addSurveyRoles", values);
+      let res = await postRequest("addToSurveyUser", values);
       if (res.code === 200) {
         setEditForm(false);
         await getAllMaster();
@@ -151,14 +155,24 @@ export default function WardComponent() {
         alert(res?.response?.data?.message || "Please try again.");
       }
   };
-
   const rednerForm = () => {
     return (
       <WardModal
+        show={addForm}
+        title={modalTitle}
+        formData={formData}
+        handleSubmitForm={handleSubmitForm}
+        onHide={() => setAddForm(false)}
+      />
+    );
+  };
+
+  const rednerEditForm = () => {
+    return (
+      <ResuableModal
         show={editForm}
         title={modalTitle}
-        saveType={"DO"}
-        formData={formData}
+        formData={editFormData}
         handleSubmitForm={handleSubmitForm}
         onHide={() => setEditForm(false)}
       />
@@ -198,35 +212,8 @@ export default function WardComponent() {
       setGpDropDown(gpData);
     }
   };
-  const AssignColumns = [
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    },
-    {
-      label: "Taluk",
-      key: "TalukName",
-      sorting: true,
-    },
-    {
-      label: "GramaPanchayat",
-      key: "GramaPanchayat",
-      sorting: true,
-    },
-    {
-      label: "Village",
-      key: "VillageName",
-      sorting: true,
-    },
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    },
-  ];
 
-  const AssignedColumns = [
+  const Columns = [
     {
       label: "Role",
       key: "Role",
@@ -240,6 +227,11 @@ export default function WardComponent() {
     {
       label: "Mobile",
       key: "Mobile",
+      sorting: true,
+    },
+    {
+      label: "AssignedCount",
+      key: "count",
       sorting: true,
     },
     {
@@ -279,7 +271,8 @@ export default function WardComponent() {
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
-      {editForm && rednerForm()}
+      {addForm && rednerForm()}
+      {editForm && rednerEditForm()}
       <Titlebar
         title={`Ward AssignMent`}
         Component={
@@ -289,29 +282,6 @@ export default function WardComponent() {
           />
         }
       />
-      <div>
-      <Row className="p-4">
-          <Col md={6} className="text-right">
-            <span
-              onClick={() => setAssignMent(true)}
-              className={`border p-3 rounded-xl ${
-                showAssignMent ? "bg-yellow-600" : "bg-blue-500"
-              } text-white`}
-            >
-              Assignment Data
-            </span>
-          </Col>
-          <Col md={6}>
-            <span
-              onClick={() => setAssignMent(false)}
-              className={`border p-3 rounded-xl ${
-                !showAssignMent ? "bg-yellow-600" : "bg-blue-500"
-              } text-white`}
-            >
-              Assigned Data
-            </span>
-          </Col>
-        </Row>
         <Row className="boxTitle">
           <Col md={2} className="boxText">
           Filters
@@ -370,54 +340,6 @@ export default function WardComponent() {
             <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </Col>
         </Row>
-        {showAssignMent ? 
-        (
-          <Row className="m-4">
-          {/* <Table hover className="pn-2" size="sm">
-            <thead className="urbanThead">
-              <th className="urbanTh p-1">District</th>
-              <th className="urbanTh p-1">Zone</th>
-              <th className="urbanTh p-1">Division</th>
-              <th className="urbanTh p-1">Ward</th>
-              <th className="urbanTh p-1">Action</th>
-            </thead>
-            <tbody>
-              <tr className="spacer"></tr>
-              {(filteredData || []).map((obj) => (
-              <tr>
-                <td className="tableRowStart">{obj?.DistrictName ?? "N/A"}</td>
-                <td>{obj?.TalukName ?? "N/A"}</td>
-                <td>{obj?.GramPanchayatName ?? "N/A"}</td>
-                <td>{obj?.VillageName ?? "N/A"}</td>
-                <td className="tableRowEnd">
-                  <Button
-                    className="mr-1"
-                    style={{backgroundColor: '#13678C'}}
-                    onClick={() => handleCLickModify(obj, "Assign")}
-                  >
-                    Assign
-                  </Button>
-                </td>
-              </tr>
-              ))}
-              <tr className="spacer"></tr>
-            </tbody>
-          </Table> */}
-          <TableWithSorting
-          columns={AssignColumns}
-          filteredData={filteredData}
-          handleCLickModify={handleCLickModify}
-          />
-          <CustomPagination
-            currentCount={filteredData.length || 0}
-            onPageChange={onPageChange}
-            totalCount={originalData.length || 0}
-            totalPages={totalPages}
-            itemsPerPage={itemsPerPage}
-            currentPage={currentPage}
-          />
-        </Row>
-        ): (
           <Row className="m-4">
           {/* <Table hover className="bg-green-200 pn-2" size="sm">
             <thead className="urbanThead">
@@ -460,7 +382,7 @@ export default function WardComponent() {
             </tbody>
           </Table> */}
           <TableWithSorting
-          columns={AssignedColumns}
+          columns={Columns}
           filteredData={filteredData}
           handleCLickModify={handleCLickModify}
           />
@@ -473,8 +395,6 @@ export default function WardComponent() {
             currentPage={currentPage}
           />
         </Row>
-        )}
-      </div>
     </React.Fragment>
   );
 }

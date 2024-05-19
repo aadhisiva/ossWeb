@@ -10,6 +10,7 @@ import { AvatarDropdown } from "../../../components/common/menuDropDown";
 import "./division.css";
 import { postRequest } from "../../../Authentication/axiosrequest";
 import { IReportsMasterData } from "../../../utilities/interfacesOrtype";
+import { calculatePercentage } from "../../../utilities/resusedFunction";
 
 
 export default function DivisionReportComponent() {
@@ -25,7 +26,7 @@ export default function DivisionReportComponent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(100);
 
-  const totalPages = Math.ceil(copyOfOriginalData.length / itemsPerPage);
+  const totalPages = Math.ceil(copyOfOriginalData?.length / itemsPerPage);
 
   const [{ Role, Mobile, loginCode }] = IsAuthenticated();
 
@@ -69,21 +70,41 @@ export default function DivisionReportComponent() {
   const endIndex = startIndex + itemsPerPage;
   const currentItems = copyOfOriginalData.slice(startIndex, endIndex);
 
-  let headers = [
-    "Gp/DivisionName",
-    "UnAssigned",
-    "Scheduled",
-    "Completed",
-    "TotalCount",
+  const columns = [
+    {
+      label: "Gp/DivisionName",
+      key: "GramPanchayatName",
+      sorting: true,
+    },
+    {
+      label: "UnAssigned",
+      key: "UnAssigned",
+      sorting: true,
+    },
+    {
+      label: "Scheduled",
+      key: "Scheduled",
+      sorting: true,
+    },
+    {
+      label: "Completed",
+      key: "Completed",
+      sorting: true,
+    },
+    {
+      label: "TotalCount",
+      key: "TotalCount",
+      sorting: true,
+    },
   ];
 
   const filteredData = (currentItems || []).filter((item) => {
     return (
-      item?.GramPanchayatName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.UnAssigned?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.Scheduled?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.Completed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase())
+      String(item?.GramPanchayatName)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item?.UnAssigned)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item?.Scheduled)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item?.Completed)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item?.TotalCount)?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
   return (
@@ -104,12 +125,12 @@ export default function DivisionReportComponent() {
       </div>
       <div className="parentOdCircles">
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Unassigned"} />
-          <HalfDonutCircle onClick={undefined} title={"scheduled"} />
-          <HalfDonutCircle onClick={undefined} title={"Completed"} />
+          <HalfDonutCircle onClick={undefined} title={"Unassigned"} percentage={calculatePercentage(originalData, "UnAssigned")} />
+          <HalfDonutCircle onClick={undefined} title={"scheduled"} percentage={calculatePercentage(originalData, "Scheduled")} />
+          <HalfDonutCircle onClick={undefined} title={"Completed"} percentage={calculatePercentage(originalData, "Completed")} />
         </div>
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Students Completed"} />
+          <HalfDonutCircle onClick={undefined} title={"Students Completed"} percentage={calculatePercentage(originalData, "Completed")} />
         </div>
       </div>
         <Row className="flex m-1">
@@ -123,10 +144,10 @@ export default function DivisionReportComponent() {
         <TablewithPagination
           onClick={handleChangeRoutes}
           title={"Gp/Division"}
-          headers={headers}
+          columns={columns}
           tableBody={filteredData}
-          currentCount={filteredData.length || 0}
-          totalCount={copyOfOriginalData.length || 0}
+          currentCount={filteredData?.length || 0}
+          totalCount={copyOfOriginalData?.length || 0}
           totalPages={totalPages}
           currentPage={currentPage}
           onPageChange={onPageChange}

@@ -18,6 +18,7 @@ import { IMasterData } from "../../../utilities/interfacesOrtype";
 import TableRowsPerPageDropDown from "../../../components/common/tableRowsPerPage";
 import SpinnerLoader from "../../../components/common/spinner/spinner";
 import { TableWithSorting } from "../../../components/common/tableWithPagination";
+import ResuableModal from "../../../components/common/Modals/selectOneRow";
 
 export default function VillageAssignMent() {
   const [district, setDistrict] = useState("");
@@ -35,11 +36,13 @@ export default function VillageAssignMent() {
   const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
 
   const [isLoading, setLoading] = useState(false);
-  const [showAssignMent, setAssignMent] = useState(true);
 
+  const [addForm, setAddForm] = useState(false);
   const [editForm, setEditForm] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
+
   const [formData, setFormData] = useState({});
+  const [editFormData, setEditFormData] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -54,7 +57,7 @@ export default function VillageAssignMent() {
     let res = await postRequest("getMasterWithAssigned", {
       LoginType: ASSIGNMENT.VILLAGE,
       Codes: userCodes,
-      DataType: showAssignMent ? "" : "Assigned",
+      DataType: "",
     });
     if (res?.code === 200) {
       setOriginalData(res?.data);
@@ -68,7 +71,7 @@ export default function VillageAssignMent() {
 
   useEffect(() => {
     getAllMaster();
-  }, [showAssignMent]);
+  }, []);
 
   useEffect(() => {
     let filterData = originalData;
@@ -138,16 +141,15 @@ export default function VillageAssignMent() {
         obj.GramPanchayatName == panchayat &&
         obj.VillageName === village
     );
+    delete find?.Name;
+    delete find?.Mobile;
     setFormData(find);
-    setEditForm(true);
+    setAddForm(true);
     setModalTitle("Add");
   };
 
   const handleSubmitForm = async (values: any) => {
-    let res = await postRequest(
-      showAssignMent ? "addToSurveyUser" : "addSurveyRoles",
-      values
-    );
+    let res = await postRequest("addToSurveyUser", values);
     if (res.code === 200) {
       setEditForm(false);
       await getAllMaster();
@@ -160,10 +162,23 @@ export default function VillageAssignMent() {
   const rednerForm = () => {
     return (
       <VillageModal
+        show={addForm}
+        title={modalTitle}
+        formData={formData}
+        handleSubmitForm={handleSubmitForm}
+        onHide={() => setAddForm(false)}
+      />
+    );
+  };
+
+  const rednerEditForm = () => {
+    return (
+      <ResuableModal
         show={editForm}
         title={modalTitle}
-        saveType={"DO"}
-        formData={formData}
+        isRoleSelectOption={true}
+        isType={"rural"}
+        formData={editFormData}
         handleSubmitForm={handleSubmitForm}
         onHide={() => setEditForm(false)}
       />
@@ -238,35 +253,7 @@ export default function VillageAssignMent() {
     }
   };
 
-  const AssignColumns = [
-    {
-      label: "District",
-      key: "DistrictName",
-      sorting: true,
-    },
-    {
-      label: "Taluk",
-      key: "TalukName",
-      sorting: true,
-    },
-    {
-      label: "GramaPanchayat",
-      key: "GramaPanchayat",
-      sorting: true,
-    },
-    {
-      label: "Village",
-      key: "VillageName",
-      sorting: true,
-    },
-    {
-      label: "Action",
-      key: "Action",
-      sorting: false,
-    },
-  ];
-
-  const AssignedColumns = [
+  const Columns = [
     {
       label: "Role",
       key: "Role",
@@ -280,6 +267,11 @@ export default function VillageAssignMent() {
     {
       label: "Mobile",
       key: "Mobile",
+      sorting: true,
+    },
+    {
+      label: "AssignedCount",
+      key: "count",
       sorting: true,
     },
     {
@@ -312,7 +304,8 @@ export default function VillageAssignMent() {
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
-      {editForm && rednerForm()}
+      {addForm && rednerForm()}
+      {editForm && rednerEditForm()}
       <Titlebar
         title={`Village Assignment`}
         Component={
@@ -323,28 +316,6 @@ export default function VillageAssignMent() {
         }
       />
       <div>
-        <Row className="p-4">
-          <Col md={6} className="text-right">
-            <span
-              onClick={() => setAssignMent(true)}
-              className={`border p-3 rounded-xl ${
-                showAssignMent ? "bg-yellow-600" : "bg-blue-500"
-              } text-white`}
-            >
-              Assignment Data
-            </span>
-          </Col>
-          <Col md={6}>
-            <span
-              onClick={() => setAssignMent(false)}
-              className={`border p-3 rounded-xl ${
-                !showAssignMent ? "bg-yellow-600" : "bg-blue-500"
-              } text-white`}
-            >
-              Assigned Data
-            </span>
-          </Col>
-        </Row>
         <Row className="boxTitle">
           <Col md={2} className="boxText">
             Filters
@@ -413,77 +384,21 @@ export default function VillageAssignMent() {
             <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </Col>
         </Row>
-        {showAssignMent ? (
-          <Row className="m-4">
-            <TableWithSorting
-              columns={AssignColumns}
-              filteredData={filteredData}
-              handleCLickModify={handleCLickModify}
-            />
-            <CustomPagination
-              currentCount={filteredData.length || 0}
-              onPageChange={onPageChange}
-              totalCount={originalData.length || 0}
-              totalPages={totalPages}
-              itemsPerPage={itemsPerPage}
-              currentPage={currentPage}
-            />
-          </Row>
-        ) : (
-          <Row className="m-4">
-            {/* <Table hover className="bg-green-200 pn-2" size="sm">
-              <thead className="urbanThead">
-                <th className="urbanTh p-1">Role</th>
-                <th className="urbanTh p-1">Name</th>
-                <th className="urbanTh p-1">Mobile Number</th>
-                <th className="urbanTh p-1">District</th>
-                <th className="urbanTh p-1">Taluk</th>
-                <th className="urbanTh p-1">GramaPanchayat</th>
-                <th className="urbanTh p-1">Village</th>
-                <th className="urbanTh p-1">Action</th>
-              </thead>
-              <tbody>
-                <tr className="spacer"></tr>
-                {(filteredData || []).map((obj: any) => (
-                  <tr>
-                    <td className="tableRowStart">{obj?.Role ?? "N/A"}</td>
-                    <td>{obj?.Name ?? "N/A"}</td>
-                    <td>{obj?.Mobile ?? "N/A"}</td>
-                    <td>{obj?.DistrictName ?? "N/A"}</td>
-                    <td>{obj?.TalukName ?? "N/A"}</td>
-                    <td>{obj?.GramPanchayatName ?? "N/A"}</td>
-                    <td>{obj?.VillageName ?? "N/A"}</td>
-                    <td>{obj?.CreatedRole ?? "N/A"}</td>
-                    <td>{obj?.CreatedMobile ?? "N/A"}</td>
-                    <td className="tableRowEnd">
-                      <Button
-                        className="mr-1"
-                        variant="primary"
-                        onClick={() => handleCLickModify(obj, "Modify")}
-                      >
-                        Modify
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-                <tr className="spacer"></tr>
-              </tbody>
-            </Table> */}
-            <TableWithSorting
-              columns={AssignedColumns}
-              filteredData={filteredData}
-              handleCLickModify={handleCLickModify}
-            />
-            <CustomPagination
-              currentCount={filteredData.length || 0}
-              onPageChange={onPageChange}
-              totalCount={originalData.length || 0}
-              totalPages={totalPages}
-              itemsPerPage={itemsPerPage}
-              currentPage={currentPage}
-            />
-          </Row>
-        )}
+        <Row className="m-4">
+          <TableWithSorting
+            columns={Columns}
+            filteredData={filteredData}
+            handleCLickModify={handleCLickModify}
+          />
+          <CustomPagination
+            currentCount={filteredData.length || 0}
+            onPageChange={onPageChange}
+            totalCount={originalData.length || 0}
+            totalPages={totalPages}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+          />
+        </Row>
       </div>
     </React.Fragment>
   );

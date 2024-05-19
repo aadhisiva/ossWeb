@@ -9,6 +9,7 @@ import Titlebar from "../../../components/common/titlebar";
 import { AvatarDropdown } from "../../../components/common/menuDropDown";
 import "./ward.css";
 import { postRequest } from "../../../Authentication/axiosrequest";
+import { calculatePercentage } from "../../../utilities/resusedFunction";
 
 let tableBody = [
   {
@@ -45,7 +46,7 @@ export default function WardReportComponent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(100);
 
-  const totalPages = Math.ceil(copyOfOriginalData.length / itemsPerPage);
+  const totalPages = Math.ceil(copyOfOriginalData?.length / itemsPerPage);
 
   const [{ Role, Mobile, loginCode }] = IsAuthenticated();
 
@@ -92,14 +93,42 @@ export default function WardReportComponent() {
   
   const filteredData = (currentItems || []).filter((item) => {
     return (
-      item?.VillageName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.UnAssigned?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.Scheduled?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.Completed?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item?.TotalCount?.toLowerCase().includes(searchTerm.toLowerCase())
+      String(item?.VillageName)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item?.UnAssigned)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item?.Scheduled)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item?.Completed)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(item?.TotalCount)?.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
-  let headers = ["Village/wardName", "UnAssigned", "Scheduled", "Completed", "TotalCount"];
+
+  const columns = [
+    {
+      label: "TalukName",
+      key: "TalukName",
+      sorting: true,
+    },
+    {
+      label: "UnAssigned",
+      key: "UnAssigned",
+      sorting: true,
+    },
+    {
+      label: "Scheduled",
+      key: "Scheduled",
+      sorting: true,
+    },
+    {
+      label: "Completed",
+      key: "Completed",
+      sorting: true,
+    },
+    {
+      label: "TotalCount",
+      key: "TotalCount",
+      sorting: true,
+    },
+  ];
+
   return (
     <React.Fragment>
       <Titlebar
@@ -118,12 +147,12 @@ export default function WardReportComponent() {
       </div>
       <div className="parentOdCircles">
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Unassigned"} />
-          <HalfDonutCircle onClick={undefined} title={"scheduled"} />
-          <HalfDonutCircle onClick={undefined} title={"Completed"} />
+          <HalfDonutCircle onClick={undefined} title={"Unassigned"} percentage={calculatePercentage(originalData, "UnAssigned")} />
+          <HalfDonutCircle onClick={undefined} title={"scheduled"} percentage={calculatePercentage(originalData, "Scheduled")} />
+          <HalfDonutCircle onClick={undefined} title={"Completed"} percentage={calculatePercentage(originalData, "Completed")} />
         </div>
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Students Completed"} />
+          <HalfDonutCircle onClick={undefined} title={"Students Completed"} percentage={calculatePercentage(originalData, "Completed")} />
         </div>
       </div>
       <Row className="flex m-1">
@@ -140,10 +169,10 @@ export default function WardReportComponent() {
       <TablewithPagination
         onClick={handleChangeRoutes}
         title={"Village/Ward"}
-        headers={headers}
+        columns={columns}
         tableBody={filteredData}
-        currentCount={filteredData.length || 0}
-        totalCount={copyOfOriginalData.length || 0}
+        currentCount={filteredData?.length || 0}
+        totalCount={copyOfOriginalData?.length || 0}
         totalPages={totalPages}
         currentPage={currentPage}
         onPageChange={onPageChange}

@@ -86,8 +86,10 @@ export interface IModalFromEdit {
     saveType?: string;
     handleSubmitForm?: any;
     formData?: any;
+    isType?: string;
     handleInputChange?: (e: any) => void;
     handleModifyAssignedUser?: any;
+    isRoleSelectOption?: boolean;
 }
 export interface IAssignMentModal {
     title?: string;
@@ -124,11 +126,14 @@ export interface ItableWithPagination {
     onClick?: any;
     title?: string;
     headers?: String[];
-    tableBody?: any[];
+    tableBody?: any;
     searchTerm?: string;
     itemsPerPage?: number;
     setSearchTerm?: Function;
     setItemsPerPage?: Function;
+    filteredData?: IMasterData[] | any;
+    columns?: ITableColumns[];
+    handleCLickModify?: any
   }
 
   export interface ITableRowsPerPageDropDown {

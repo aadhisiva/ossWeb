@@ -24,7 +24,6 @@ export const TableWithSorting: FC<ITableWithSorting> = ({
 
   const handleSort = (key: string) => {
     let direction = "ascending";
-    console.log("key", key);
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
       direction = "descending";
     }
@@ -33,17 +32,17 @@ export const TableWithSorting: FC<ITableWithSorting> = ({
 
   const sortedData = [...filteredData].sort((a, b) => {
     if (sortConfig.key && sortConfig.direction === "ascending") {
-      return a[sortConfig.key]?.localeCompare(b[sortConfig.key]);
+      return a[sortConfig.key]+''.localeCompare(b[sortConfig.key]);
     }
     if (sortConfig.key && sortConfig.direction === "descending") {
-      return b[sortConfig.key]?.localeCompare(a[sortConfig.key]);
+      return b[sortConfig.key]+''.localeCompare(a[sortConfig.key]);
     }
     return 0;
   });
 
   return (
     <React.Fragment>
-      <Table hover size="sm">
+      <Table responsive hover size="sm" border={1}>
         <thead className="urbanThead">
           <tr>
             {columns?.map((obj, i) => {
@@ -51,7 +50,7 @@ export const TableWithSorting: FC<ITableWithSorting> = ({
                 return (
                   <th
                     key={`${obj.key} - ${i}`}
-                    className="urbanTh p-1"
+                    className="urbanTh p-1 eachcolumn"
                     onClick={() => handleSort(obj.key)}
                   >
                     {obj.label}{" "}
@@ -81,7 +80,10 @@ export const TableWithSorting: FC<ITableWithSorting> = ({
                 );
               }
               return (
-                <th key={`${obj.key} - ${i}`} className="urbanTh p-1">
+                <th
+                  key={`${obj.key} - ${i}`}
+                  className="urbanTh p-1 eachcolumn"
+                >
                   {obj.label}
                 </th>
               );
@@ -97,7 +99,7 @@ export const TableWithSorting: FC<ITableWithSorting> = ({
                   return (
                     <td
                       key={`${column.key} - ${columnIndex}}`}
-                      className="tableRowEnd"
+                      className="eachcolumn"
                     >
                       <Button
                         className="mr-1"
@@ -112,7 +114,8 @@ export const TableWithSorting: FC<ITableWithSorting> = ({
                 return (
                   <td
                     key={`${column.key} - ${columnIndex}}`}
-                    className={`${columnIndex == 0 && "tableRowStart"}`}
+                    // className={`${columnIndex == 0 && "tableRowStart"} eachcolumn`}
+                    className="eachcolumn"
                   >
                     {obj[column.key] ?? "N/A"}
                   </td>

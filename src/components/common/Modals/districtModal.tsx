@@ -29,6 +29,7 @@ export default function DistrictModal({
     if (form.checkValidity() === true) {
         let forApiBody = {
           Name: stateData.Name,
+          id: stateData?.id ,
           Mobile: stateData.Mobile,
           DistrictCode: stateData?.DistrictCode,
           CreatedRole: userRole,
@@ -36,13 +37,16 @@ export default function DistrictModal({
           ListType: "District",
           AssigningType: stateData?.DistrictName == "BBMP" ? ROLES.BBMP_HEAD : ROLES.DISTRICT_OFFICER
         };
+        if(title == "Add") {
+          delete forApiBody.id;
+        };
         handleSubmitForm(forApiBody);
     };
     setValidated(true);
   };
   const handleInputChange = (e: React.ChangeEvent<any>) =>{
     const { name, value } = e.target;
-    if(name === "Name" && /^[a-zA-Z\s]*$/.test(value) === false) return;
+    if(name === "Name" && /^[a-zA-Z_0-9\s]*$/.test(value) === false) return;
     if(name === "Mobile" && value.length > 10) return;
     setStateData((prev:any) => ({
         ...prev,

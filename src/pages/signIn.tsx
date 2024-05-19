@@ -83,7 +83,7 @@ export default function SignIn({ auth }: any) {
         if (!check) return alert("Otp Verification Failed.");
 
         let filterData = usersData.filter(
-          (user: any) => user.AssigningType === Role
+          (user: any) => user?.AssigningType === Role
         );
         if (Role == ROLES.SUPER_ADMIN) {
           // let codes = Array.from(new Set((filterData || []).map((obj: any) => obj.DistrictCode)));
@@ -118,7 +118,7 @@ export default function SignIn({ auth }: any) {
 
         let check = OtpNo === Otp;
         if (!check) return alert("Otp Verification Failed.");
-        let fetchRole = usersData && usersData[0].AssigningType;
+        let fetchRole = usersData && usersData[0]?.AssigningType;
         if (fetchRole == ROLES.SUPER_ADMIN) {
           // let codes = Array.from(new Set((usersData || []).map((obj: any) => obj.DistrictCode)));
           dispatch(otpVerification({ userRole: fetchRole, userCodes: [] }));

@@ -1,4 +1,5 @@
 import { postRequest } from "../Authentication/axiosrequest";
+import { IMasterData } from "./interfacesOrtype";
 
 export const getDistinctOfEach = async (type: string, code: string) => {
     let res = await postRequest("getDistinctOfEach", {
@@ -39,3 +40,9 @@ export function numberWithCommas(x: number) {
 };
 
 
+export const calculatePercentage = (data: any, path: string) => {
+    let sumData = (data || [])?.reduce((prev: any, next: any) => prev+ next[path], 0);
+    let totalSumData = (data || [])?.reduce((prev: any, next: any) => prev+ next['TotalCount'], 0);
+    const calculatedPercentage = (sumData / totalSumData) * 100;
+    return calculatedPercentage.toFixed(2); 
+};
