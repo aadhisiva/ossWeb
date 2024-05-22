@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import TablewithPagination from "../../../components/common/Tables";
 import { useSelector } from "react-redux";
-import { IsAuthenticated } from "../../../Authentication/useAuth";import { IMasterData, IReportsMasterData } from "../../../utilities/interfacesOrtype";
+import { IsAuthenticated } from "../../../Authentication/useAuth";
+import {
+  IMasterData,
+  IReportsMasterData,
+} from "../../../utilities/interfacesOrtype";
 import { Col, Row } from "react-bootstrap";
 import HalfDonutCircle from "../../../components/common/Reviewbars";
 import Titlebar from "../../../components/common/titlebar";
@@ -10,6 +14,8 @@ import { AvatarDropdown } from "../../../components/common/menuDropDown";
 import "./ward.css";
 import { postRequest } from "../../../Authentication/axiosrequest";
 import { calculatePercentage } from "../../../utilities/resusedFunction";
+import { CustomTable } from "../../../components/common/customTable";
+import { roleArrangeMent } from "../../../utilities/roles";
 
 let tableBody = [
   {
@@ -34,24 +40,18 @@ for (let i = 0; i <= 500; i++) {
 
 export default function WardReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
-  const [copyOfOriginalData, setCopyOriginalData] = useState<IReportsMasterData[]>([]);
+  const [copyOfOriginalData, setCopyOriginalData] = useState<
+    IReportsMasterData[]
+  >([]);
 
-  const [urlSearchParam, setUrlSearchParam] = useSearchParams(); // retrieve url query params
-
-  const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
+  const [urlSearchParam, setUrlSearchParam] = useSearchParams(); // retrieve url query params/ for search to get any value
 
   const [isLoading, setLoading] = useState(false);
-  const [tableData, setTableData] = useState(tableBody);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(100);
-
-  const totalPages = Math.ceil(copyOfOriginalData?.length / itemsPerPage);
-
-  const [{ Role, Mobile, loginCode }] = IsAuthenticated();
+  const [{ userRole }] = IsAuthenticated();
+  const { currentPath } = useSelector((state: any) => state.path);
+  
 
   const navigate = useNavigate();
-  const { currentPath } = useSelector((state: any) => state.path);
 
   useEffect(() => {
     getInitialData();
@@ -59,74 +59,33 @@ export default function WardReportComponent() {
 
   const getInitialData = async () => {
     let body = {
-      DataType: 'VD',
+      DataType: "VD",
       DistrictName: urlSearchParam.get("DistrictName"),
       TalukName: urlSearchParam.get("TalukName"),
-      GpName: urlSearchParam.get("GpName")
-    }
+      GpName: urlSearchParam.get("GpName"),
+    };
     setLoading(true);
     let apiRes = await postRequest("getStagesWiseData", body);
-    if(apiRes?.code == 200){
+    if (apiRes?.code == 200) {
       setLoading(false);
       setOriginalData(apiRes?.data);
       setCopyOriginalData(apiRes?.data);
     } else {
       setLoading(false);
-      alert(apiRes?.response?.data?.message || "Please try again.")
+      alert(apiRes?.response?.data?.message || "Please try again.");
     }
-  }; 
+  };
 
   const handleChangeRoutes = () => {
     navigate(`/`);
   };
 
-  const onPageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = copyOfOriginalData.slice(startIndex, endIndex);
-
-  
-  const filteredData = (currentItems || []).filter((item) => {
-    return (
-      String(item?.VillageName)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item?.UnAssigned)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item?.Scheduled)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item?.Completed)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(item?.TotalCount)?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
-
   const columns = [
-    {
-      label: "TalukName",
-      key: "TalukName",
-      sorting: true,
-    },
-    {
-      label: "UnAssigned",
-      key: "UnAssigned",
-      sorting: true,
-    },
-    {
-      label: "Scheduled",
-      key: "Scheduled",
-      sorting: true,
-    },
-    {
-      label: "Completed",
-      key: "Completed",
-      sorting: true,
-    },
-    {
-      label: "TotalCount",
-      key: "TotalCount",
-      sorting: true,
-    },
+    { accessor: "VillageName", label: "Village" },
+    { accessor: "UnAssigned", label: "UnAssigned" },
+    { accessor: "Scheduled", label: "Scheduled" },
+    { accessor: "Completed", label: "Completed" },
+    { accessor: "TotalCount", label: "TotalCount" },
   ];
 
   return (
@@ -135,10 +94,7 @@ export default function WardReportComponent() {
         title={`Ward ${currentPath}`}
         Component={
           <AvatarDropdown
-            username={"SuperAdmin"}
-            dropDown={[
-              { routeName: "Assignment", routePath: "/Assignment/Zone" },
-            ]}
+          {...roleArrangeMent(userRole)}
           />
         }
       />
@@ -147,39 +103,57 @@ export default function WardReportComponent() {
       </div>
       <div className="parentOdCircles">
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Unassigned"} percentage={calculatePercentage(originalData, "UnAssigned")} />
-          <HalfDonutCircle onClick={undefined} title={"scheduled"} percentage={calculatePercentage(originalData, "Scheduled")} />
-          <HalfDonutCircle onClick={undefined} title={"Completed"} percentage={calculatePercentage(originalData, "Completed")} />
+          <HalfDonutCircle
+            onClick={undefined}
+            title={"Unassigned"}
+            percentage={calculatePercentage(originalData, "UnAssigned")}
+          />
+          <HalfDonutCircle
+            onClick={undefined}
+            title={"scheduled"}
+            percentage={calculatePercentage(originalData, "Scheduled")}
+          />
+          <HalfDonutCircle
+            onClick={undefined}
+            title={"Completed"}
+            percentage={calculatePercentage(originalData, "Completed")}
+          />
         </div>
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Students Completed"} percentage={calculatePercentage(originalData, "Completed")} />
+          <HalfDonutCircle
+            onClick={undefined}
+            title={"Students Completed"}
+            percentage={calculatePercentage(originalData, "Completed")}
+          />
         </div>
       </div>
       <Row className="flex m-1">
-        <Col md={3} xs={12} className="border rounded-xl bg-[#13678C] text-white">
+        <Col
+          md={3}
+          xs={12}
+          className="border rounded-xl bg-[#13678C] text-white"
+        >
           District Name: {urlSearchParam.get("DistrictName")}
         </Col>
-        <Col md={3} xs={12} className="border rounded-xl bg-[#13678C] text-white">
+        <Col
+          md={3}
+          xs={12}
+          className="border rounded-xl bg-[#13678C] text-white"
+        >
           Taluk/Zone Name: {urlSearchParam.get("TalukName")}
         </Col>
-        <Col md={3} xs={12} className="border rounded-xl bg-[#13678C] text-white">
+        <Col
+          md={3}
+          xs={12}
+          className="border rounded-xl bg-[#13678C] text-white"
+        >
           Gp/Division Name: {urlSearchParam.get("GpName")}
         </Col>
       </Row>
-      <TablewithPagination
-        onClick={handleChangeRoutes}
-        title={"Village/Ward"}
+      <CustomTable
         columns={columns}
-        tableBody={filteredData}
-        currentCount={filteredData?.length || 0}
-        totalCount={copyOfOriginalData?.length || 0}
-        totalPages={totalPages}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        itemsPerPage={itemsPerPage}
-        setItemsPerPage={setItemsPerPage}
+        rows={originalData}
+        handleChangeRoutes={handleChangeRoutes}
       />
     </React.Fragment>
   );

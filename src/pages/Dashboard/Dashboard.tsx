@@ -43,20 +43,24 @@ function Dasbboard() {
           <HalfDonutCircle
             onClick={() => onRouteChange("UnAssigned")}
             title={"Unassigned"}
+            percentage={30}
           />
           <HalfDonutCircle
             onClick={() => onRouteChange("Scheduled")}
             title={"scheduled"}
+            percentage={30}
           />
           <HalfDonutCircle
             onClick={() => onRouteChange("Completed")}
             title={"Completed"}
+            percentage={30}
           />
         </div>
         <div className="dashBoardPage">
           <HalfDonutCircle
             onClick={() => onRouteChange("StudentsComplpeted")}
             title={"Students Complpeted"}
+            percentage={30}
           />
         </div>
       </div>

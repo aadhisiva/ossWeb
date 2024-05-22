@@ -166,3 +166,11 @@ export interface IDistrictReports {
     UrbanSurveyor?: string | undefined;
     Total_Asha_AWW?: string;
 }
+
+export interface ISelectItemsListProps {
+    district?: string;
+    type?: string;
+    taluk?: string;
+    panchayat?: string;
+    village?: string;
+}

@@ -1,39 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { useSelector } from 'react-redux';
-import { Col, Row } from 'react-bootstrap';
-import TablewithPagination from '../../../components/common/Tables';
-import { IsAuthenticated } from '../../../Authentication/useAuth';
-import HalfDonutCircle from '../../../components/common/Reviewbars';
-import Titlebar from '../../../components/common/titlebar';
-import { AvatarDropdown } from '../../../components/common/menuDropDown';
-import { postRequest } from '../../../Authentication/axiosrequest';
-import SpinnerLoader from '../../../components/common/spinner/spinner';
-import { IMasterData, IReportsMasterData } from '../../../utilities/interfacesOrtype';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Col, Row } from "react-bootstrap";
+import HalfDonutCircle from "../../../components/common/Reviewbars";
+import Titlebar from "../../../components/common/titlebar";
+import { AvatarDropdown } from "../../../components/common/menuDropDown";
+import { postRequest } from "../../../Authentication/axiosrequest";
+import SpinnerLoader from "../../../components/common/spinner/spinner";
+import { IReportsMasterData } from "../../../utilities/interfacesOrtype";
+import { calculatePercentage } from "../../../utilities/resusedFunction";
+import { CustomTable } from "../../../components/common/customTable";
 import "./zone.css";
-import { calculatePercentage } from '../../../utilities/resusedFunction';
-
-let headers = ["Zone/TalukName", "UnAssigned", "Scheduled", "Completed", "TotalCount"];
+import { IsAuthenticated } from "../../../Authentication/useAuth";
+import { roleArrangeMent } from "../../../utilities/roles";
 
 export default function ZoneReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
-  const [copyOfiginalData, setCopyOriginalData] = useState<IReportsMasterData[]>([]);
-  
-  const [urlSearchParam, setUrlSearchParam] = useSearchParams();  // retrieve url query params
+  const [copyOfiginalData, setCopyOriginalData] = useState<
+    IReportsMasterData[]
+  >([]);
 
-  const [searchTerm, setSearchTerm] = useState(""); // for search to get any value
+  const [urlSearchParam, setUrlSearchParam] = useSearchParams(); // retrieve url query params
 
   const [isLoading, setLoading] = useState(false);
-  
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const totalPages = Math.ceil(copyOfiginalData.length / itemsPerPage);
-
-  const [{ Role, Mobile, loginCode }] = IsAuthenticated();
-  
-  const navigate = useNavigate();
+  const [{ userRole }] = IsAuthenticated();
   const { currentPath } = useSelector((state: any) => state.path);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getInitialData();
@@ -41,83 +34,43 @@ export default function ZoneReportComponent() {
 
   const getInitialData = async () => {
     let body = {
-      DataType: 'TD',
-      DistrictName: urlSearchParam.get("DistrictName")
-    }
+      DataType: "TD",
+      DistrictName: urlSearchParam.get("DistrictName"),
+    };
     setLoading(true);
     let apiRes = await postRequest("getStagesWiseData", body);
-    if(apiRes?.code == 200){
+    if (apiRes?.code == 200) {
       setLoading(false);
       setOriginalData(apiRes?.data);
       setCopyOriginalData(apiRes?.data);
     } else {
       setLoading(false);
-      alert(apiRes?.response?.data?.message || "Please try again.")
+      alert(apiRes?.response?.data?.message || "Please try again.");
     }
-  }; 
-  
+  };
+
   const handleChangeRoutes = (obj: IReportsMasterData) => {
-    navigate(`/Division/${currentPath}?DistrictName=${obj.DistrictName}&TalukName=${obj.TalukName}`);
-  };
-
-  const onPageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = copyOfiginalData.slice(startIndex, endIndex);
-  
-  const filteredData = (currentItems || [])?.filter((item) => {
-    return (
-      String(item?.TalukName)?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
-      String(item?.UnAssigned)?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
-      String(item?.Scheduled)?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
-      String(item?.Completed)?.toLowerCase().includes(searchTerm?.toLowerCase()) ||
-      String(item?.TotalCount)?.toLowerCase().includes(searchTerm?.toLowerCase())
+    navigate(
+      `/Division/${currentPath}?DistrictName=${obj.DistrictName}&TalukName=${obj.TalukName}`
     );
-  });
+  };
+
   const columns = [
-    {
-      label: "TalukName",
-      key: "TalukName",
-      sorting: true,
-    },
-    {
-      label: "UnAssigned",
-      key: "UnAssigned",
-      sorting: true,
-    },
-    {
-      label: "Scheduled",
-      key: "Scheduled",
-      sorting: true,
-    },
-    {
-      label: "Completed",
-      key: "Completed",
-      sorting: true,
-    },
-    {
-      label: "TotalCount",
-      key: "TotalCount",
-      sorting: true,
-    },
+    { accessor: "TalukName", label: "Taluk" },
+    { accessor: "UnAssigned", label: "UnAssigned" },
+    { accessor: "Scheduled", label: "Scheduled" },
+    { accessor: "Completed", label: "Completed" },
+    { accessor: "TotalCount", label: "TotalCount" },
   ];
 
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
-       <Titlebar
+      <Titlebar
         title={`Zone ${currentPath}`}
         Component={
           <AvatarDropdown
-            username={"SuperAdmin"}
-            dropDown={[
-              { routeName: "Assignment", routePath: "/Assignment/Zone" },
-            ]}
+          {...roleArrangeMent(userRole)}
           />
         }
       />
@@ -126,36 +79,46 @@ export default function ZoneReportComponent() {
       </div>
       <div className="parentOdCircles">
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Unassigned"} percentage={calculatePercentage(originalData, "UnAssigned")} />
-          <HalfDonutCircle onClick={undefined} title={"scheduled"} percentage={calculatePercentage(originalData, "Scheduled")} />
-          <HalfDonutCircle onClick={undefined} title={"Completed"} percentage={calculatePercentage(originalData, "Completed")} />
+          <HalfDonutCircle
+            onClick={undefined}
+            title={"Unassigned"}
+            percentage={calculatePercentage(originalData, "UnAssigned")}
+          />
+          <HalfDonutCircle
+            onClick={undefined}
+            title={"scheduled"}
+            percentage={calculatePercentage(originalData, "Scheduled")}
+          />
+          <HalfDonutCircle
+            onClick={undefined}
+            title={"Completed"}
+            percentage={calculatePercentage(originalData, "Completed")}
+          />
         </div>
         <div className="dashBoardPage">
-          <HalfDonutCircle onClick={undefined} title={"Students Complpeted"} percentage={calculatePercentage(originalData, "Completed")} />
+          <HalfDonutCircle
+            onClick={undefined}
+            title={"Students Complpeted"}
+            percentage={calculatePercentage(originalData, "Completed")}
+          />
         </div>
       </div>
       <div>
-        <Row className='flex m-1'>
-            <Col md={2} xs={12} className='border rounded-xl bg-[#13678C] text-white'>District : {urlSearchParam.get("DistrictName")}</Col>
+        <Row className="flex m-1">
+          <Col
+            md={2}
+            xs={12}
+            className="border rounded-xl bg-[#13678C] text-white"
+          >
+            District : {urlSearchParam.get("DistrictName")}
+          </Col>
         </Row>
-        <TablewithPagination 
-          onClick={handleChangeRoutes} 
-          title={"Taluk/Zone"}  
-          columns={columns} 
-          tableBody={filteredData}
-          currentCount={filteredData.length|| 0}
-          totalCount={copyOfiginalData.length || 0}
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={onPageChange}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          itemsPerPage={itemsPerPage}
-          setItemsPerPage={setItemsPerPage}
-          />
+        <CustomTable
+          columns={columns}
+          rows={originalData}
+          handleChangeRoutes={handleChangeRoutes}
+        />
       </div>
-  
     </React.Fragment>
   );
 }
-

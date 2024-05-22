@@ -1,0 +1,53 @@
+.boxTitle {
+  display: flex;
+  margin-left: 3rem;
+  margin-top: 1rem;
+}
+
+.boxText {
+  border: 1px solid;
+  width: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #000000;
+  color: #FFFFFF;
+  border-radius: 10px 10px 0 0;
+  border-bottom: none;
+}
+
+.box {
+  display: flex;
+  border: 1.5px solid;
+  row-gap: 10px;
+  border-color: grey;
+  border-radius: 0 10px 10px 10px;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  padding: 0.5rem;
+}
+
+.float {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 40px;
+  right: 40px;
+  background-color: #0C9;
+  color: #FFF;
+  border-radius: 50px;
+  justify-content: center;
+  display: flex;
+  text-align: center;
+  box-shadow: 2px 2px 3px #999;
+}
+
+.my-float {
+  margin-top: 22px;
+}
+
+.searchWithDroopDown {
+  justify-content: space-between;
+  margin-left: 1rem;
+  margin-top: 10px;
+  margin-right: 1rem;
+}

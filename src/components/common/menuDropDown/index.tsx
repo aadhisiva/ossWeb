@@ -35,9 +35,9 @@ export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
         <div className="dropdown-content">
           {dropDown.map((obj) => (
             <>
-            <a onClick={() => handleRouting(String(obj.routePath))}>
-              {obj.routeName}
-            </a>
+              <a onClick={() => handleRouting(String(obj.routePath))}>
+                {obj.routeName}
+              </a>
             </>
           ))}
           <a onClick={handleLogout}>Log Out</a>

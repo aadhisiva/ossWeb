@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from "react";
-import Titlebar from "../../../components/common/titlebar";
-import { AvatarDropdown } from "../../../components/common/menuDropDown";
-import { Button, Col, Row, Table } from "react-bootstrap";
-import SelectInput from "../../../components/common/selectInput";
-import "./urbanStyle.css";
-import { postRequest } from "../../../Authentication/axiosrequest";
-import { ASSIGNMENT } from "../../../utilities/roles";
-import DistrictModal from "../../../components/common/Modals/districtModal";
-import {
-  IMasterData,
-  ISelectItemsListProps,
-} from "../../../utilities/interfacesOrtype";
-import SpinnerLoader from "../../../components/common/spinner/spinner";
-import ResuableModal from "../../../components/common/Modals/selectOneRow";
-import { CustomTable } from "../../../components/common/customTable";
-import { ResuableDropDownList } from "../../../components/common/resuableDropDownList";
+import { Row } from "react-bootstrap";
+import { IMasterData, ISelectItemsListProps } from "../../utilities/interfacesOrtype";
+import { postRequest } from "../../Authentication/axiosrequest";
+import { ASSIGNMENT } from "../../utilities/roles";
+import DistrictModal from "../../components/common/Modals/districtModal";
+import ResuableModal from "../../components/common/Modals/selectOneRow";
+import SpinnerLoader from "../../components/common/spinner/spinner";
+import Titlebar from "../../components/common/titlebar";
+import { AvatarDropdown } from "../../components/common/menuDropDown";
+import { ResuableDropDownList } from "../../components/common/resuableDropDownList";
+import { CustomTable } from "../../components/common/customTable";
+
 
 export default function DistrictAssignMent() {
   const [originalData, setOriginalData] = useState<IMasterData[]>([]);

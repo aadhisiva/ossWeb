@@ -28,10 +28,10 @@ export default function Titlebar({ title, Component }: ITitleBar) {
           sm={2}
           xs={3}
           onClick={handleNavigate}
-          className="cursor-pointer"
+          className="cursor-pointer text-center"
         >
           <p>
-            <i className="bi bi-house-fill text-blue-600 text-xl"></i>
+            <i className="bi bi-house-fill text-blue-600 text-2xl"></i>
           </p>
         </Col>
         <Col md={7} sm={6} xs={3} className="text-xl">

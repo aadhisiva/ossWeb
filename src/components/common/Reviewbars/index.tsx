@@ -18,8 +18,8 @@ export default function HalfDonutCircle({ onClick, title, percentage }:IHalfDonu
       <div className="single-graph margin">
         <span className="graphTitle">{percentage}</span>
         <div className="graph" data-name="Completed" style={donutCircle(percentage)}></div>
-        <div className="graph" data-name="Average" style={donutCircle(percentage)}></div>
-        <div className="graph" data-name="Low" style={donutCircle(percentage)}></div>
+        {/* <div className="graph" data-name="Average" style={donutCircle(percentage)}></div> */}
+        {/* <div className="graph" data-name="Low" style={donutCircle(percentage)}></div> */}
       </div>
         <span className="graphTitle">{title}</span>
       {/* <div className="identifier">

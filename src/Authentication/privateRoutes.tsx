@@ -14,7 +14,6 @@ import StudentsCompleted from "../pages/Studentscompleted/StudentsCompleted";
 import Completed from "../pages/Completed/Completed";
 import scheduled from "../pages/Scheduled/scheduled";
 import Dashboard from "../pages/Dashboard/Dashboard";
-import VillageAssignMent from "../pages/ossAssignment/rural/village";
 
 const DistrictChartComponent = lazy(() =>
   import("../pages/chartsDashBoard/District")
@@ -31,17 +30,17 @@ const ZoneComponent = lazy(() => import("../pages/ossAssignment/urban/zone"));
 const WardComponent = lazy(() => import("../pages/ossAssignment/urban/ward"));
 const DivisionComponent = lazy(() => import("../pages/ossAssignment/urban/division"));
 
-const DistrictComponent = lazy(() =>
-  import("../pages/ossAssignment/rural/district")
+const DistrictAssignmentComponent = lazy(() =>
+  import("../pages/assignment/district")
 );
-const TalukComponent = lazy(() => import("../pages/ossAssignment/rural/taluk"));
+const TalukAssignmentComponent = lazy(() => import("../pages/assignment/taluk"));
 
-const GaramaPanchayatComponent = lazy(() =>
-  import("../pages/ossAssignment/rural/gramaPanchayat")
+const PanchayatAssignmentComponent = lazy(() =>
+  import("../pages/assignment/panchayat")
 );
 
 const VillageAssignMentComponent = lazy(() =>
-  import("../pages/ossAssignment/rural/village")
+  import("../pages/assignment/village")
 );
 
 const PrivateRoutes = () => {
@@ -57,14 +56,14 @@ const PrivateRoutes = () => {
       <Route path="/Zone/:path" Component={ZoneChartComponent} />
       <Route path="/District/:path" Component={DistrictChartComponent} />
 
+      <Route path={ASSIGNMENT_DISTRICT} Component={DistrictAssignmentComponent} />
+      <Route path={ASSIGNMENT_TALUK} Component={TalukAssignmentComponent} />
+      <Route path={ASSIGNMENT_GP} Component={PanchayatAssignmentComponent} />
+      <Route path={ASSIGNMENT_SURVEYOR} Component={VillageAssignMentComponent} />
+
       <Route path={ASSIGNMENT_ZONE} Component={ZoneComponent} />
       <Route path={ASSIGNMENT_WARD} Component={WardComponent} />
       <Route path={ASSIGNMENT_DIVISION} Component={DivisionComponent} />
-
-      <Route path={ASSIGNMENT_DISTRICT} Component={DistrictComponent} />
-      <Route path={ASSIGNMENT_TALUK} Component={TalukComponent} />
-      <Route path={ASSIGNMENT_GP} Component={GaramaPanchayatComponent} />
-      <Route path={ASSIGNMENT_SURVEYOR} Component={VillageAssignMentComponent} />
 
       <Route path="/*" element={<Navigate to={DASHBOARD} />} />
     </Routes>

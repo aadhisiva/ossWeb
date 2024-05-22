@@ -30,6 +30,7 @@ export default function DistrictModal({
         let forApiBody = {
           Name: stateData.Name,
           id: stateData?.id ,
+          MasterType: stateData?.Type ?? "",
           Mobile: stateData.Mobile,
           DistrictCode: stateData?.DistrictCode,
           CreatedRole: userRole,
@@ -68,6 +69,13 @@ export default function DistrictModal({
       <Modal.Body className="flex flex-col">
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Row>
+            <TextInputWithLabel
+              controlId={"validationCustom02"}
+              placeholder={"Type"}
+              value={stateData?.Type || ""}
+              disabled={true}
+              onChange={handleInputChange}
+              />
             <TextInputWithLabel
               controlId={"validationCustom02"}
               placeholder={"DistrictName"}

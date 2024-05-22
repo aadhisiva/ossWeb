@@ -23,7 +23,8 @@ export default function ResuableModal({
   const initialData = formData.map((obj: any) => ({
     Mobile: obj?.Mobile,
     Name: obj?.Name,
-    Role: obj?.Role
+    Role: obj?.Role,
+    AssigningType: obj?.AssigningType
   }));
   const [stateData, setStateData] = useState(initialData);
 
@@ -34,9 +35,10 @@ export default function ResuableModal({
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
         let getData = formData[i];
-      let newFormData: IMasterData = {
+      let newFormData: any = {
         Name: stateData[i].Name,
         Mobile: stateData[i].Mobile,
+        AssigningType: stateData[i].AssigningType,
         CreatedRole: userRole,
         CreatedMobile: Mobile,
       };

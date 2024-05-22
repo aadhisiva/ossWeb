@@ -7,7 +7,6 @@ import { IModalFromEdit } from "../../../utilities/interfacesOrtype";
 import TextInputWithLabel from "../textInputWithLabel";
 import SelectInputWithLabel from "../selectInputWithLabel";
 
-
 export default function VillageModal({
   show,
   title,
@@ -30,37 +29,41 @@ export default function VillageModal({
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       event.stopPropagation();
-        let forApiBody = {
-          Name: stateData.Name,
-          Mobile: stateData.Mobile,
-          DistrictCode: stateData?.DistrictCode,
-          TalukCode: stateData?.TalukCode,
-          id: stateData?.id,
-          Role: stateData?.Role,
-          GpOrWard: stateData?.GramPanchayatCode,
-          VillageCode: stateData?.VillageCode,
-          CreatedRole: userRole,
-          CreatedMobile: Mobile,
-          ListType: "Village",
-          Type: "Rural"
-        };
-        handleSubmitForm(forApiBody);
-    };
+      let forApiBody = {
+        Name: stateData.Name,
+        Mobile: stateData.Mobile,
+        DistrictCode: stateData?.DistrictCode,
+        TalukCode: stateData?.TalukCode,
+        id: stateData?.id,
+        Role: stateData?.Role,
+        GpOrWard: stateData?.GramPanchayatCode,
+        VillageCode: stateData?.VillageCode,
+        CreatedRole: userRole ?? "",
+        CreatedMobile: Mobile ?? "",
+        ListType: "Village",
+        Type: stateData?.Type ?? "",
+      };
+      if (title === "Add") {
+        delete forApiBody.id;
+      }
+      handleSubmitForm(forApiBody);
+    }
     setValidated(true);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<any>) =>{
+  const handleInputChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
-    if(name === "Name" && /^[a-zA-Z\s]*$/.test(value) === false) return;
-    if(name === "Mobile" && value.length > 10) return;
-    setStateData((prev:any) => ({
-        ...prev,
-        [name]: value
-    }))
-  }
+    if (name === "Name" && /^[a-zA-Z\s]*$/.test(value) === false) return;
+    if (name === "Mobile" && value.length > 10) return;
+    setStateData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const renderRoles = () => {
-      return ["Panchayath Officer"];
+    if (stateData?.Type == "Rural") return ["SHG"];
+    return ["Enumerator"];
   };
 
   return (
@@ -79,32 +82,39 @@ export default function VillageModal({
           <Row>
             <TextInputWithLabel
               controlId={"validationCustom02"}
+              placeholder={"Type"}
+              value={stateData?.Type || ""}
+              disabled={true}
+              onChange={handleInputChange}
+            />
+            <TextInputWithLabel
+              controlId={"validationCustom02"}
               placeholder={"District Name"}
               value={stateData?.DistrictName || ""}
               disabled={true}
               onChange={handleInputChange}
             />
-              <TextInputWithLabel
-                controlId={"validationCustom03"}
-                placeholder={"Taluk Name"}
-                value={stateData?.TalukName || ""}
-                disabled={true}
-                onChange={handleInputChange}
-              />
-              <TextInputWithLabel
-                controlId={"validationCustom03"}
-                placeholder={"GramPanchayat Name"}
-                value={stateData?.GramPanchayatName || ""}
-                disabled={true}
-                onChange={handleInputChange}
-              />
-              <TextInputWithLabel
-                controlId={"validationCustom03"}
-                placeholder={"Village Naem"}
-                value={stateData?.VillageName || ""}
-                disabled={true}
-                onChange={handleInputChange}
-              />
+            <TextInputWithLabel
+              controlId={"validationCustom03"}
+              placeholder={"Taluk Name"}
+              value={stateData?.TalukName || ""}
+              disabled={true}
+              onChange={handleInputChange}
+            />
+            <TextInputWithLabel
+              controlId={"validationCustom03"}
+              placeholder={"GramPanchayat Name"}
+              value={stateData?.GramPanchayatName || ""}
+              disabled={true}
+              onChange={handleInputChange}
+            />
+            <TextInputWithLabel
+              controlId={"validationCustom03"}
+              placeholder={"Village Naem"}
+              value={stateData?.VillageName || ""}
+              disabled={true}
+              onChange={handleInputChange}
+            />
             <TextInputWithLabel
               controlId={"validationCustom06"}
               placeholder={"Mobile"}

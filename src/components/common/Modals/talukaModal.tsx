@@ -5,8 +5,7 @@ import { useState } from "react";
 import { IsAuthenticated } from "../../../Authentication/useAuth";
 import { IModalFromEdit } from "../../../utilities/interfacesOrtype";
 import TextInputWithLabel from "../textInputWithLabel";
-import { ROLES } from "../../../utilities/roles";
-
+import { ROLES, rolesMapping } from "../../../utilities/roles";
 
 export default function TalukModal({
   show,
@@ -14,12 +13,10 @@ export default function TalukModal({
   onHide,
   handleSubmitForm,
   formData,
-  saveType
 }: IModalFromEdit) {
   const [validated, setValidated] = useState(false);
   const [stateData, setStateData] = useState({
     TalukOfficerName: "",
-    Role: "",
     TalukOfficerMobile: "",
     ...formData,
   });
@@ -31,29 +28,43 @@ export default function TalukModal({
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       event.stopPropagation();
-        let forApiBody = {
-          TalukOfficerName: stateData.TalukOfficerName,
-          TalukOfficerMobile: stateData.TalukOfficerMobile,
-          TalukCode: stateData?.TalukCode,
-          CreatedRole: userRole,
-          CreatedMobile: Mobile,
-          ListType: "Taluk",
-          AssigningType: ROLES.TALUK_OFFICER
-        };
-        handleSubmitForm(forApiBody);
-    };
+      let forApiBody = {
+        TalukOfficerName: stateData.TalukOfficerName,
+        TalukOfficerMobile: stateData.TalukOfficerMobile,
+        id: stateData?.id ?? "",
+        MasterType: stateData?.Type ?? "",
+        TalukCode: stateData?.TalukCode ?? "",
+        DistrictCode: stateData?.DistrictCode ?? "",
+        CreatedRole: userRole ?? "",
+        CreatedMobile: Mobile ?? "",
+        ListType: "Taluk",
+        AssigningType: rolesMapping(userRole),
+      };
+      if (title == "Add") {
+        delete forApiBody.id;
+      }
+      handleSubmitForm(forApiBody);
+    }
     setValidated(true);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<any>) =>{
+  const handleInputChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
-    if(name === "Name" || name === "TalukOfficerName" && /^[a-zA-Z_0-9\s]*$/.test(value) === false) return;
-    if(name === "Mobile" || name === "TalukOfficerMobile" && value.length > 10) return;
-    setStateData((prev:any) => ({
-        ...prev,
-        [name]: value
-    }))
-  }
+    if (
+      name === "Name" ||
+      (name === "TalukOfficerName" && /^[a-zA-Z_0-9\s]*$/.test(value) === false)
+    )
+      return;
+    if (
+      name === "Mobile" ||
+      (name === "TalukOfficerMobile" && value.length > 10)
+    )
+      return;
+    setStateData((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   return (
     <Modal
@@ -71,18 +82,25 @@ export default function TalukModal({
           <Row>
             <TextInputWithLabel
               controlId={"validationCustom02"}
+              placeholder={"Type"}
+              value={stateData?.Type || ""}
+              disabled={true}
+              onChange={handleInputChange}
+            />
+            <TextInputWithLabel
+              controlId={"validationCustom02"}
               placeholder={"DistrictName"}
               value={stateData?.DistrictName || ""}
               disabled={true}
               onChange={handleInputChange}
             />
-              <TextInputWithLabel
-                controlId={"validationCustom03"}
-                placeholder={"TalukName"}
-                value={stateData?.TalukName || ""}
-                disabled={true}
-                onChange={handleInputChange}
-              />
+            <TextInputWithLabel
+              controlId={"validationCustom03"}
+              placeholder={"TalukName"}
+              value={stateData?.TalukName || ""}
+              disabled={true}
+              onChange={handleInputChange}
+            />
             <TextInputWithLabel
               controlId={"validationCustom06"}
               placeholder={"Mobile"}

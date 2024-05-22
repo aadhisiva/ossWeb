@@ -34,8 +34,8 @@ function SelectInput({
                 {obj.AssigningType}
               </option>
             )) : 
-            (options || []).map((obj: string) => (
-              <option value={obj} key={obj}>
+            (options || []).map((obj: string, i: string) => (
+              <option value={obj} key={obj+i}>
                 {obj}
               </option> ))}
       </Form.Select>

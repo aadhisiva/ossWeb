@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from "react";
-import Titlebar from "../../../components/common/titlebar";
-import { AvatarDropdown } from "../../../components/common/menuDropDown";
-import { Button, Col, Row, Table } from "react-bootstrap";
-import SelectInput from "../../../components/common/selectInput";
-import "./urbanStyle.css";
-import { postRequest } from "../../../Authentication/axiosrequest";
-import { ASSIGNMENT } from "../../../utilities/roles";
-import DistrictModal from "../../../components/common/Modals/districtModal";
 import {
   IMasterData,
   ISelectItemsListProps,
-} from "../../../utilities/interfacesOrtype";
-import SpinnerLoader from "../../../components/common/spinner/spinner";
-import ResuableModal from "../../../components/common/Modals/selectOneRow";
-import { CustomTable } from "../../../components/common/customTable";
-import { ResuableDropDownList } from "../../../components/common/resuableDropDownList";
+} from "../../utilities/interfacesOrtype";
+import { postRequest } from "../../Authentication/axiosrequest";
+import { ASSIGNMENT } from "../../utilities/roles";
+import DistrictModal from "../../components/common/Modals/districtModal";
+import ResuableModal from "../../components/common/Modals/selectOneRow";
+import SpinnerLoader from "../../components/common/spinner/spinner";
+import Titlebar from "../../components/common/titlebar";
+import { AvatarDropdown } from "../../components/common/menuDropDown";
+import { ResuableDropDownList } from "../../components/common/resuableDropDownList";
+import { CustomTable } from "../../components/common/customTable";
+import { Row } from "react-bootstrap";
+import { IsAuthenticated } from "../../Authentication/useAuth";
+import TalukModal from "../../components/common/Modals/talukaModal";
+import GpModal from "../../components/common/Modals/gpModal";
+import VillageModal from "../../components/common/Modals/villageModal";
 
-export default function DistrictAssignMent() {
+export default function Village() {
   const [originalData, setOriginalData] = useState<IMasterData[]>([]);
   const [copyOfOriginalData, setCopyOriginalData] = useState<IMasterData[]>([]);
 
@@ -28,12 +30,14 @@ export default function DistrictAssignMent() {
   const [formData, setFormData] = useState<any>({});
   const [editFormData, setEditFormData] = useState([]);
 
+  const [{ userCodes }] = IsAuthenticated();
+
   // assign initial data
   const getAllMaster = async () => {
     setLoading(true);
     let res = await postRequest("getMasterWithAssigned", {
-      LoginType: ASSIGNMENT.DISTRICT,
-      Codes: [],
+      LoginType: ASSIGNMENT.VILLAGE,
+      Codes: userCodes,
     });
     if (res?.code === 200) {
       setOriginalData(res?.data);
@@ -50,11 +54,17 @@ export default function DistrictAssignMent() {
   }, []);
 
   const handleCLickModify = async (obj: any, title: string) => {
-    if (!obj?.DistrictCode) return alert("Something Went Wrong.");
+    if (!obj?.DistrictCode) return alert("Provide DistrictCode");
+    if (!obj?.TalukCode) return alert("Provide TalukCode.");
+    if (!obj?.GramPanchayatCode) return alert("Provide GramPanchayatCode.");
+    if (!obj?.VillageCode) return alert("Provide VillageCode.");
     if (obj.count < 1) return alert("You have to add user first.");
     let getData = await postRequest("getAllWithCode", {
-      ListType: "District",
+      ListType: "User",
       DistrictCode: obj?.DistrictCode,
+      TalukCode: obj?.TalukCode,
+      GpOrWard: obj?.GramPanchayatCode,
+      VillageCode: obj?.VillageCode
     });
     if (getData?.code == 200) {
       setEditFormData(getData?.data);
@@ -66,9 +76,15 @@ export default function DistrictAssignMent() {
   };
 
   const handleCLickAdd = async (selectedValues: ISelectItemsListProps) => {
-    if (!selectedValues?.district) return alert("Select District.");
+    if (!selectedValues.district || !selectedValues.taluk)
+      return alert("Select Fields.");
     let find = originalData.find(
-      (obj: IMasterData) => obj.Type == selectedValues.type && obj.DistrictName == selectedValues.district
+      (obj: IMasterData) =>
+        obj.Type == selectedValues.type &&
+        obj.DistrictName == selectedValues.district &&
+        obj.TalukName == selectedValues.taluk &&
+        obj.GramPanchayatName == selectedValues.panchayat &&
+        obj.VillageName == selectedValues.village 
     );
     delete find?.Name;
     delete find?.Mobile;
@@ -90,7 +106,7 @@ export default function DistrictAssignMent() {
 
   const rednerForm = () => {
     return (
-      <DistrictModal
+      <VillageModal
         show={addForm}
         title={modalTitle}
         formData={formData}
@@ -115,10 +131,13 @@ export default function DistrictAssignMent() {
   const columns = [
     { accessor: "Mobile", label: "Mobile" },
     { accessor: "Name", label: "Name" },
-    { accessor: "Type", label: "Type" },
     { accessor: "count", label: "AssignedCount" },
+    { accessor: "Type", label: "Type" },
     { accessor: "DistrictName", label: "District" },
-    { accessor: "Action", label: "Action" },
+    { accessor: "TalukName", label: "Taluk" },
+    { accessor: "GramPanchayatName", label: "Gp" },
+    { accessor: "VillageName", label: "Village" },
+    { accessor: "Action", label: "Action" }
   ];
 
   return (
@@ -127,7 +146,7 @@ export default function DistrictAssignMent() {
       {addForm && rednerForm()}
       {editForm && rednerEditForm()}
       <Titlebar
-        title={`District Assignment`}
+        title={`Village Assignment`}
         Component={
           <AvatarDropdown
             dropDown={[{ routeName: "DashBoard", routePath: "/Dashboard" }]}
@@ -137,7 +156,7 @@ export default function DistrictAssignMent() {
       />
       <div>
         <ResuableDropDownList
-          listType={1}
+          listType={4}
           handleClickAdd={handleCLickAdd}
           setCopyOriginalData={setCopyOriginalData}
           originalData={originalData}
