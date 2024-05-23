@@ -162,7 +162,7 @@ export default function SignIn({ auth }: any) {
   return (
     <div className="flex mt-8 justify-center items-center">
       <a className="float">
-        <i className="my-float">1.1.4</i>
+        <i className="my-float">1.0.0</i>
       </a>
       <Card className="text-center pb-5">
         {!isOtpValidate ? (
