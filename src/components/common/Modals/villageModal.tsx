@@ -22,7 +22,7 @@ export default function VillageModal({
     ...formData,
   });
 
-  const [{ userRole, Mobile }] = IsAuthenticated();
+  const [{ userRole, Mobile, childRoles }] = IsAuthenticated();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -35,13 +35,13 @@ export default function VillageModal({
         DistrictCode: stateData?.DistrictCode,
         TalukCode: stateData?.TalukCode,
         id: stateData?.id,
-        Role: stateData?.Role,
-        GpOrWard: stateData?.GramPanchayatCode,
+        GpCode: stateData?.GramPanchayatCode,
         VillageCode: stateData?.VillageCode,
         CreatedRole: userRole ?? "",
         CreatedMobile: Mobile ?? "",
-        ListType: "Village",
         Type: stateData?.Type ?? "",
+        RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0].Child,
+        Role: childRoles?.length > 1 ? stateData?.Role : childRoles[0].ChildRole
       };
       if (title === "Add") {
         delete forApiBody.id;
@@ -132,15 +132,17 @@ export default function VillageModal({
               maxLength={50}
               onChange={handleInputChange}
             />
+             {childRoles?.length > 1 ? 
             <SelectInputWithLabel
               controlId={"validationCustom08"}
               required={true}
               defaultSelect="Select Roles"
-              options={renderRoles()}
+              isValueAdded={true}
+              options={childRoles.map((obj: any) => { return {role: obj?.ChildRole, value: obj?.Child}})}
               name={"Role"}
               value={stateData.Role}
               onChange={handleInputChange}
-            />
+            /> : ("")}
           </Row>
           <Modal.Footer>
             <Button type="submit">Submit</Button>

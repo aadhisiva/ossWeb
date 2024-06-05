@@ -15,7 +15,7 @@ function Dasbboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [{userRole}] = IsAuthenticated();
+  const [{accessOfMasters}] = IsAuthenticated();
   const [auth] = IsAuthenticated();
 
   const onRouteChange = (path: string) => {
@@ -29,7 +29,7 @@ function Dasbboard() {
         title={"DashBoard"}
         Component={
           <AvatarDropdown
-          {...roleArrangeMent(userRole)}
+          {...roleArrangeMent(accessOfMasters)}
           />
         }
       />

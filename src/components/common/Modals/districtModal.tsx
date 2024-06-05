@@ -6,6 +6,7 @@ import { useState } from "react";
 import TextInputWithLabel from "../textInputWithLabel";
 import { IsAuthenticated } from "../../../Authentication/useAuth";
 import { ROLES } from "../../../utilities/roles";
+import SelectInputWithLabel from "../selectInputWithLabel";
 
 export default function DistrictModal({
   show,
@@ -21,7 +22,7 @@ export default function DistrictModal({
     apiType: title,
     ...formData,
   });
-  const [{ Mobile, userRole }] = IsAuthenticated();
+  const [{ Mobile, userRole, childRoles }] = IsAuthenticated();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -30,13 +31,14 @@ export default function DistrictModal({
         let forApiBody = {
           Name: stateData.Name,
           id: stateData?.id ,
-          MasterType: stateData?.Type ?? "",
+          RuralOrUrban: stateData?.Type ?? "",
           Mobile: stateData.Mobile,
           DistrictCode: stateData?.DistrictCode,
           CreatedRole: userRole,
           CreatedMobile: Mobile,
           ListType: "District",
-          AssigningType: stateData?.DistrictName == "BBMP" ? ROLES.BBMP_HEAD : ROLES.DISTRICT_OFFICER
+          RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0].Child,
+          AssigningType: childRoles?.length > 1 ? stateData?.Role : childRoles[0].ChildRole
         };
         if(title == "Add") {
           delete forApiBody.id;
@@ -53,7 +55,7 @@ export default function DistrictModal({
         ...prev,
         [name]: value
     }))
-  }
+  };
 
   return (
     <Modal
@@ -99,15 +101,17 @@ export default function DistrictModal({
               value={stateData?.Name || ''}
               onChange={handleInputChange}
             />
-            {/* <SelectInputWithLabel
+            {childRoles?.length > 1 ? 
+            <SelectInputWithLabel
               controlId={"validationCustom08"}
               required={true}
               defaultSelect="Select Roles"
-              options={renderRoles()}
+              isValueAdded={true}
+              options={childRoles.map((obj: any) => { return {role: obj?.ChildRole, value: obj?.Child}})}
               name={"Role"}
               value={stateData.Role}
               onChange={handleInputChange}
-            /> */}
+            /> : ("")}
           </Row>
           <Modal.Footer>
             <Button type="submit">Submit</Button>

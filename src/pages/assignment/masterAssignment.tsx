@@ -16,7 +16,7 @@ import { Row } from "react-bootstrap";
 import { IsAuthenticated } from "../../Authentication/useAuth";
 import TalukModal from "../../components/common/Modals/talukaModal";
 
-export default function Taluk() {
+export default function MasterAssignment() {
   const [originalData, setOriginalData] = useState<IMasterData[]>([]);
   const [copyOfOriginalData, setCopyOriginalData] = useState<IMasterData[]>([]);
 
@@ -28,14 +28,13 @@ export default function Taluk() {
   const [formData, setFormData] = useState<any>({});
   const [editFormData, setEditFormData] = useState([]);
 
-  const [{ userCodes, accessOfMasters }] = IsAuthenticated();
+  const [{ userCodes }] = IsAuthenticated();
 
   // assign initial data
   const getAllMaster = async () => {
     setLoading(true);
     let res = await postRequest("getMasterWithAssigned", {
       LoginType: ASSIGNMENT.TALUK,
-      TypeOfData: accessOfMasters[0]?.TypeOfData,
       Codes: userCodes,
     });
     if (res?.code === 200) {
@@ -86,6 +85,12 @@ export default function Taluk() {
   };
 
   const handleSubmitForm = async (values: any) => {
+    if (modalTitle !== "Add") {
+      values.TalukOfficerMobile = values.Mobile;
+      values.TalukOfficerName = values.Name;
+      delete values.Name;
+      delete values.Mobile;
+    }
     let res = await postRequest("assignMentProcess", values);
     if (res.code === 200) {
       setAddForm(false);
@@ -136,7 +141,7 @@ export default function Taluk() {
       {addForm && rednerForm()}
       {editForm && rednerEditForm()}
       <Titlebar
-        title={`Taluk/Zone Assignment`}
+        title={`Taluk Assignment`}
         Component={
           <AvatarDropdown
             dropDown={[{ routeName: "DashBoard", routePath: "/Dashboard" }]}

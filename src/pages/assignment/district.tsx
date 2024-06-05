@@ -10,6 +10,7 @@ import Titlebar from "../../components/common/titlebar";
 import { AvatarDropdown } from "../../components/common/menuDropDown";
 import { ResuableDropDownList } from "../../components/common/resuableDropDownList";
 import { CustomTable } from "../../components/common/customTable";
+import { IsAuthenticated } from "../../Authentication/useAuth";
 
 
 export default function DistrictAssignMent() {
@@ -24,11 +25,14 @@ export default function DistrictAssignMent() {
   const [formData, setFormData] = useState<any>({});
   const [editFormData, setEditFormData] = useState([]);
 
+  const [{ accessOfMasters }] = IsAuthenticated();
+
   // assign initial data
   const getAllMaster = async () => {
     setLoading(true);
     let res = await postRequest("getMasterWithAssigned", {
       LoginType: ASSIGNMENT.DISTRICT,
+      TypeOfData: accessOfMasters[0]?.TypeOfData,
       Codes: [],
     });
     if (res?.code === 200) {
@@ -111,8 +115,8 @@ export default function DistrictAssignMent() {
   const columns = [
     { accessor: "Mobile", label: "Mobile" },
     { accessor: "Name", label: "Name" },
-    { accessor: "Type", label: "Type" },
     { accessor: "count", label: "AssignedCount" },
+    { accessor: "Type", label: "Type" },
     { accessor: "DistrictName", label: "District" },
     { accessor: "Action", label: "Action" },
   ];

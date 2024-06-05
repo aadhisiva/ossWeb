@@ -29,13 +29,14 @@ export default function Panchayat() {
   const [formData, setFormData] = useState<any>({});
   const [editFormData, setEditFormData] = useState([]);
 
-  const [{ userCodes }] = IsAuthenticated();
+  const [{ userCodes, accessOfMasters }] = IsAuthenticated();
 
   // assign initial data
   const getAllMaster = async () => {
     setLoading(true);
     let res = await postRequest("getMasterWithAssigned", {
       LoginType: ASSIGNMENT.GET_GP,
+      TypeOfData: accessOfMasters[0]?.TypeOfData,
       Codes: userCodes,
     });
     if (res?.code === 200) {
@@ -90,12 +91,6 @@ export default function Panchayat() {
   };
 
   const handleSubmitForm = async (values: any) => {
-    if (modalTitle !== "Add") {
-      values.GpOfficerMobile = values.Mobile;
-      values.GpOfficerName = values.Name;
-      delete values.Name;
-      delete values.Mobile;
-    }
     let res = await postRequest("assignMentProcess", values);
     if (res.code === 200) {
       setAddForm(false);
@@ -147,7 +142,7 @@ export default function Panchayat() {
       {addForm && rednerForm()}
       {editForm && rednerEditForm()}
       <Titlebar
-        title={`Taluk Assignment`}
+        title={`Gp/Division Assignment`}
         Component={
           <AvatarDropdown
             dropDown={[{ routeName: "DashBoard", routePath: "/Dashboard" }]}

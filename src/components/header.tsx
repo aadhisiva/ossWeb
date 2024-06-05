@@ -22,7 +22,7 @@ export default function Header({ userRole }: { userRole: string }) {
           />
         </Col>
         <Col md={8} xs={6} className="text-white text-center text-base">
-          Government of Karnataka MANASA
+          Out Of School Survey
         </Col>
         <Col md={2} xs={2} className="text-end">
           <span className="text-sm text-white">{userRole}</span>

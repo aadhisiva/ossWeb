@@ -8,14 +8,11 @@ function SelectInputWithLabel({
   value,
   name,
   isValueAdded,
-  required
+  isRoleSelect,
+  required,
 }: ISelectInput) {
   return (
-    <Form.Group
-      as={Col}
-      md="12"
-      controlId="validationCustom08"
-    >
+    <Form.Group as={Col} md="12" controlId="validationCustom08">
       <Form.Label>{defaultSelect}</Form.Label>
       <Form.Select
         required={required}
@@ -25,17 +22,30 @@ function SelectInputWithLabel({
         aria-label="Default select example"
       >
         <option value={""}>{defaultSelect}</option>
-        {isValueAdded ? 
-        ((options).map((obj: any) => (
+        {isValueAdded ? (
+          options.map((obj: any) => (
+            <option value={obj?.value} key={obj?.role}>
+              {obj.role}
+            </option>
+          ))
+        ) : isRoleSelect ? (
+          <>
+            <option value={"0"} key={"0"}>
+              {"No Parent"}
+            </option>
+            {(options || []).map((obj: any) => (
               <option value={obj?.value} key={obj?.role}>
                 {obj.role}
               </option>
-            ))
-        ): (options || []).map((obj: string) => (
+            ))}
+          </>
+        ) : (
+          (options || []).map((obj: string) => (
             <option value={obj} key={obj}>
               {obj}
             </option>
-        ))}
+          ))
+        )}
       </Form.Select>
     </Form.Group>
   );

@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { otpVerification, userLoggedIn } from "../redux/actions/userAction";
+import {
+  otpVerification,
+  saveUserRolesAndAccess,
+  userLoggedIn,
+} from "../redux/actions/userAction";
 import SelectInput from "../components/common/selectInput";
 import TextInput from "../components/common/textInput";
 import { postRequest } from "../Authentication/axiosrequest";
@@ -54,7 +58,7 @@ export default function SignIn({ auth }: any) {
     if (form.checkValidity() === true) {
       // make it true when you are using api
       event.stopPropagation();
-      let res = await postRequest("sendOtpAndCheckRole", { Mobile });
+      let res = await postRequest("checkRoleAndSendOtp", { Mobile });
       // let res = {code: 200, };
       if (res.code === 200) {
         setUsersData(res?.data?.assignedData);
@@ -69,75 +73,96 @@ export default function SignIn({ auth }: any) {
     }
     setValidated(true);
   };
-  const handleSubmitOtp = (event: React.FormEvent<HTMLFormElement>) => {
+
+
+  const handleSubmitOtp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (form.checkValidity() === true) {
       // make it true when you are using api
       event.stopPropagation();
       if (usersUniqueList?.length > 1) {
-        if (!OtpNo) return alert("Provide Otp.");
-        if (!Role) return alert("Select Role.");
-
-        let check = OtpNo === Otp;
-        if (!check) return alert("Otp Verification Failed.");
-
         let filterData = usersData.filter(
           (user: any) => user?.AssigningType === Role
         );
-        if (Role == ROLES.SUPER_ADMIN) {
-          // let codes = Array.from(new Set((filterData || []).map((obj: any) => obj.DistrictCode)));
-          dispatch(otpVerification({ userRole: Role, userCodes: [] }));
-        } else if (Role == ROLES.DISTRICT_OFFICER || Role == ROLES.BBMP_HEAD) {
-          // let codes = Array.from(new Set((filterData || []).map((obj: any) => obj.TalukCode)));
+        let fetchRole = filterData && filterData[0]?.AssigningType;
+        let FetchRoleId = filterData && filterData[0]?.RoleId;
+
+        let rolesData = await postRequest("getRolesAndAccessData", {
+          RoleId: FetchRoleId,
+        });
+        const accessRole = rolesData?.data?.access[0];
+        if (accessRole?.District === "Yes") {
           let codes = Array.from(
             new Set((filterData || []).map((obj: any) => obj.DistrictCode))
           );
-          dispatch(otpVerification({ userRole: Role, userCodes: codes }));
-        } else if (Role == ROLES.TALUK_OFFICER || Role == ROLES.ZONE_OFFICER) {
-          // let codes = Array.from(new Set((filterData || []).map((obj: any) => obj.TalukCode)));
+          dispatch(otpVerification({ userRole: fetchRole, userCodes: [] }));
+
+        } else if (accessRole?.TalukorZone === "Yes") {
+          let codes = Array.from(
+            new Set((filterData || []).map((obj: any) => obj.DistrictCode))
+          );
+          dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
+
+        } else if (accessRole?.GpOrPhc === "Yes") {
           let codes = Array.from(
             new Set((filterData || []).map((obj: any) => obj.TalukCode))
           );
-          dispatch(otpVerification({ userRole: Role, userCodes: codes }));
+          dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
         } else {
           let codes = Array.from(
-            new Set((filterData || []).map((obj: any) => obj.GpOrWard))
+            new Set((filterData || []).map((obj: any) => obj.GpCode))
           );
-          dispatch(otpVerification({ userRole: Role, userCodes: codes }));
+          dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
         }
+        dispatch(
+          saveUserRolesAndAccess({
+            childRoles: rolesData?.data?.roles,
+            accessOfMasters: rolesData?.data?.access,
+          })
+        );
       } else {
         if (!OtpNo) return alert("Provide Otp.");
 
-        // let originalCaptcha = captch.split(" ").join("");
-        // if (captchValue.length !== 6)
-        //   return alert("Please Enter Correct Captcha.");
-        // // captch checking here
-        // if (originalCaptcha !== captchValue)
-        //   return alert("Captcha Failed. Please Try Again");
-
         let check = OtpNo === Otp;
         if (!check) return alert("Otp Verification Failed.");
+
         let fetchRole = usersData && usersData[0]?.AssigningType;
-        if (fetchRole == ROLES.SUPER_ADMIN) {
-          // let codes = Array.from(new Set((usersData || []).map((obj: any) => obj.DistrictCode)));
+        let FetchRoleId = usersData && usersData[0]?.RoleId;
+
+        let rolesData = await postRequest("getRolesAndAccessData", {
+          RoleId: FetchRoleId,
+        });
+        const accessRole = rolesData?.data?.access[0];
+        if (accessRole?.District === "Yes") {
+          let codes = Array.from(
+            new Set((usersData || []).map((obj: any) => obj.DistrictCode))
+          );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: [] }));
-        } else if (fetchRole == ROLES.DISTRICT_OFFICER || fetchRole === ROLES.BBMP_HEAD) {
+
+        } else if (accessRole?.TalukorZone === "Yes") {
           let codes = Array.from(
             new Set((usersData || []).map((obj: any) => obj.DistrictCode))
           );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
-        } else if(fetchRole === ROLES.TALUK_OFFICER || ROLES.ZONE_OFFICER){
+
+        } else if (accessRole?.GpOrPhc === "Yes") {
           let codes = Array.from(
             new Set((usersData || []).map((obj: any) => obj.TalukCode))
           );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
         } else {
           let codes = Array.from(
-            new Set((usersData || []).map((obj: any) => obj.GpOrWard))
+            new Set((usersData || []).map((obj: any) => obj.GpCode))
           );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
         }
+        dispatch(
+          saveUserRolesAndAccess({
+            childRoles: rolesData?.data?.roles,
+            accessOfMasters: rolesData?.data?.access,
+          })
+        );
       }
     }
     setValidatedForm2(true);

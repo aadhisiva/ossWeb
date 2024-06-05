@@ -12,6 +12,7 @@ interface ITableProps {
   rows: IMasterData[];
   handleCLickModify?: any;
   handleChangeRoutes?: any;
+  title?: string;
 }
 
 interface IColumn {
@@ -24,7 +25,8 @@ export const CustomTable: FC<ITableProps> = ({
   columns,
   rows,
   handleCLickModify=undefined,
-  handleChangeRoutes =undefined
+  handleChangeRoutes =undefined,
+  title
 }) => {
   const [activePage, setActivePage] = useState<number>(1);
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -186,7 +188,7 @@ export const CustomTable: FC<ITableProps> = ({
                           style={{ backgroundColor: "#13678C" }}
                           onClick={() => handleCLickModify(row, "Modify")}
                         >
-                          Modify
+                          {title ?? "Modify"}
                         </Button>
                       </td>
                     );

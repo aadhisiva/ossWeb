@@ -6,6 +6,7 @@ import {
   ASSIGNMENT_GP,
   ASSIGNMENT_SURVEYOR,
   ASSIGNMENT_TALUK,
+  ASSIGNMENT_TO_MASTERS,
   ASSIGNMENT_WARD,
   ASSIGNMENT_ZONE,
   DASHBOARD,
@@ -14,6 +15,9 @@ import StudentsCompleted from "../pages/Studentscompleted/StudentsCompleted";
 import Completed from "../pages/Completed/Completed";
 import scheduled from "../pages/Scheduled/scheduled";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import ChildRoles from "../pages/roles/roles";
+import Access from "../pages/roles/access";
+import Hierarchy from "../pages/roles/hierarchy";
 
 const DistrictChartComponent = lazy(() =>
   import("../pages/chartsDashBoard/District")
@@ -43,6 +47,14 @@ const VillageAssignMentComponent = lazy(() =>
   import("../pages/assignment/village")
 );
 
+const MasterAssignmentLazy = lazy(() =>
+  import("../pages/assignment/masterAssignment")
+);
+
+const RoleDashboardLazy = lazy(() =>
+  import("../pages/roles")
+);
+
 const PrivateRoutes = () => {
   return (
     <Routes>
@@ -61,9 +73,17 @@ const PrivateRoutes = () => {
       <Route path={ASSIGNMENT_GP} Component={PanchayatAssignmentComponent} />
       <Route path={ASSIGNMENT_SURVEYOR} Component={VillageAssignMentComponent} />
 
+      <Route path={ASSIGNMENT_TO_MASTERS} Component={MasterAssignmentLazy} />
+
       <Route path={ASSIGNMENT_ZONE} Component={ZoneComponent} />
       <Route path={ASSIGNMENT_WARD} Component={WardComponent} />
       <Route path={ASSIGNMENT_DIVISION} Component={DivisionComponent} />
+
+
+      <Route path={'/rolesDashboard'} Component={RoleDashboardLazy} />
+      <Route path={'/ChildRoles'} Component={ChildRoles} />
+      <Route path={'/Access'} Component={Access} />
+      <Route path={'/Hierarchy'} Component={Hierarchy} />
 
       <Route path="/*" element={<Navigate to={DASHBOARD} />} />
     </Routes>

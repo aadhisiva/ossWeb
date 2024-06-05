@@ -30,13 +30,14 @@ export default function Village() {
   const [formData, setFormData] = useState<any>({});
   const [editFormData, setEditFormData] = useState([]);
 
-  const [{ userCodes }] = IsAuthenticated();
+  const [{ userCodes, accessOfMasters }] = IsAuthenticated();
 
   // assign initial data
   const getAllMaster = async () => {
     setLoading(true);
     let res = await postRequest("getMasterWithAssigned", {
       LoginType: ASSIGNMENT.VILLAGE,
+      TypeOfData: accessOfMasters[0]?.TypeOfData,
       Codes: userCodes,
     });
     if (res?.code === 200) {
@@ -130,6 +131,7 @@ export default function Village() {
 
   const columns = [
     { accessor: "Mobile", label: "Mobile" },
+    { accessor: "Role", label: "Role" },
     { accessor: "Name", label: "Name" },
     { accessor: "count", label: "AssignedCount" },
     { accessor: "Type", label: "Type" },

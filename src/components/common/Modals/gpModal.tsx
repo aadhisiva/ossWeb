@@ -6,6 +6,7 @@ import { IsAuthenticated } from "../../../Authentication/useAuth";
 import { IModalFromEdit } from "../../../utilities/interfacesOrtype";
 import TextInputWithLabel from "../textInputWithLabel";
 import { ROLES, rolesMapping } from "../../../utilities/roles";
+import SelectInputWithLabel from "../selectInputWithLabel";
 
 export default function GpModal({
   show,
@@ -19,12 +20,10 @@ export default function GpModal({
     Name: "",
     Role: "",
     Mobile: "",
-    GpOfficerName: formData?.Name,
-    GpOfficerMobile: formData?.Mobile,
     ...formData,
   });
 
-  const [{ userRole, Mobile }] = IsAuthenticated();
+  const [{ userRole, Mobile, childRoles }] = IsAuthenticated();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,17 +31,18 @@ export default function GpModal({
     if (form.checkValidity() === true) {
       event.stopPropagation();
       let forApiBody = {
-        GpOfficerName: stateData?.GpOfficerName ?? "",
-        GpOfficerMobile: stateData?.GpOfficerMobile ?? "",
+        Name: stateData?.Name ?? "",
+        Mobile: stateData?.Mobile ?? "",
         DistrictCode: stateData?.DistrictCode ?? "",
         id: stateData?.id ?? "",
-        MasterType: stateData.Type ?? "",
+        RuralOrUrban: stateData.Type ?? "",
         TalukCode: stateData?.TalukCode ?? "",
-        GpOrWard: stateData?.GramPanchayatCode ?? "",
+        GpCode: stateData?.GramPanchayatCode ?? "",
         CreatedRole: userRole ?? "",
         CreatedMobile: Mobile ?? "",
         ListType: "Gp",
-        AssigningType: rolesMapping(userRole) ?? "",
+        RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0].Child,
+        AssigningType: childRoles?.length > 1 ? stateData?.Role : childRoles[0].ChildRole
       };
       if (title === "Add") {
         delete forApiBody.id;
@@ -54,13 +54,8 @@ export default function GpModal({
 
   const handleInputChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
-    if (
-      name === "Name" ||
-      (name === "GpOfficerName" && /^[a-zA-Z\s]*$/.test(value) === false)
-    )
-      return;
-    if (name === "Mobile" || (name === "GpOfficerMobile" && value.length > 10))
-      return;
+    if (name === "Name"&& /^[a-zA-Z\s]*$/.test(value) === false) return;
+    if (name === "Mobile" && value.length > 10) return;
     setStateData((prev: any) => ({
       ...prev,
       [name]: value,
@@ -111,20 +106,31 @@ export default function GpModal({
             <TextInputWithLabel
               controlId={"validationCustom06"}
               placeholder={"Mobile"}
-              name={"GpOfficerMobile"}
+              name={"Mobile"}
               type={"number"}
-              value={stateData.GpOfficerMobile}
+              value={stateData?.Mobile ?? ""}
               maxLength={10}
               onChange={handleInputChange}
             />
             <TextInputWithLabel
               controlId="validationCustom07"
               placeholder={"Name"}
-              name={"GpOfficerName"}
-              value={stateData.GpOfficerName}
+              name={"Name"}
+              value={stateData?.Name ?? ""}
               maxLength={50}
               onChange={handleInputChange}
             />
+            {childRoles?.length > 1 ? 
+            <SelectInputWithLabel
+              controlId={"validationCustom08"}
+              required={true}
+              defaultSelect="Select Roles"
+              isValueAdded={true}
+              options={childRoles.map((obj: any) => { return {role: obj?.ChildRole, value: obj?.Child}})}
+              name={"Role"}
+              value={stateData.Role}
+              onChange={handleInputChange}
+            /> : ("")}
           </Row>
           <Modal.Footer>
             <Button type="submit">Submit</Button>

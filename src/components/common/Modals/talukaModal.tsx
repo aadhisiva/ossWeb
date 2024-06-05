@@ -6,6 +6,7 @@ import { IsAuthenticated } from "../../../Authentication/useAuth";
 import { IModalFromEdit } from "../../../utilities/interfacesOrtype";
 import TextInputWithLabel from "../textInputWithLabel";
 import { ROLES, rolesMapping } from "../../../utilities/roles";
+import SelectInputWithLabel from "../selectInputWithLabel";
 
 export default function TalukModal({
   show,
@@ -16,12 +17,12 @@ export default function TalukModal({
 }: IModalFromEdit) {
   const [validated, setValidated] = useState(false);
   const [stateData, setStateData] = useState({
-    TalukOfficerName: "",
-    TalukOfficerMobile: "",
+    Name: "",
+    Mobile: "",
     ...formData,
   });
 
-  const [{ userRole, Mobile }] = IsAuthenticated();
+  const [{ userRole, Mobile, childRoles }] = IsAuthenticated();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,16 +30,17 @@ export default function TalukModal({
     if (form.checkValidity() === true) {
       event.stopPropagation();
       let forApiBody = {
-        TalukOfficerName: stateData.TalukOfficerName,
-        TalukOfficerMobile: stateData.TalukOfficerMobile,
+        Name: stateData.Name,
+        Mobile: stateData.Mobile,
         id: stateData?.id ?? "",
-        MasterType: stateData?.Type ?? "",
+        RuralOrUrban: stateData?.Type ?? "",
         TalukCode: stateData?.TalukCode ?? "",
         DistrictCode: stateData?.DistrictCode ?? "",
         CreatedRole: userRole ?? "",
         CreatedMobile: Mobile ?? "",
         ListType: "Taluk",
-        AssigningType: rolesMapping(userRole),
+        RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0].Child,
+        AssigningType: childRoles?.length > 1 ? stateData?.Role : childRoles[0].ChildRole
       };
       if (title == "Add") {
         delete forApiBody.id;
@@ -50,16 +52,8 @@ export default function TalukModal({
 
   const handleInputChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
-    if (
-      name === "Name" ||
-      (name === "TalukOfficerName" && /^[a-zA-Z_0-9\s]*$/.test(value) === false)
-    )
-      return;
-    if (
-      name === "Mobile" ||
-      (name === "TalukOfficerMobile" && value.length > 10)
-    )
-      return;
+    if (name === "Name" && /^[a-zA-Z_0-9\s]*$/.test(value) === false) return;
+    if(name === "Mobile" && value.length > 10) return;
     setStateData((prev: any) => ({
       ...prev,
       [name]: value,
@@ -101,32 +95,33 @@ export default function TalukModal({
               disabled={true}
               onChange={handleInputChange}
             />
-            <TextInputWithLabel
-              controlId={"validationCustom06"}
+           <TextInputWithLabel
+              controlId={"validationCustom04"}
               placeholder={"Mobile"}
-              name={"TalukOfficerMobile"}
-              type={"number"}
-              value={stateData.TalukOfficerMobile}
+              name={"Mobile"}
+              value={stateData?.Mobile || ""}
               maxLength={10}
+              type={"number"}
               onChange={handleInputChange}
             />
             <TextInputWithLabel
-              controlId="validationCustom07"
+              controlId="validationCustom05"
               placeholder={"Name"}
-              name={"TalukOfficerName"}
-              value={stateData.TalukOfficerName}
-              maxLength={50}
+              name={"Name"}
+              value={stateData?.Name || ''}
               onChange={handleInputChange}
             />
-            {/* <SelectInputWithLabel
+             {childRoles?.length > 1 ? 
+            <SelectInputWithLabel
               controlId={"validationCustom08"}
               required={true}
               defaultSelect="Select Roles"
-              options={renderRoles()}
+              isValueAdded={true}
+              options={childRoles.map((obj: any) => { return {role: obj?.ChildRole, value: obj?.Child}})}
               name={"Role"}
               value={stateData.Role}
               onChange={handleInputChange}
-            /> */}
+            /> : ("")}
           </Row>
           <Modal.Footer>
             <Button type="submit">Submit</Button>

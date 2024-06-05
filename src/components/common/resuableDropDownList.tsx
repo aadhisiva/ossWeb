@@ -199,7 +199,11 @@ export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
           <Col md={3} sm={6}>
             <SelectInput
               defaultSelect="Select Rural/Urban"
-              options={["Rural", "Urban"]}
+              options={ Array.from(
+                new Set(
+                  originalData.map((obj) => obj.Type)
+                )
+              )}
               onChange={(e) => handleTypeSelect(e.target.value)}
               value={type}
             />

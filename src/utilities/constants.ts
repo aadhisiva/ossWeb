@@ -2,6 +2,8 @@ export const LOGGED_IN = "LOGGED_IN";
 export const LOGGED_OUT = "LOGGED_OUT";
 export const OTP_VERIFY = "OTP_VERIFY";
 
+export const ROLE_ACCESS = "ROLE_ACCESS";
+
 export const SAVE_USER_PATH = "SAVE_USER_PATH";
 
 export const SET_TIMEOUT_ID = "SET_TIMEOUT_ID";

@@ -33,9 +33,9 @@ export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
       </div>
       {dropdownOpen && (
         <div className="dropdown-content">
-          {dropDown.map((obj) => (
+          {dropDown.map((obj, i) => (
             <>
-              <a onClick={() => handleRouting(String(obj.routePath))}>
+              <a key={i+1} onClick={() => handleRouting(String(obj.routePath))}>
                 {obj.routeName}
               </a>
             </>

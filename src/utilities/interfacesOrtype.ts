@@ -5,7 +5,7 @@ export interface ISelectInput {
     options?: any;
     value?:string; 
     defaultSelect?:string; 
-    isRoleSelect?:string; 
+    isRoleSelect?:boolean; 
     controlId?:string; 
     name?:string;
     isValueAdded?: boolean, 
