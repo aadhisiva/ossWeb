@@ -5,7 +5,6 @@ import {
 } from "../../utilities/interfacesOrtype";
 import { postRequest } from "../../Authentication/axiosrequest";
 import { ASSIGNMENT } from "../../utilities/roles";
-import DistrictModal from "../../components/common/Modals/districtModal";
 import ResuableModal from "../../components/common/Modals/selectOneRow";
 import SpinnerLoader from "../../components/common/spinner/spinner";
 import Titlebar from "../../components/common/titlebar";
@@ -15,6 +14,7 @@ import { CustomTable } from "../../components/common/customTable";
 import { Row } from "react-bootstrap";
 import { IsAuthenticated } from "../../Authentication/useAuth";
 import TalukModal from "../../components/common/Modals/talukaModal";
+import ResuableHeaders from "../../components/common/resuableHeaders";
 
 export default function Taluk() {
   const [originalData, setOriginalData] = useState<IMasterData[]>([]);
@@ -29,6 +29,7 @@ export default function Taluk() {
   const [editFormData, setEditFormData] = useState([]);
 
   const [{ userCodes, accessOfMasters }] = IsAuthenticated();
+  const [{ HTaluk }] = ResuableHeaders();
 
   // assign initial data
   const getAllMaster = async () => {
@@ -126,7 +127,7 @@ export default function Taluk() {
     { accessor: "count", label: "AssignedCount" },
     { accessor: "Type", label: "Type" },
     { accessor: "DistrictName", label: "District" },
-    { accessor: "TalukName", label: "Taluk" },
+    { accessor: "TalukName", label: HTaluk },
     { accessor: "Action", label: "Action" },
   ];
 

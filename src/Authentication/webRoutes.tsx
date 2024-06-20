@@ -12,7 +12,7 @@ export default function WebRoutes() {
 
   return (
     <React.Suspense fallback={<div>....Loading</div>}>
-      <BrowserRouter basename="/oss">
+      <BrowserRouter basename="/web">
         <Header userRole={userRole} />
         {!isLoggedIn ? <PublicRoutesComponent /> : <PrivateRoutesComponent />}
         <Footer />

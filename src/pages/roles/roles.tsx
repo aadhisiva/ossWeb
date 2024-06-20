@@ -13,7 +13,7 @@ export default function ChildRoles() {
 
   const [validated, setValidated] = useState<any>(false);
   const [formData, setFormData] = useState<any>(false);
-  const [stateData, setStateData] = useState({
+  const [stateData, setStateData] = useState<any>({
     IsLastStage: "",
     RoleId: "",
     ChildRole: "",
@@ -42,13 +42,15 @@ export default function ChildRoles() {
     }
   };
 
-    const columns = [
+  const columns = [
     { accessor: "ChildRole", label: "ChildRole" },
     { accessor: "IsLastStage", label: "IsLastStage" },
     { accessor: "Action", label: "Action" },
   ];
 
   const handleClickAdd = () => {
+    setStateData({})
+    setValidated(false);
     setShowForm(!isShowForm);
   };
 
@@ -72,7 +74,7 @@ export default function ChildRoles() {
       let forApiBody = {
         IsLastStage: stateData.IsLastStage,
         RoleId: stateData?.RoleId,
-        Child: stateData?.ChildRole
+        Child: stateData?.ChildRole,
       };
       await postRequest("AssignRoles", {
         DataType: "",
@@ -100,32 +102,32 @@ export default function ChildRoles() {
             <Row>
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select Parent Role"
+                defaultSelect="Parent Role"
                 isValueAdded={true}
                 options={rolesData.map((obj: any) => {
                   return { role: obj.Role, value: obj.id };
                 })}
                 name={"RoleId"}
-                value={stateData.RoleId}
+                value={stateData.RoleId ?? ""}
                 onChange={handleInputChange}
               />
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select Child Role"
+                defaultSelect="Child Role"
                 isValueAdded={true}
                 options={rolesData.map((obj: any) => {
                   return { role: obj.Role, value: obj.id };
                 })}
                 name={"ChildRole"}
-                value={stateData.ChildRole}
+                value={stateData.ChildRole ?? ""}
                 onChange={handleInputChange}
               />
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select IsLastStage"
+                defaultSelect="IsLastStage"
                 options={["Yes", "No"]}
                 name={"IsLastStage"}
-                value={stateData.IsLastStage}
+                value={stateData.IsLastStage ?? ""}
                 onChange={handleInputChange}
               />
             </Row>

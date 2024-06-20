@@ -18,6 +18,7 @@ export const LOGIN_ROLES = [
     {value: "Taluk Officer", role: "Taluk/Zone"},
     {value: "Phco Officer", role: "Phco/Divison"}
 ];
+
 export const DISTRICT_OPTIONS = [
 "Vijayanagara",
 "Bengaluru (Urban)",

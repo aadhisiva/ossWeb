@@ -12,7 +12,7 @@ export default function Hierarchy() {
 
   const [validated, setValidated] = useState<any>(false);
   const [formData, setFormData] = useState<any>(false);
-  const [stateData, setStateData] = useState({
+  const [stateData, setStateData] = useState<any>({
     Role: "",
     ParentId: "",
   });
@@ -43,6 +43,8 @@ export default function Hierarchy() {
   ];
 
   const handleClickAdd = () => {
+    setStateData({})
+    setValidated(false);
     setShowForm(!isShowForm);
   };
 
@@ -53,7 +55,7 @@ export default function Hierarchy() {
 
   const handleInputChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
-    if (name === "Role" && /^[a-zA-Z_0-9-\s]*$/.test(value) === false) return;
+    if (name === "Role" && /^[a-zA-Z_0-9_/-\s]*$/.test(value) === false) return;
     setStateData((prev: any) => ({
       ...prev,
       [name]: value,
@@ -75,6 +77,10 @@ export default function Hierarchy() {
       setShowForm(!isShowForm);
       await getAllMaster();
     }
+    setStateData({
+      Role: "",
+      ParentId: "",
+    });
     setValidated(true);
   };
   const renderForm = () => {

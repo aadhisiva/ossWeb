@@ -3,6 +3,7 @@ export const DASHBOARD = "/Dashboard";
 
 export const ASSIGNMENT_DISTRICT = "/Assignment/District";
 export const ASSIGNMENT_TALUK = "/Assignment/Taluk";
+export const ASSIGNMENT_APPROVER = "/Assignment/Approver";
 export const ASSIGNMENT_GP = "/Assignment/GramaPanchayat";
 export const ASSIGNMENT_SURVEYOR = "/Assignment/Surveyor";
 

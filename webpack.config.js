@@ -1,18 +1,8 @@
 /* eslint-disable no-undef */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const dotEnvModules = require("dotenv");
 
-const appSetting = true;
-const appSettingsFile = appSetting
-  ? "/config/development.env"
-  : "/settings/production.env";
-const envFilePath = path.join(__dirname, appSettingsFile);
-const dotenv = dotEnvModules.config({
-  path: envFilePath,
-});
 const devMode = process.env.NODE_ENV !== "production"
 
 
@@ -21,8 +11,8 @@ module.exports = {
   mode: "development", //production
   entry: path.join(__dirname, "src", "index.tsx"),
   output: {
-    // publicPath: "//",
-    publicPath: "/",
+    publicPath: "/web/",
+    // publicPath: "/",
     filename: 'widget.[contenthash].js',
     path: path.resolve(__dirname, "build"),
   },
@@ -30,17 +20,14 @@ module.exports = {
     extensions: ["*", ".js", ".jsx", ".ts", ".tsx"],
   },
   plugins: [
-    new webpack.DefinePlugin({
-      "process.env": JSON.stringify(dotenv.parsed),
-    }),
-    new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "index.html"),
+      template: './src/index.html',
+      filename: 'index.html',
+      inject: true,
     }),
   ],
   devServer: {
-    // port: 9000,
-    // https: true,
+    compress: true,
     historyApiFallback: true, // It prevents the reload issue and direct searching by paths.
   },
   performance: {

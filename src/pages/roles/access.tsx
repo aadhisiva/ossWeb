@@ -11,7 +11,7 @@ export default function Access() {
   const [rolesData, setRolesData] = useState<any[]>([]);
 
   const [validated, setValidated] = useState<any>(false);
-  const [stateData, setStateData] = useState({
+  const [stateData, setStateData] = useState<any>({
     RoleId: "",
     District: "",
     TalukorZone: "",
@@ -53,6 +53,8 @@ export default function Access() {
   ];
 
   const handleClickAdd = () => {
+    setStateData({})
+    setValidated(false);
     setShowForm(!isShowForm);
   };
 
@@ -88,6 +90,14 @@ export default function Access() {
       setShowForm(!isShowForm);
       await getAllMaster();
     }
+    setStateData({
+      RoleId: "",
+      District: "",
+      TalukorZone: "",
+      GpOrPhc: "",
+      VllageOrWard: "",
+      TypeOfData: "",
+    });
     setValidated(true);
   };
   const renderForm = () => {
@@ -107,7 +117,7 @@ export default function Access() {
             <Row>
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select Parent Role"
+                defaultSelect="Parent Role"
                 isValueAdded={true}
                 options={rolesData.map((obj: any) => {
                   return { role: obj.Role, value: obj.id };
@@ -118,7 +128,7 @@ export default function Access() {
               />
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select District Access"
+                defaultSelect="District"
                 options={["Yes", "No"]}
                 name={"District"}
                 value={stateData.District}
@@ -126,7 +136,7 @@ export default function Access() {
               />
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select TalukorZone Access"
+                defaultSelect="TalukorZone"
                 options={["Yes", "No"]}
                 name={"TalukorZone"}
                 value={stateData.TalukorZone}
@@ -134,7 +144,7 @@ export default function Access() {
               />
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select GpOrPhc Access"
+                defaultSelect="GpOrPhc"
                 options={["Yes", "No"]}
                 name={"GpOrPhc"}
                 value={stateData.GpOrPhc}
@@ -142,7 +152,7 @@ export default function Access() {
               />
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select VllageOrWard"
+                defaultSelect="VllageOrWard"
                 options={["Yes", "No"]}
                 name={"VllageOrWard"}
                 value={stateData.VllageOrWard}
@@ -150,8 +160,8 @@ export default function Access() {
               />
               <SelectInputWithLabel
                 required={true}
-                defaultSelect="Select TypeOfData"
-                options={["Rural", "Urban", "BBMP"]}
+                defaultSelect="TypeOfData"
+                options={["Rural", "Urban", "BBMP", "All"]}
                 name={"TypeOfData"}
                 value={stateData.TypeOfData}
                 onChange={handleInputChange}

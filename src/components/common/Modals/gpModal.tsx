@@ -7,6 +7,7 @@ import { IModalFromEdit } from "../../../utilities/interfacesOrtype";
 import TextInputWithLabel from "../textInputWithLabel";
 import { ROLES, rolesMapping } from "../../../utilities/roles";
 import SelectInputWithLabel from "../selectInputWithLabel";
+import ResuableHeaders from "../resuableHeaders";
 
 export default function GpModal({
   show,
@@ -24,6 +25,7 @@ export default function GpModal({
   });
 
   const [{ userRole, Mobile, childRoles }] = IsAuthenticated();
+  const [{HTaluk, HGp}] = ResuableHeaders();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,8 +43,7 @@ export default function GpModal({
         CreatedRole: userRole ?? "",
         CreatedMobile: Mobile ?? "",
         ListType: "Gp",
-        RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0].Child,
-        AssigningType: childRoles?.length > 1 ? stateData?.Role : childRoles[0].ChildRole
+        RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0]?.Child,
       };
       if (title === "Add") {
         delete forApiBody.id;
@@ -91,14 +92,14 @@ export default function GpModal({
             />
             <TextInputWithLabel
               controlId={"validationCustom03"}
-              placeholder={"TalukOrTownName"}
+              placeholder={HTaluk}
               value={stateData?.TalukName || ""}
               disabled={true}
               onChange={handleInputChange}
             />
             <TextInputWithLabel
               controlId={"validationCustom03"}
-              placeholder={"GramPanchayatName"}
+              placeholder={HGp}
               value={stateData?.GramPanchayatName || ""}
               disabled={true}
               onChange={handleInputChange}

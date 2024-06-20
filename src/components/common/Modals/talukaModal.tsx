@@ -7,6 +7,7 @@ import { IModalFromEdit } from "../../../utilities/interfacesOrtype";
 import TextInputWithLabel from "../textInputWithLabel";
 import { ROLES, rolesMapping } from "../../../utilities/roles";
 import SelectInputWithLabel from "../selectInputWithLabel";
+import ResuableHeaders from "../resuableHeaders";
 
 export default function TalukModal({
   show,
@@ -23,6 +24,7 @@ export default function TalukModal({
   });
 
   const [{ userRole, Mobile, childRoles }] = IsAuthenticated();
+  const [{ HTaluk }] = ResuableHeaders();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -40,7 +42,6 @@ export default function TalukModal({
         CreatedMobile: Mobile ?? "",
         ListType: "Taluk",
         RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0].Child,
-        AssigningType: childRoles?.length > 1 ? stateData?.Role : childRoles[0].ChildRole
       };
       if (title == "Add") {
         delete forApiBody.id;
@@ -90,7 +91,7 @@ export default function TalukModal({
             />
             <TextInputWithLabel
               controlId={"validationCustom03"}
-              placeholder={"TalukName"}
+              placeholder={HTaluk}
               value={stateData?.TalukName || ""}
               disabled={true}
               onChange={handleInputChange}

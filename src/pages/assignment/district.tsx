@@ -12,7 +12,6 @@ import { ResuableDropDownList } from "../../components/common/resuableDropDownLi
 import { CustomTable } from "../../components/common/customTable";
 import { IsAuthenticated } from "../../Authentication/useAuth";
 
-
 export default function DistrictAssignMent() {
   const [originalData, setOriginalData] = useState<IMasterData[]>([]);
   const [copyOfOriginalData, setCopyOriginalData] = useState<IMasterData[]>([]);

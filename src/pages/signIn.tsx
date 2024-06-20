@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { Button, Card, Form, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import {
   otpVerification,
@@ -10,9 +10,7 @@ import SelectInput from "../components/common/selectInput";
 import TextInput from "../components/common/textInput";
 import { postRequest } from "../Authentication/axiosrequest";
 import { IsAuthenticated } from "../Authentication/useAuth";
-import { CustomCaptch } from "../components/cutomCaptch";
 import "./float.css";
-import { ROLES } from "../utilities/roles";
 
 export default function SignIn({ auth }: any) {
   const [validated, setValidated] = useState(false);
@@ -27,13 +25,9 @@ export default function SignIn({ auth }: any) {
   const [isOtpValidate, setIsOtpValidate] = useState(false);
   const [isbuttonActive, setButtonActive] = useState(false);
 
-  const [captch, setFreshCaptch] = useState("");
-  const [captchValue, setCaptchaValue] = useState("");
-
   const dispatch = useDispatch();
 
   const [{ Otp }] = IsAuthenticated();
-  const [aut] = IsAuthenticated();
 
   const usersUniqueList: any = Array.from(
     new Set((usersData || []).map((obj: any) => obj?.AssigningType))
@@ -85,17 +79,15 @@ export default function SignIn({ auth }: any) {
         let filterData = usersData.filter(
           (user: any) => user?.AssigningType === Role
         );
+        if (!Mobile) return alert("Provide Mobile.");
         let fetchRole = filterData && filterData[0]?.AssigningType;
         let FetchRoleId = filterData && filterData[0]?.RoleId;
-
+  
         let rolesData = await postRequest("getRolesAndAccessData", {
           RoleId: FetchRoleId,
         });
         const accessRole = rolesData?.data?.access[0];
         if (accessRole?.District === "Yes") {
-          let codes = Array.from(
-            new Set((filterData || []).map((obj: any) => obj.DistrictCode))
-          );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: [] }));
 
         } else if (accessRole?.TalukorZone === "Yes") {
@@ -122,6 +114,8 @@ export default function SignIn({ auth }: any) {
           })
         );
       } else {
+        if (!Role) return alert("Provide Role.");
+        if (!Mobile) return alert("Provide Mobile.");
         if (!OtpNo) return alert("Provide Otp.");
 
         let check = OtpNo === Otp;
@@ -133,11 +127,9 @@ export default function SignIn({ auth }: any) {
         let rolesData = await postRequest("getRolesAndAccessData", {
           RoleId: FetchRoleId,
         });
+
         const accessRole = rolesData?.data?.access[0];
         if (accessRole?.District === "Yes") {
-          let codes = Array.from(
-            new Set((usersData || []).map((obj: any) => obj.DistrictCode))
-          );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: [] }));
 
         } else if (accessRole?.TalukorZone === "Yes") {

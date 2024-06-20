@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
+  ASSIGNMENT_APPROVER,
   ASSIGNMENT_DISTRICT,
   ASSIGNMENT_DIVISION,
   ASSIGNMENT_GP,
@@ -47,6 +48,10 @@ const VillageAssignMentComponent = lazy(() =>
   import("../pages/assignment/village")
 );
 
+const ApprovalComponent = lazy(() =>
+  import("../pages/assignment/approval")
+);
+
 const MasterAssignmentLazy = lazy(() =>
   import("../pages/assignment/masterAssignment")
 );
@@ -72,6 +77,7 @@ const PrivateRoutes = () => {
       <Route path={ASSIGNMENT_TALUK} Component={TalukAssignmentComponent} />
       <Route path={ASSIGNMENT_GP} Component={PanchayatAssignmentComponent} />
       <Route path={ASSIGNMENT_SURVEYOR} Component={VillageAssignMentComponent} />
+      <Route path={ASSIGNMENT_APPROVER} Component={ApprovalComponent} />
 
       <Route path={ASSIGNMENT_TO_MASTERS} Component={MasterAssignmentLazy} />
 
@@ -80,7 +86,6 @@ const PrivateRoutes = () => {
       <Route path={ASSIGNMENT_DIVISION} Component={DivisionComponent} />
 
 
-      <Route path={'/rolesDashboard'} Component={RoleDashboardLazy} />
       <Route path={'/ChildRoles'} Component={ChildRoles} />
       <Route path={'/Access'} Component={Access} />
       <Route path={'/Hierarchy'} Component={Hierarchy} />

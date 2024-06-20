@@ -1,4 +1,4 @@
-import { ASSIGNMENT_DISTRICT, ASSIGNMENT_DIVISION, ASSIGNMENT_GP, ASSIGNMENT_SURVEYOR, ASSIGNMENT_TALUK, ASSIGNMENT_TO_MASTERS, ASSIGNMENT_WARD, ASSIGNMENT_ZONE } from "./routePaths";
+import { ASSIGNMENT_APPROVER, ASSIGNMENT_DISTRICT, ASSIGNMENT_GP, ASSIGNMENT_SURVEYOR, ASSIGNMENT_TALUK, DASHBOARD } from "./routePaths";
 
 export enum ROLES {
     SUPER_ADMIN = 'Super Admin',
@@ -21,37 +21,45 @@ export enum ASSIGNMENT {
     GP = 'GramaPanchayat',
     GET_GP = 'Gp',
     VILLAGE = 'Village',
+    APPROVER = 'Approver',
 };
 
-export enum H {
-    A= "ASDc",
-    B="adf"
-}
+export const roleArrangeMent = (role: any, userRole?: string) => {
+    let eachRole: any = role && role[0];
 
-export const roleArrangeMent = (role: any) => {
-let eachRole: any = role && role[0];
-
-if(eachRole?.District === "Yes"){
-    return {
-        username: "SA",
-        dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_DISTRICT }]
-    };
-} else if(eachRole?.TalukorZone === "Yes"){
-    return {
-        username: "SA",
-        dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_TALUK }]
-    };
-} else if(eachRole?.GpOrPhc === "Yes"){
-    return {
-        username: "SA",
-        dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_GP }]
-    };
-} else {
+    if (eachRole?.District === "Yes") {
         return {
             username: "SA",
-            dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_WARD }]
+            dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_DISTRICT }]
         };
-}
+    } else if (eachRole?.TalukorZone === "Yes") {
+        return {
+            username: "SA",
+            dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_TALUK }]
+        };
+    } else if (eachRole?.GpOrPhc === "Yes") {
+        if (userRole === "CC/CMC/TMC") {
+            return {
+                username: "SA",
+                dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_APPROVER }]
+            };
+        } else {
+            return {
+                username: "SA",
+                dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_GP }]
+            };
+        }
+    } else if (eachRole?.VllageOrWard == "Yes") {
+        return {
+            username: "SA",
+            dropDown: [{ routeName: "Assignment", routePath: ASSIGNMENT_SURVEYOR }]
+        };
+    } else {
+        return {
+            username: "SA",
+            dropDown: [{ routeName: "Assignment", routePath: DASHBOARD }]
+        }
+    }
 
     // switch (role) {
     //     case ROLES.SUPER_ADMIN:
@@ -112,5 +120,5 @@ export const rolesMapping = (role: string) => {
             return ROLES.GP_OFFICER;
         default:
             return ""
-        }
+    }
 }

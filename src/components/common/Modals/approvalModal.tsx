@@ -6,9 +6,8 @@ import { IsAuthenticated } from "../../../Authentication/useAuth";
 import { IModalFromEdit } from "../../../utilities/interfacesOrtype";
 import TextInputWithLabel from "../textInputWithLabel";
 import SelectInputWithLabel from "../selectInputWithLabel";
-import ResuableHeaders from "../resuableHeaders";
 
-export default function VillageModal({
+export default function ApprovalModal({
   show,
   title,
   onHide,
@@ -20,11 +19,12 @@ export default function VillageModal({
     Name: "",
     Role: "",
     Mobile: "",
+    GramPanchayatCode: "",
     ...formData,
   });
 
   const [{ userRole, Mobile, childRoles }] = IsAuthenticated();
-  const [{HTaluk, HGp, HVillage}] = ResuableHeaders();
+ 
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,14 +37,13 @@ export default function VillageModal({
         DistrictCode: stateData?.DistrictCode,
         TalukCode: stateData?.TalukCode,
         id: stateData?.id,
-        GpOrWard: stateData?.GramPanchayatCode,
+        GpCode: stateData?.GramPanchayatCode,
         VillageCode: stateData?.VillageCode,
         CreatedRole: userRole ?? "",
         CreatedMobile: Mobile ?? "",
-        Type: stateData?.Type ?? "",
-        ListType: 'Village',
-        RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0]?.Child,
-        Role: childRoles?.length > 1 ? stateData?.Role : childRoles[0]?.ChildRole
+        RuralOrUrban: stateData?.Type ?? "",
+        ListType: 'Gp',
+        RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0]?.Child
       };
       if (title === "Add") {
         delete forApiBody.id;
@@ -56,7 +55,7 @@ export default function VillageModal({
 
   const handleInputChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
-    if (name === "Name" && /^[a-zA-Z-/\s]*$/.test(value) === false) return;
+    if (name === "Name" && /^[a-zA-Z-_/\s]*$/.test(value) === false) return;
     if (name === "Mobile" && value.length > 10) return;
     setStateData((prev: any) => ({
       ...prev,
@@ -95,25 +94,27 @@ export default function VillageModal({
             />
             <TextInputWithLabel
               controlId={"validationCustom03"}
-              placeholder={HTaluk}
+              placeholder={"ULB"}
               value={stateData?.TalukName || ""}
               disabled={true}
               onChange={handleInputChange}
             />
             <TextInputWithLabel
               controlId={"validationCustom03"}
-              placeholder={HGp}
-              value={stateData?.GramPanchayatName || ""}
-              disabled={true}
-              onChange={handleInputChange}
-            />
-            <TextInputWithLabel
-              controlId={"validationCustom03"}
-              placeholder={HVillage}
+              placeholder={"Village Naem"}
               value={stateData?.VillageName || ""}
               disabled={true}
               onChange={handleInputChange}
             />
+              <SelectInputWithLabel
+                controlId={"validationCustom08"}
+                required={true}
+                defaultSelect="Select ULB Ward"
+                options={["RO", "RI", "ARO"]}
+                name={"GramPanchayatCode"}
+                value={stateData.GramPanchayatCode}
+                onChange={handleInputChange}
+                />
             <TextInputWithLabel
               controlId={"validationCustom06"}
               placeholder={"Mobile"}
@@ -131,17 +132,6 @@ export default function VillageModal({
               maxLength={50}
               onChange={handleInputChange}
             />
-             {childRoles?.length > 1 ? 
-            <SelectInputWithLabel
-              controlId={"validationCustom08"}
-              required={true}
-              defaultSelect="Select Roles"
-              isValueAdded={true}
-              options={childRoles.map((obj: any) => { return {role: obj?.ChildRole, value: obj?.Child}})}
-              name={"Role"}
-              value={stateData.Role}
-              onChange={handleInputChange}
-            /> : ("")}
           </Row>
           <Modal.Footer>
             <Button type="submit">Submit</Button>

@@ -10,13 +10,13 @@ import HalfDonutCircle from "../../components/common/Reviewbars";
 import { Col, Container, Row } from "react-bootstrap";
 import { IsAuthenticated } from "../../Authentication/useAuth";
 import { roleArrangeMent } from "../../utilities/roles";
+import "../float.css";
 
 function Dasbboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [{accessOfMasters}] = IsAuthenticated();
-  const [auth] = IsAuthenticated();
+  const [{ accessOfMasters, userRole }] = IsAuthenticated();
 
   const onRouteChange = (path: string) => {
     navigate(`/District/${path}`);
@@ -27,16 +27,16 @@ function Dasbboard() {
     <React.Fragment>
       <Titlebar
         title={"DashBoard"}
-        Component={
-          <AvatarDropdown
-          {...roleArrangeMent(accessOfMasters)}
-          />
-        }
+        Component={<AvatarDropdown {...roleArrangeMent(accessOfMasters, userRole)} />}
       />
-       <div className="houseHoldBox">
-        <span className="houseHoldText">
-          HouseHold
-        </span>
+      <a
+        onClick={() => navigate("/ChildRoles")}
+        className="float cursor-pointer"
+      >
+        <i className="my-float">Assign</i>
+      </a>
+      <div className="houseHoldBox">
+        <span className="houseHoldText">HouseHold</span>
       </div>
       <div className="parentOdCircles">
         <div className="dashBoardPage">

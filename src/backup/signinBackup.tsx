@@ -242,7 +242,7 @@ export default function SignIn({ auth }: any) {
           let codes = Array.from(
             new Set((filterData || []).map((obj: any) => obj.DistrictCode))
           );
-          dispatch(otpVerification({ userRole: Role, userCodes: codes, roles:  }));
+          dispatch(otpVerification({ userRole: Role, userCodes: codes, roles: [] }));
         } else if (Role == ROLES.TALUK_OFFICER || Role == ROLES.ZONE_OFFICER) {
           // let codes = Array.from(new Set((filterData || []).map((obj: any) => obj.TalukCode)));
           let codes = Array.from(

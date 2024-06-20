@@ -38,7 +38,6 @@ export default function DistrictModal({
           CreatedMobile: Mobile,
           ListType: "District",
           RoleId: childRoles?.length > 1 ? childRoles.find((obj: any) => obj.ChildRole == stateData?.Role)?.RoleId :  childRoles[0].Child,
-          AssigningType: childRoles?.length > 1 ? stateData?.Role : childRoles[0].ChildRole
         };
         if(title == "Add") {
           delete forApiBody.id;

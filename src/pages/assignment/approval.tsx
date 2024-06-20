@@ -5,18 +5,17 @@ import {
 } from "../../utilities/interfacesOrtype";
 import { postRequest } from "../../Authentication/axiosrequest";
 import { ASSIGNMENT } from "../../utilities/roles";
+import ResuableModal from "../../components/common/Modals/selectOneRow";
 import SpinnerLoader from "../../components/common/spinner/spinner";
 import Titlebar from "../../components/common/titlebar";
 import { AvatarDropdown } from "../../components/common/menuDropDown";
-import { ResuableDropDownList } from "../../components/common/resuableDropDownList";
 import { CustomTable } from "../../components/common/customTable";
 import { Row } from "react-bootstrap";
 import { IsAuthenticated } from "../../Authentication/useAuth";
-import VillageModal from "../../components/common/Modals/villageModal";
-import VillageModifyModal from "../../components/common/Modals/villageModifyModal";
-import ResuableHeaders from "../../components/common/resuableHeaders";
+import { SelectReUsableDropDown } from "../../components/common/selectDropDowns.ts";
+import ApprovalModal from "../../components/common/Modals/approvalModal";
 
-export default function Village() {
+export default function Approval() {
   const [originalData, setOriginalData] = useState<IMasterData[]>([]);
   const [copyOfOriginalData, setCopyOriginalData] = useState<IMasterData[]>([]);
 
@@ -29,13 +28,12 @@ export default function Village() {
   const [editFormData, setEditFormData] = useState([]);
 
   const [{ userCodes, accessOfMasters }] = IsAuthenticated();
-  const [{HTaluk, HGp, HVillage}] = ResuableHeaders();
 
   // assign initial data
   const getAllMaster = async () => {
     setLoading(true);
     let res = await postRequest("getMasterWithAssigned", {
-      LoginType: ASSIGNMENT.VILLAGE,
+      LoginType: ASSIGNMENT.APPROVER,
       TypeOfData: accessOfMasters[0]?.TypeOfData,
       Codes: userCodes,
     });
@@ -56,14 +54,12 @@ export default function Village() {
   const handleCLickModify = async (obj: any, title: string) => {
     if (!obj?.DistrictCode) return alert("Provide DistrictCode");
     if (!obj?.TalukCode) return alert("Provide TalukCode.");
-    if (!obj?.GramPanchayatCode) return alert("Provide GramPanchayatCode.");
     if (!obj?.VillageCode) return alert("Provide VillageCode.");
     if (obj.count < 1) return alert("You have to add user first.");
     let getData = await postRequest("getAllWithCode", {
-      ListType: "User",
+      ListType: "Approval",
       DistrictCode: obj?.DistrictCode,
       TalukCode: obj?.TalukCode,
-      GpOrWard: obj?.GramPanchayatCode,
       VillageCode: obj?.VillageCode
     });
     if (getData?.code == 200) {
@@ -72,19 +68,26 @@ export default function Village() {
       setModalTitle(title);
     } else {
       alert(getData?.response?.data?.message || "Please try again.");
-    }
+    };
   };
 
   const handleCLickAdd = async (selectedValues: ISelectItemsListProps) => {
     if (!selectedValues.district || !selectedValues.taluk)
       return alert("Select Fields.");
+    
     let find = originalData.find(
-      (obj: IMasterData) =>
+      (obj: IMasterData) =>  (selectedValues?.panchayat !== "All") ?(
+          obj.Type == selectedValues.type &&
+          obj.DistrictName == selectedValues.district &&
+          obj.TalukName == selectedValues.taluk &&
+          obj.GramPanchayatName == selectedValues.panchayat &&
+          obj.VillageName == selectedValues.village  
+        ) : (
         obj.Type == selectedValues.type &&
         obj.DistrictName == selectedValues.district &&
         obj.TalukName == selectedValues.taluk &&
-        obj.GramPanchayatName == selectedValues.panchayat &&
         obj.VillageName == selectedValues.village 
+        )
     );
     delete find?.Name;
     delete find?.Mobile;
@@ -94,7 +97,7 @@ export default function Village() {
   };
 
   const handleSubmitForm = async (values: any) => {
-    let res = await postRequest("assignMentProcess", values);
+    let res = await postRequest(modalTitle !== "Add" ? "assignMentProcess" :  "assignToMasterAndRoles", values);
     if (res.code === 200) {
       setAddForm(false);
       await getAllMaster();
@@ -106,7 +109,7 @@ export default function Village() {
 
   const rednerForm = () => {
     return (
-      <VillageModal
+      <ApprovalModal
         show={addForm}
         title={modalTitle}
         formData={formData}
@@ -118,7 +121,7 @@ export default function Village() {
 
   const rednerEditForm = () => {
     return (
-      <VillageModifyModal
+      <ResuableModal
         show={editForm}
         title={modalTitle}
         formData={editFormData}
@@ -130,14 +133,13 @@ export default function Village() {
 
   const columns = [
     { accessor: "Mobile", label: "Mobile" },
-    { accessor: "Role", label: "Role" },
     { accessor: "Name", label: "Name" },
     { accessor: "count", label: "AssignedCount" },
     { accessor: "Type", label: "Type" },
     { accessor: "DistrictName", label: "District" },
-    { accessor: "TalukName", label: HTaluk },
-    { accessor: "GramPanchayatName", label: HGp },
-    { accessor: "VillageName", label: HVillage },
+    { accessor: "TalukName", label: "ULB" },
+    { accessor: "GramPanchayatName", label: "ULB Ward" },
+    { accessor: "VillageName", label: "Ward" },
     { accessor: "Action", label: "Action" }
   ];
 
@@ -147,7 +149,7 @@ export default function Village() {
       {addForm && rednerForm()}
       {editForm && rednerEditForm()}
       <Titlebar
-        title={`Village Assignment`}
+        title={`Ward Assignment`}
         Component={
           <AvatarDropdown
             dropDown={[{ routeName: "DashBoard", routePath: "/Dashboard" }]}
@@ -156,7 +158,7 @@ export default function Village() {
         }
       />
       <div>
-        <ResuableDropDownList
+        <SelectReUsableDropDown
           listType={4}
           handleClickAdd={handleCLickAdd}
           setCopyOriginalData={setCopyOriginalData}

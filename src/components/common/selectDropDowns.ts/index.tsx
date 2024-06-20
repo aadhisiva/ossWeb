@@ -1,12 +1,12 @@
 import React, { FC, Fragment, useEffect, useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import SelectInput from "./selectInput";
+
+import "../assignment.css";
 import {
   IMasterData,
   ISelectItemsListProps,
-} from "../../utilities/interfacesOrtype";
-import "./assignment.css";
-import ResuableHeaders from "./resuableHeaders";
+} from "../../../utilities/interfacesOrtype";
+import SelectInput from "../selectInput";
 
 interface IResuableDropDownListProps {
   originalData?: IMasterData[];
@@ -14,7 +14,7 @@ interface IResuableDropDownListProps {
   setCopyOriginalData?: any;
   listType?: number;
 }
-export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
+export const SelectReUsableDropDown: FC<IResuableDropDownListProps> = ({
   originalData = [],
   listType,
   handleClickAdd,
@@ -34,7 +34,7 @@ export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
   const [villageDropDown, setVillageDropDown] = useState([]);
 
   const { district, panchayat, type, taluk, village } = selectedItems;
-  const [ { HGp, HTaluk, HVillage } ] = ResuableHeaders();
+
   useEffect(() => {
     let filterData = originalData;
     // filter rural/urban
@@ -59,13 +59,20 @@ export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
     }
     // filter rural/urban and district and taluka
     if (type && district && taluk && panchayat) {
-      filterData = filterData.filter(
+      filterData = panchayat !== "All" ?  
+      filterData.filter(
         (obj) =>
           obj.Type === type &&
           obj.DistrictName === district &&
-          obj?.TalukName === taluk &&
+          obj?.TalukName === taluk && 
           obj?.GramPanchayatName === panchayat
-      );
+      ) : 
+      filterData.filter(
+        (obj) =>
+          obj.Type === type &&
+          obj.DistrictName === district &&
+          obj?.TalukName === taluk
+      ) 
     }
     // filter rural/urban and district and taluka
     if (type && district && taluk && panchayat && village) {
@@ -74,7 +81,7 @@ export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
           obj.Type === type &&
           obj.DistrictName === district &&
           obj?.TalukName === taluk &&
-          obj?.GramPanchayatName === panchayat &&
+          panchayat !== "All" ? obj?.GramPanchayatName === panchayat : true &&
           obj?.VillageName === village
       );
     }
@@ -129,6 +136,7 @@ export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
         panchayat: "",
         village: "",
       }));
+      setGpDropDown([]);
       let gpSelect: any = Array.from(
         new Set(
           originalData
@@ -141,7 +149,11 @@ export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
             .map((obj) => obj.GramPanchayatName)
         )
       );
-      setGpDropDown(gpSelect);
+      var filtered = gpSelect.filter(function (el: string) {
+        return el != null;
+      });
+      filtered.push("All");
+      setGpDropDown(filtered)
     }
   };
 
@@ -152,31 +164,47 @@ export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
         panchayat: value,
         village: "",
       }));
-      let villagesData: any = Array.from(
-        new Set(
-          originalData
-            .filter(
-              (obj) =>
-                obj.Type === type &&
-                obj.DistrictName === district &&
-                obj.TalukName === taluk &&
-                obj.GramPanchayatName === value
+      if(value == "All"){
+          let villagesData: any = Array.from(
+            new Set(
+              originalData
+                .filter(
+                  (obj) =>
+                    obj.Type === type &&
+                    obj.DistrictName === district &&
+                    obj.TalukName === taluk 
+                )
+                .map((obj) => obj.VillageName)
             )
-            .map((obj) => obj.VillageName)
-        )
-      );
-      setVillageDropDown(villagesData);
+          );
+          setVillageDropDown(villagesData);
+        } else {
+          let villagesData: any = Array.from(
+            new Set(
+              originalData
+                .filter(
+                  (obj) =>
+                    obj.Type === type &&
+                    obj.DistrictName === district &&
+                    obj.TalukName === taluk &&
+                    obj.GramPanchayatName === value
+                )
+                .map((obj) => obj.VillageName)
+            )
+          );
+          setVillageDropDown(villagesData);
+      }
     }
   };
 
   const handleVillageSelect = (value: string) => {
-    if(village !== value){
-        setSelectItems((prev) => ({
-            ...prev,
-            village: value,
-          }));
+    if (village !== value) {
+      setSelectItems((prev) => ({
+        ...prev,
+        village: value,
+      }));
     }
-  }
+  };
 
   const handleClearFilters = () => {
     setSelectItems((prev) => ({
@@ -196,62 +224,47 @@ export const ResuableDropDownList: FC<IResuableDropDownListProps> = ({
         </Col>
       </Row>
       <Row className="box">
-        <Fragment>
-          <Col md={3} sm={6}>
-            <SelectInput
-              defaultSelect="Select Rural/Urban"
-              options={ Array.from(
-                new Set(
-                  originalData.map((obj) => obj.Type)
-                )
-              )}
-              onChange={(e) => handleTypeSelect(e.target.value)}
-              value={type}
-            />
-          </Col>
-          <Col md={3} sm={6}>
-            <SelectInput
-              defaultSelect="Select District"
-              options={districtDropDown}
-              onChange={(e) => handleDistrictSelect(e.target.value)}
-              value={district}
-            />
-          </Col>
-        </Fragment>
-        {listType !== 1 && (
-          <Fragment>
-            <Col md={3} sm={6}>
-              <SelectInput
-                defaultSelect={`Select ${HTaluk}`}
-                options={talukDropDown}
-                onChange={(e) => handleTalukSelect(e.target.value)}
-                value={taluk}
-              />
-            </Col>
-            {listType !== 2 && (
-              <Fragment>
-                <Col md={3} sm={6}>
-                  <SelectInput
-                    defaultSelect={`Select ${HGp}`}
-                    options={gpDropDown}
-                    onChange={(e) => handleGpSelect(e.target.value)}
-                    value={panchayat}
-                  />
-                </Col>
-                {listType !== 3 && (
-                  <Col md={3} sm={6}>
-                    <SelectInput
-                      defaultSelect={`Select ${HVillage}`}
-                      options={villageDropDown}
-                      onChange={(e) => handleVillageSelect(e.target.value)}
-                      value={village}
-                    />
-                  </Col>
-                )}
-              </Fragment>
-            )}
-          </Fragment>
-        )}
+        <Col md={3} sm={6}>
+          <SelectInput
+            defaultSelect="Select Type"
+            options={Array.from(new Set(originalData.map((obj) => obj.Type)))}
+            onChange={(e) => handleTypeSelect(e.target.value)}
+            value={type}
+          />
+        </Col>
+        <Col md={3} sm={6}>
+          <SelectInput
+            defaultSelect="Select District"
+            options={districtDropDown}
+            onChange={(e) => handleDistrictSelect(e.target.value)}
+            value={district}
+          />
+        </Col>
+        <Col md={3} sm={6}>
+          <SelectInput
+            defaultSelect="Select ULB"
+            options={talukDropDown}
+            onChange={(e) => handleTalukSelect(e.target.value)}
+            value={taluk}
+          />
+        </Col>
+
+        <Col md={3} sm={6}>
+          <SelectInput
+            defaultSelect="Select ULB Ward"
+            options={gpDropDown}
+            onChange={(e) => handleGpSelect(e.target.value)}
+            value={panchayat}
+          />
+        </Col>
+        <Col md={3} sm={6}>
+          <SelectInput
+            defaultSelect="Select Ward"
+            options={villageDropDown}
+            onChange={(e) => handleVillageSelect(e.target.value)}
+            value={village}
+          />
+        </Col>
         <Col md={3} sm={6}>
           <Button
             style={{ backgroundColor: "#13678C" }}

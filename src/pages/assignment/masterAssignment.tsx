@@ -5,7 +5,6 @@ import {
 } from "../../utilities/interfacesOrtype";
 import { postRequest } from "../../Authentication/axiosrequest";
 import { ASSIGNMENT } from "../../utilities/roles";
-import DistrictModal from "../../components/common/Modals/districtModal";
 import ResuableModal from "../../components/common/Modals/selectOneRow";
 import SpinnerLoader from "../../components/common/spinner/spinner";
 import Titlebar from "../../components/common/titlebar";
