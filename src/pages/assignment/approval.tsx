@@ -132,14 +132,14 @@ export default function Approval() {
   };
 
   const columns = [
-    { accessor: "Mobile", label: "Mobile" },
-    { accessor: "Name", label: "Name" },
-    { accessor: "count", label: "AssignedCount" },
-    { accessor: "Type", label: "Type" },
     { accessor: "DistrictName", label: "District" },
     { accessor: "TalukName", label: "ULB" },
     { accessor: "GramPanchayatName", label: "ULB Ward" },
+    { accessor: "count", label: "AssignedCount" },
     { accessor: "VillageName", label: "Ward" },
+    { accessor: "Mobile", label: "Mobile" },
+    { accessor: "Name", label: "Name" },
+    { accessor: "Type", label: "Type" },
     { accessor: "Action", label: "Action" }
   ];
 

@@ -112,11 +112,11 @@ export default function DistrictAssignMent() {
   };
 
   const columns = [
+    { accessor: "DistrictName", label: "District" },
+    { accessor: "Type", label: "Type" },
+    { accessor: "count", label: "AssignedCount" },
     { accessor: "Mobile", label: "Mobile" },
     { accessor: "Name", label: "Name" },
-    { accessor: "count", label: "AssignedCount" },
-    { accessor: "Type", label: "Type" },
-    { accessor: "DistrictName", label: "District" },
     { accessor: "Action", label: "Action" },
   ];
 

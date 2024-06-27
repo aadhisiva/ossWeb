@@ -51,13 +51,13 @@ export default function DistrictReportComponent() {
     navigate(`/Zone/${currentPath}?DistrictName=${obj?.DistrictName}`);
   };
 
-  const columns = [
-    { accessor: "DistrictName", label: "District" },
-    { accessor: "UnAssigned", label: "UnAssigned" },
-    { accessor: "Scheduled", label: "Scheduled" },
-    { accessor: "Completed", label: "Completed" },
-    { accessor: "TotalCount", label: "TotalCount" },
-  ];
+    const columns = [
+      { accessor: "DistrictName", label: "District" },
+      { accessor: "UnAssigned", label: "UnAssigned" },
+      { accessor: "Scheduled", label: "Scheduled" },
+      { accessor: "Completed", label: "Completed" },
+      { accessor: "TotalCount", label: "TotalCount" },
+    ];
 
   return (
     <React.Fragment>

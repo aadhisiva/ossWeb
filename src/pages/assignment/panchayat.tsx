@@ -126,13 +126,13 @@ export default function Panchayat() {
   };
 
   const columns = [
-    { accessor: "Mobile", label: "Mobile" },
-    { accessor: "Name", label: "Name" },
-    { accessor: "count", label: "AssignedCount" },
-    { accessor: "Type", label: "Type" },
     { accessor: "DistrictName", label: "District" },
     { accessor: "TalukName", label: HTaluk },
     { accessor: "GramPanchayatName", label: HGp },
+    { accessor: "Type", label: "Type" },
+    { accessor: "count", label: "AssignedCount" },
+    { accessor: "Mobile", label: "Mobile" },
+    { accessor: "Name", label: "Name" },
     { accessor: "Action", label: "Action" },
   ];
 

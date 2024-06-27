@@ -122,12 +122,12 @@ export default function Taluk() {
   };
 
   const columns = [
-    { accessor: "Mobile", label: "Mobile" },
-    { accessor: "Name", label: "Name" },
-    { accessor: "count", label: "AssignedCount" },
-    { accessor: "Type", label: "Type" },
     { accessor: "DistrictName", label: "District" },
     { accessor: "TalukName", label: HTaluk },
+    { accessor: "Type", label: "Type" },
+    { accessor: "count", label: "AssignedCount" },
+    { accessor: "Mobile", label: "Mobile" },
+    { accessor: "Name", label: "Name" },
     { accessor: "Action", label: "Action" },
   ];
 

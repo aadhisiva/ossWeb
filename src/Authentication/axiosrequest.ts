@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 // const BaseUrl = "http://103.138.196.123/mapi/";
-const BaseUrl = "https://childrensurvey.karnataka.gov.in/mapi/admin/";
-// const BaseUrl = "http://localhost:8887/mapi/admin/";
+// const BaseUrl = "https://childrensurvey.karnataka.gov.in/mapi/admin/";
+const BaseUrl = "http://localhost:8887/mapi/admin/";
 
 export const postRequest = async (url: string, body: any) => {
     try {

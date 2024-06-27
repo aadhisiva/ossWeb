@@ -129,15 +129,15 @@ export default function Village() {
   };
 
   const columns = [
-    { accessor: "Mobile", label: "Mobile" },
-    { accessor: "Role", label: "Role" },
-    { accessor: "Name", label: "Name" },
-    { accessor: "count", label: "AssignedCount" },
-    { accessor: "Type", label: "Type" },
     { accessor: "DistrictName", label: "District" },
     { accessor: "TalukName", label: HTaluk },
     { accessor: "GramPanchayatName", label: HGp },
     { accessor: "VillageName", label: HVillage },
+    { accessor: "Type", label: "Type" },
+    { accessor: "count", label: "AssignedCount" },
+    { accessor: "Mobile", label: "Mobile" },
+    { accessor: "Name", label: "Name" },
+    { accessor: "Role", label: "Role" },
     { accessor: "Action", label: "Action" }
   ];
 

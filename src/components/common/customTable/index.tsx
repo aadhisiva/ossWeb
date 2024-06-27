@@ -24,9 +24,9 @@ interface IColumn {
 export const CustomTable: FC<ITableProps> = ({
   columns,
   rows,
-  handleCLickModify=undefined,
-  handleChangeRoutes =undefined,
-  title
+  handleCLickModify = undefined,
+  handleChangeRoutes = undefined,
+  title,
 }) => {
   const [activePage, setActivePage] = useState<number>(1);
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -131,11 +131,7 @@ export const CustomTable: FC<ITableProps> = ({
                 }
               };
               return (
-                <th
-                  key={`${column.accessor}_${i}`}
-                  className="rounded-xl"
-                  style={{ backgroundColor: "grey" }}
-                >
+                <th key={`${column.accessor}_${i}`} className="rounded-xl">
                   <span>{column.label}</span>
                   <button onClick={() => handleSort(column.accessor)}>
                     {sortIcon()}
@@ -169,15 +165,15 @@ export const CustomTable: FC<ITableProps> = ({
         <tbody>
           {filteredData.map((row: any, i) => {
             return (
-              <tr key={i} onClick={handleChangeRoutes == undefined ? undefined : () =>handleChangeRoutes(row)}>
+              <tr
+                key={i}
+                onClick={
+                  handleChangeRoutes == undefined
+                    ? undefined
+                    : () => handleChangeRoutes(row)
+                }
+              >
                 {columns.map((column) => {
-                  // if (column.format) {
-                  //   return (
-                  //     <td key={column.accessor}>
-                  //       {column.format(row[column.accessor])}
-                  //     </td>
-                  //   );
-                  // }
                   if (column.accessor == "Action") {
                     return (
                       <td
@@ -219,8 +215,8 @@ export const CustomTable: FC<ITableProps> = ({
 
       <div>
         <p>
-          <button className="pointer" onClick={clearAll}>
-            Clear all
+          <button className="pointer text-blue-500" onClick={clearAll}>
+            Clear all Filters
           </button>
         </p>
       </div>

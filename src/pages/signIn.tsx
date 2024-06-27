@@ -80,6 +80,7 @@ export default function SignIn({ auth }: any) {
           (user: any) => user?.AssigningType === Role
         );
         if (!Mobile) return alert("Provide Mobile.");
+        if (!Role) return alert("Provide Role.");
         let fetchRole = filterData && filterData[0]?.AssigningType;
         let FetchRoleId = filterData && filterData[0]?.RoleId;
   
@@ -114,7 +115,6 @@ export default function SignIn({ auth }: any) {
           })
         );
       } else {
-        if (!Role) return alert("Provide Role.");
         if (!Mobile) return alert("Provide Mobile.");
         if (!OtpNo) return alert("Provide Otp.");
 
