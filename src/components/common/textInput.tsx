@@ -1,14 +1,13 @@
 import { Form, Col } from "react-bootstrap";
 import { ITextInput } from "../../utilities/interfacesOrtype";
 
-function TextInput({ name, onChange, placeholder, value, controlId, maxLength, disabled, className }: ITextInput) {
+function TextInput({ name, onChange, placeholder, value, controlId, maxLength, disabled, className, label }: ITextInput) {
   return (
     <Form.Group
-      className={`${className} flex flex-row mt-4`}
-      as={Col}
-      md="12"
+      className={`${className} flex flex-col mt-4`}
       controlId={controlId}
     >
+      <Form.Label>{label}</Form.Label>
       <Form.Control
         required
         type="text"

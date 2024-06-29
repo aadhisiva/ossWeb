@@ -7,7 +7,8 @@ function SelectInput({
   onChange,
   value,
   isValueAdded,
-  isRoleSelect
+  isRoleSelect,
+  name
 }: ISelectInput) {
   return (
     <Form.Group
@@ -17,7 +18,7 @@ function SelectInput({
       controlId="validationCustom02"
     >
       <Form.Select
-        
+        name={name}
         value={value}
         onChange={onChange}
         aria-label="Default select example"

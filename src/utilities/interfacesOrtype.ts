@@ -35,6 +35,7 @@ export interface ITextInput {
     value?:string; 
     defaultOption?:string; 
     controlId?:string; 
+    label?:string; 
     type?:string; 
     maxLength?:number; 
     disabled?:boolean; 
@@ -173,4 +174,6 @@ export interface ISelectItemsListProps {
     taluk?: string;
     panchayat?: string;
     village?: string;
+    mode?: string;
+    status?: string;
 }

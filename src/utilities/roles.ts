@@ -22,6 +22,8 @@ export enum ASSIGNMENT {
     GET_GP = 'Gp',
     VILLAGE = 'Village',
     APPROVER = 'Approver',
+    USER = 'user',
+    SUREVY = 'survey',
 };
 
 export const roleArrangeMent = (role: any, userRole?: string) => {

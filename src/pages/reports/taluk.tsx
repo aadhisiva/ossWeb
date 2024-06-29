@@ -10,6 +10,7 @@ import { ASSIGNMENT, roleArrangeMent } from "../../utilities/roles";
 import { Col, Row } from "react-bootstrap";
 import { CustomTable } from "../../components/common/customTable";
 import { GP_REPORTS } from "../../utilities/routePaths";
+import SpinnerLoader from "../../components/common/spinner/spinner";
 
 export default function TalukReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -20,7 +21,7 @@ export default function TalukReportComponent() {
   const [urlSearchParam, setUrlSearchParam] = useSearchParams(); // retrieve url query params
 
   const [isLoading, setLoading] = useState(false);
-  const [{ userRole, accessOfMasters }] = IsAuthenticated();
+  const [{ userRole, accessOfMasters, userCodes }] = IsAuthenticated();
   const { currentPath } = useSelector((state: any) => state.path);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ export default function TalukReportComponent() {
       {
         LoginType: ASSIGNMENT.TALUK,
         TypeOfData: accessOfMasters[0]?.TypeOfData,
-        Codes: [urlSearchParam.get('DistrictName')],
+        Codes: [urlSearchParam.get('DistrictName'), ...userCodes],
       }
     );
     if (apiRes?.code == 200) {
@@ -61,6 +62,7 @@ export default function TalukReportComponent() {
 
   return (
     <React.Fragment>
+      <SpinnerLoader isLoading={isLoading} />
       <Titlebar
         title={`Taluk`}
         Component={<AvatarDropdown {...roleArrangeMent(userRole)} />}

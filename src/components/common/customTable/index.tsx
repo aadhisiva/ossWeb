@@ -6,13 +6,16 @@ import "./customTable.css";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import TableRowsPerPageDropDown from "../tableRowsPerPage";
 import { SearchBox } from "../searchBox";
+import { IsAuthenticated } from "../../../Authentication/useAuth";
 
 interface ITableProps {
   columns: IColumn[];
   rows: IMasterData[];
   handleCLickModify?: any;
+  handleCLickApprove?: any;
   handleChangeRoutes?: any;
   title?: string;
+  secondTitle?: string;
 }
 
 interface IColumn {
@@ -27,6 +30,8 @@ export const CustomTable: FC<ITableProps> = ({
   handleCLickModify = undefined,
   handleChangeRoutes = undefined,
   title,
+  secondTitle,
+  handleCLickApprove
 }) => {
   const [activePage, setActivePage] = useState<number>(1);
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -49,6 +54,8 @@ export const CustomTable: FC<ITableProps> = ({
 
   const count = filteredRows.length;
   const totalPages = Math.ceil(count / rowsPerPage);
+
+  const [{ userRole }] = IsAuthenticated();
 
   const handleSearch = (value: string, accessor: string) => {
     setActivePage(1);
@@ -131,7 +138,7 @@ export const CustomTable: FC<ITableProps> = ({
                 }
               };
               return (
-                <th key={`${column.accessor}_${i}`} className="rounded-xl">
+                <th key={`${column.accessor}_${i}`} className="rounded-xl text-sm">
                   <span>{column.label}</span>
                   <button onClick={() => handleSort(column.accessor)}>
                     {sortIcon()}
@@ -148,7 +155,7 @@ export const CustomTable: FC<ITableProps> = ({
               return (
                 <th key={i}>
                   <input
-                    className="rounded-2xl"
+                    className="rounded-xl h-7 p-0 text-sm"
                     key={`${column.accessor}-search`}
                     type="search"
                     placeholder={`Search ${column.label}`}
@@ -178,19 +185,30 @@ export const CustomTable: FC<ITableProps> = ({
                     return (
                       <td
                         key={`${column.accessor} - ${i}}`}
-                        className="eachcolumn"
+                        className="eachcolumn text-sm flex flex-row"
                       >
                         <Button
-                          style={{ backgroundColor: "#13678C" }}
+                          style={{ backgroundColor: "#13678C", fontSize: 10 }}
                           onClick={() => handleCLickModify(row, "Modify")}
                         >
                           {title ?? "Modify"}
                         </Button>
+                        {userRole == "CC/CMC/TMC" && (
+                          secondTitle && (
+                             <Button
+                             style={{ backgroundColor: "#13678C", fontSize: 10 }}
+                             disabled={!row["ApproveBy"] ? false : true}
+                             onClick={() => handleCLickApprove(row, "Modify")}
+                           >
+                             {secondTitle}
+                           </Button>
+                          )
+                        )}
                       </td>
                     );
                   }
                   return (
-                    <td key={column.accessor}>
+                    <td key={column.accessor} className="text-sm">
                       {row[column.accessor] ?? "N/A"}
                     </td>
                   );

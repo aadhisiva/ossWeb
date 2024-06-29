@@ -18,6 +18,7 @@ export const DISTRICT_REPORTS = "/DsitrictReports";
 export const GP_REPORTS = "/GpReports";
 
 export const SEARCH_REPORTS = "/SearchReports";
+export const SURVEY_REPORTS = "/SurveyReports";
 
 
 export const ASSIGNMENT_TO_MASTERS = "/assignmentToMasters";

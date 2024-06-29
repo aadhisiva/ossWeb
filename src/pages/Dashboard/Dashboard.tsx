@@ -13,9 +13,10 @@ import { ASSIGNMENT, reportsAssignment, roleArrangeMent, routingWithBasedOnRole 
 import "../float.css";
 import { postRequest } from "../../Authentication/axiosrequest";
 import { SEARCH_REPORTS } from "../../utilities/routePaths";
+import SpinnerLoader from "../../components/common/spinner/spinner";
 
 function Dasbboard() {
-  const [originalData, setOriginalData] = useState<any>({});
+  const [originalData, setOriginalData] = useState<any>([]);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,6 +65,7 @@ function Dasbboard() {
 
   return (
     <React.Fragment>
+      <SpinnerLoader isLoading={isLoading}/>
       <Titlebar
         title={"DashBoard"}
         Component={
@@ -88,21 +90,21 @@ function Dasbboard() {
         <Row className="flex flex-row justify-evenly border border-solid border-gray-800 gap-y-4 rounded-b-lg rounded-r-lg mt-0 p-3 mb-3">
           <Col
             md={2}
-            className="border justify-center items-center text-center border-gray-800 bg-green-500 rounded-xl flex h-32 text-xl"
+            className="border justify-center items-center text-center border-gray-800 bg-[#ffc107] rounded-xl flex h-32 text-xl"
           >
-            {`Total : ${originalData?.TotalCount || 0}`}
+            {`Total : ${originalData[0]?.TotalCount || 0}`}
           </Col>
           <Col
             md={2}
-            className="border justify-center items-center text-center border-gray-800 bg-orange-500 rounded-xl flex h-32  text-xl"
+            className="border justify-center items-center text-center border-gray-800 bg-[#17a2b8] rounded-xl flex h-32  text-xl"
           >
-             {`Total : ${originalData?.Verified || 0}`}
+             {`Verified : ${originalData[0]?.Verified || 0}`}
           </Col>
           <Col
             md={2}
-            className="border justify-center items-center text-center border-gray-800 bg-blue-500 rounded-xl flex h-32  text-xl"
+            className="border justify-center items-center text-center border-gray-800 bg-[#fd7e14] rounded-xl flex h-32  text-xl"
           >
-             {`Total : ${originalData?.Pending || 0}`}
+             {`Pending : ${originalData[0]?.Pending || 0}`}
           </Col>
         </Row>
 
@@ -118,21 +120,21 @@ function Dasbboard() {
         <Row className="flex flex-row justify-evenly border border-solid border-gray-800 gap-y-4 rounded-b-lg rounded-r-lg mt-0 p-3">
           <Col
             md={2}
-            className="border justify-center items-center text-center border-gray-800 bg-red-500 rounded-xl flex h-32  text-xl"
+            className="border justify-center items-center text-center border-gray-800 bg-[#007bff] rounded-xl flex h-32  text-xl"
             onClick={handleAssignRouting}
           >
             Assignment
           </Col>
           <Col
             md={2}
-            className="border justify-center items-center text-center border-gray-800 bg-violet-500 rounded-xl flex h-32  text-xl"
+            className="border justify-center items-center text-center border-gray-800 bg-[#28a745] rounded-xl flex h-32  text-xl"
             onClick={handleReportsRouting}
           >
             Reports
           </Col>
           <Col
             md={2}
-            className="border justify-center items-center text-center border-gray-800 bg-yellow-500 rounded-xl flex h-32  text-xl"
+            className="border justify-center items-center text-center border-gray-800 bg-[#6f42c1] rounded-xl flex h-32  text-xl"
           onClick={() => navigate(SEARCH_REPORTS)}
           >
             Search Reports

@@ -9,6 +9,8 @@ import { AvatarDropdown } from "../../components/common/menuDropDown";
 import { ASSIGNMENT, roleArrangeMent } from "../../utilities/roles";
 import { Col, Row } from "react-bootstrap";
 import { CustomTable } from "../../components/common/customTable";
+import { SURVEY_REPORTS } from "../../utilities/routePaths";
+import SpinnerLoader from "../../components/common/spinner/spinner";
 
 export default function VillageReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -19,7 +21,7 @@ export default function VillageReportComponent() {
   const [urlSearchParam, setUrlSearchParam] = useSearchParams(); // retrieve url query params
 
   const [isLoading, setLoading] = useState(false);
-  const [{ userRole, accessOfMasters }] = IsAuthenticated();
+  const [{ userRole, accessOfMasters, userCodes }] = IsAuthenticated();
 
   useEffect(() => {
     getInitialData();
@@ -31,7 +33,7 @@ export default function VillageReportComponent() {
       {
         LoginType: ASSIGNMENT.VILLAGE,
         TypeOfData: accessOfMasters[0]?.TypeOfData,
-        Codes: [urlSearchParam.get('GpName')],
+        Codes: [urlSearchParam.get('GpName'), ...userCodes],
       }
     );
     if (apiRes?.code == 200) {
@@ -48,7 +50,7 @@ export default function VillageReportComponent() {
 
   const handleChangeRoutes = (obj: IReportsMasterData) => {
     navigate(
-      `/village?DistrictName=${obj.DistrictName}&TalukName=${obj.TalukName}&GpName=${obj.GramPanchayatName}`
+      `${SURVEY_REPORTS}?DistrictName=${obj.DistrictCode}&TalukName=${obj.TalukCode}&GpName=${obj.GramPanchayatCode}&VillageName=${obj.VillageCode}`
     );
   };
 
@@ -59,13 +61,12 @@ export default function VillageReportComponent() {
 
   return (
     <React.Fragment>
+      <SpinnerLoader isLoading={isLoading}/>
       <Titlebar
         title={`Village`}
         Component={<AvatarDropdown {...roleArrangeMent(userRole)} />}
       />
-      <div className="firstBox">
-        <span className="boxText">HouseHold</span>
-      </div>
+      <div className="m-4">
       {/* <Row className="flex m-1">
         <Col
           md={2}
@@ -87,6 +88,7 @@ export default function VillageReportComponent() {
         rows={originalData}
         handleChangeRoutes={handleChangeRoutes}
       />
+      </div>
     </React.Fragment>
   );
 }

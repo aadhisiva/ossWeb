@@ -14,6 +14,7 @@ import {
   DISTRICT_REPORTS,
   GP_REPORTS,
   SEARCH_REPORTS,
+  SURVEY_REPORTS,
   TALUK_REPORTS,
   VILLAGE_REPORTS,
 } from "../utilities/routePaths";
@@ -73,7 +74,10 @@ const SeacrhReportsComponent = lazy(() =>
   import("../pages/reports/searchReports")
 );
 
-const RoleDashboardLazy = lazy(() => import("../pages/roles"));
+const SurveyReportsComponent = lazy(() =>
+  import("../pages/reports/survey")
+);
+
 
 const PrivateRoutes = () => {
   return (
@@ -89,6 +93,7 @@ const PrivateRoutes = () => {
       <Route path={DISTRICT_REPORTS} Component={DistrictReportsComponent} />
 
       <Route path={SEARCH_REPORTS} Component={SeacrhReportsComponent} />
+      <Route path={SURVEY_REPORTS} Component={SurveyReportsComponent} />
 
       <Route
         path={ASSIGNMENT_DISTRICT}

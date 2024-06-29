@@ -10,6 +10,7 @@ import { ASSIGNMENT, roleArrangeMent } from "../../utilities/roles";
 import { CustomTable } from "../../components/common/customTable";
 import { VILLAGE_REPORTS } from "../../utilities/routePaths";
 import { Col, Row } from "react-bootstrap";
+import SpinnerLoader from "../../components/common/spinner/spinner";
 
 export default function GpReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -20,8 +21,7 @@ export default function GpReportComponent() {
   const [urlSearchParam, setUrlSearchParam] = useSearchParams(); // retrieve url query params
 
   const [isLoading, setLoading] = useState(false);
-  const [{ userRole, accessOfMasters }] = IsAuthenticated();
-  const { currentPath } = useSelector((state: any) => state.path);
+  const [{ userRole, accessOfMasters, userCodes }] = IsAuthenticated();
 
   useEffect(() => {
     getInitialData();
@@ -34,7 +34,7 @@ export default function GpReportComponent() {
       {
         LoginType: ASSIGNMENT.GET_GP,
         TypeOfData: accessOfMasters[0]?.TypeOfData,
-        Codes: [urlSearchParam.get('TalukName')],
+        Codes: [urlSearchParam.get('TalukName'), ...userCodes],
       }
     );
     if (apiRes?.code == 200) {
@@ -63,13 +63,13 @@ export default function GpReportComponent() {
 
   return (
     <React.Fragment>
+      <SpinnerLoader isLoading={isLoading}/>
       <Titlebar
         title={`GramPanchayat`}
         Component={<AvatarDropdown {...roleArrangeMent(userRole)} />}
       />
-      <div className="firstBox">
-        <span className="boxText">HouseHold</span>
-      </div>
+      <div className="m-4">
+     
       {/* <Row className="flex m-1">
         <Col
           md={2}
@@ -91,6 +91,7 @@ export default function GpReportComponent() {
         rows={originalData}
         handleChangeRoutes={handleChangeRoutes}
       />
+      </div>
     </React.Fragment>
   );
 }
