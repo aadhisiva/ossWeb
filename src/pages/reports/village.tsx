@@ -11,6 +11,7 @@ import { Col, Row } from "react-bootstrap";
 import { CustomTable } from "../../components/common/customTable";
 import { SURVEY_REPORTS } from "../../utilities/routePaths";
 import SpinnerLoader from "../../components/common/spinner/spinner";
+import ResuableHeaders from "../../components/common/resuableHeaders";
 
 export default function VillageReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -22,6 +23,7 @@ export default function VillageReportComponent() {
 
   const [isLoading, setLoading] = useState(false);
   const [{ userRole, accessOfMasters, userCodes }] = IsAuthenticated();
+  const [{ HVillage }] = ResuableHeaders();
 
   useEffect(() => {
     getInitialData();
@@ -55,7 +57,7 @@ export default function VillageReportComponent() {
   };
 
   const columns = [
-    { accessor: "VillageName", label: "Village" },
+    { accessor: "VillageName", label: HVillage },
     { accessor: "TotalCompleted", label: "TotalCount" },
   ];
 
@@ -63,7 +65,7 @@ export default function VillageReportComponent() {
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading}/>
       <Titlebar
-        title={`Village`}
+        title={HVillage}
         Component={<AvatarDropdown {...roleArrangeMent(userRole)} />}
       />
       <div className="m-4">

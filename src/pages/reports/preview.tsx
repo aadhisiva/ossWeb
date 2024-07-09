@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import TextInput from "../../components/common/textInput";
-import { Col, Image, Row } from "react-bootstrap";
+import { Col, Form, Image, Row } from "react-bootstrap";
 
 interface PreviewModalProps {
   show?: boolean;
@@ -39,42 +39,35 @@ export default function PreviewModal({
             <TextInput
               value={previewData?.StudentId ?? ""}
               disabled={true}
-              label="StudentId"
+              label="SATS Id"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentName ?? ""}
               disabled={true}
-              label="StudentName"
+              label="Student Name"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentClass ?? ""}
               disabled={true}
-              label="StudentClass"
+              label="Student Class"
             />
           </Col>
           <Col md={3}>
             <TextInput
-              value={previewData?.Category ?? ""}
+              value={previewData?.ParentCategory ?? ""}
               disabled={true}
               label="Category"
             />
           </Col>
           <Col md={3}>
             <TextInput
-              value={previewData?.Standard ?? ""}
-              disabled={true}
-              label="Standard"
-            />
-          </Col>
-          <Col md={3}>
-            <TextInput
               value={previewData?.SchoolName ?? ""}
               disabled={true}
-              label="SchoolName"
+              label="School Name"
             />
           </Col>
           <Col md={3}>
@@ -86,37 +79,51 @@ export default function PreviewModal({
           </Col>
           <Col md={3}>
             <TextInput
-              value={previewData?.ParentDob ?? ""}
+              value={previewData?.StudentDob ?? ""}
               disabled={true}
-              label="ParentDob"
+              label="Student Date of Birth"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentNotGoing ?? ""}
+              disabled={true}
+              label="Student Not Going"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentFinancial ?? ""}
               disabled={true}
-              label="StudentFinancial"
+              label="Financial Reason"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentSocial ?? ""}
               disabled={true}
-              label="StudentSocial"
+              label="Social Reason"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentOther ?? ""}
               disabled={true}
-              label="StudentOther"
+              label="Other Reason"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentMedical ?? ""}
+              disabled={true}
+              label="Medical Reason"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentSpecialSupport ?? ""}
               disabled={true}
-              label="StudentSpecialSupport"
+              label="Special Support Required"
             />
           </Col>
           <Col md={3}>
@@ -128,88 +135,95 @@ export default function PreviewModal({
           </Col>
           <Col md={3}>
             <TextInput
-              value={previewData?.ParentGender ?? ""}
+              value={previewData?.StudentGender ?? ""}
               disabled={true}
-              label="ParentGender"
+              label="Student Gender"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentDisabilityType ?? ""}
               disabled={true}
-              label="StudentDisabilityType"
+              label="Student Disability Type"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentDisability ?? ""}
               disabled={true}
-              label="StudentDisability"
+              label="Student Disability"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentRelation ?? ""}
               disabled={true}
-              label="StudentRelation"
-            />
-          </Col>
-          <Col md={3}>
-            <TextInput
-              value={previewData?.StudentDob ?? ""}
-              disabled={true}
-              label="StudentDob"
-            />
-          </Col>
-          <Col md={3}>
-            <TextInput
-              value={previewData?.StudentGender ?? ""}
-              disabled={true}
-              label="StudentGender"
+              label="Student Relation with HOF"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.SchoolAddress ?? ""}
               disabled={true}
-              label="SchoolAddress"
+              label="School Address"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.StudentLAS_Date ?? ""}
               disabled={true}
-              label="StudentLAS_Date"
+              label="Student Last Date in School"
             />
           </Col>
-          <Col md={3}>
-            <TextInput
-              value={previewData?.StudentNotGoing ?? ""}
-              disabled={true}
-              label="StudentNotGoing"
-            />
-          </Col>
+          
           <Col md={3}>
             <TextInput
               value={previewData?.ParentMobile ?? ""}
               disabled={true}
-              label="ParentMobile"
+              label="Parent Mobile"
+            />
+          </Col>      
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentMigratedDate ?? ""}
+              disabled={true}
+              label="Student Migration dDate"
+            />
+          </Col>
+          
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentMigratedFrom ?? ""}
+              disabled={true}
+              label="Student Migration From"
             />
           </Col>
           <Col md={3}>
             <TextInput
               value={previewData?.ApproveBy ?? ""}
               disabled={true}
-              label="ApproveBy"
+              label="Approve"
             />
           </Col>
-          <Col md={3} className="flex flex-col mt-1">
+          <Col md={3} className="mt-3">
+          <Form.Group as={Col} controlId="validationCustom01">
+            <Form.Label>Enter Remark</Form.Label>
+            <Form.Control
+              required
+              as="textarea"
+              value={previewData?.Remarks ?? ""}
+              disabled
+              rows={4}
+            />
+          </Form.Group>
+          </Col>
+          <Col md={3} className="flex flex-col justify-center items-center mt-3">
             <div>StudentImage</div>
-            <div className="border rounded-xl h-52">
+            <div className="border rounded-xl items-center">
               <Image
                 src={`data:image/png;base64,${previewData.StudentImage}`}
-                width={50}
                 height={100}
+                width={150}
               />
             </div>
           </Col>

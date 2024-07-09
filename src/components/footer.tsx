@@ -10,7 +10,7 @@ export default function Footer() {
           Directorate Of EDCS Developed By Mobile One
           <Image
             className="h-10 w-10"
-            src={require("../assests/Images/m1-T.png")}
+            src={require("../assets/Images/m1-T.png")}
             alt="M1 Logo"
           />
         </Col>

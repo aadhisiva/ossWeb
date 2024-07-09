@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Form, Row } from "react-bootstrap";
+import { Button, Card, Form, Image, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import {
   otpVerification,
@@ -68,7 +68,6 @@ export default function SignIn({ auth }: any) {
     setValidated(true);
   };
 
-
   const handleSubmitOtp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -83,20 +82,18 @@ export default function SignIn({ auth }: any) {
         if (!Role) return alert("Provide Role.");
         let fetchRole = filterData && filterData[0]?.AssigningType;
         let FetchRoleId = filterData && filterData[0]?.RoleId;
-  
+
         let rolesData = await postRequest("getRolesAndAccessData", {
           RoleId: FetchRoleId,
         });
         const accessRole = rolesData?.data?.access[0];
         if (accessRole?.District === "Yes") {
           dispatch(otpVerification({ userRole: fetchRole, userCodes: [] }));
-
         } else if (accessRole?.TalukorZone === "Yes") {
           let codes = Array.from(
             new Set((filterData || []).map((obj: any) => obj.DistrictCode))
           );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
-
         } else if (accessRole?.GpOrPhc === "Yes") {
           let codes = Array.from(
             new Set((filterData || []).map((obj: any) => obj.TalukCode))
@@ -131,13 +128,11 @@ export default function SignIn({ auth }: any) {
         const accessRole = rolesData?.data?.access[0];
         if (accessRole?.District === "Yes") {
           dispatch(otpVerification({ userRole: fetchRole, userCodes: [] }));
-
         } else if (accessRole?.TalukorZone === "Yes") {
           let codes = Array.from(
             new Set((usersData || []).map((obj: any) => obj.DistrictCode))
           );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
-
         } else if (accessRole?.GpOrPhc === "Yes") {
           let codes = Array.from(
             new Set((usersData || []).map((obj: any) => obj.TalukCode))
@@ -177,95 +172,99 @@ export default function SignIn({ auth }: any) {
   };
 
   return (
-    <div className="flex mt-8 justify-center items-center">
-      <a className="float">
-        <i className="my-float">1.0.0</i>
-      </a>
-      <Card className="text-center pb-5">
-        {!isOtpValidate ? (
-          <Form
-            noValidate
-            className="flex flex-col p-10"
-            validated={validated}
-            onSubmit={handleSubmit}
-          >
-            <Row className="mb-4 flex flex-col">
-              <span className="pb-2 text-center font-bold">Login</span>
-              <TextInput
-                controlId="validationCustom03"
-                name={"Mobile"}
-                placeholder={"Enter Mobile"}
-                value={Mobile}
-                maxLength={10}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setMobile(e.target.value)
-                }
-              />
-            </Row>
-            <Button disabled={isbuttonActive} type="submit">
-              Submit
-            </Button>
-          </Form>
-        ) : (
-          <Form
-            noValidate
-            className="flex flex-col p-10"
-            validated={validatedForm2}
-            onSubmit={handleSubmitOtp}
-          >
-            <Row className="mb-4 flex flex-col">
-              <span className="pb-2 text-center font-bold">Login</span>
-              {(usersUniqueList.length || []) > 1 ? (
-                <SelectInput
-                  defaultSelect={"Select Role"}
-                  options={usersUniqueList}
-                  value={Role}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setRole(e.target.value)
-                  }
-                />
-              ) : (
-                ""
-              )}
-              <TextInput
-                controlId="validationCustom03"
-                name={"Mobile"}
-                placeholder={"Mobile"}
-                value={Mobile}
-                maxLength={10}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setMobile(e.target.value)
-                }
-              />
-              <TextInput
-                controlId="validationCustom03"
-                name={"Otp"}
-                placeholder={"Enter Otp"}
-                value={OtpNo}
-                maxLength={6}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  setOtpNo(e.target.value)
-                }
-              />
-              <div className="flex justify-end">
-                <a
-                  onClick={handleResendOtp}
-                  className={`${
-                    timer < 1
-                      ? "text-red-400 cursor-pointer"
-                      : "pointer-events-none text-gray-600"
-                  }`}
-                >
-                  RESEND OTP {timer > 0 && `(${timer})`}
-                </a>
-              </div>
-            </Row>
-            <Button disabled={isbuttonActive} color="#269DA5" type="submit">
-              Submit
-            </Button>
-          </Form>
-        )}
-      </Card>
-    </div>
+    <div
+      className="relative min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${require("../assets/Images/bg.jpg")}`}}
+    >
+      <div className="absolute inset-0 flex items-center  justify-center">
+        {/* <div className="bg-transparent p-8 rounded-lg shadow-lg max-w-md text-center"> */}
+          <Card className="bg-opacity-15">
+            {!isOtpValidate ? (
+              <Form
+                noValidate
+                className="flex flex-col p-10"
+                validated={validated}
+                onSubmit={handleSubmit}
+              >
+                <Row className="mb-4 flex flex-col">
+                  <span className="pb-2 text-center font-bold">Login</span>
+                  <TextInput
+                    controlId="validationCustom03"
+                    name={"Mobile"}
+                    placeholder={"Enter Mobile"}
+                    value={Mobile}
+                    maxLength={10}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setMobile(e.target.value)
+                    }
+                  />
+                </Row>
+                <Button disabled={isbuttonActive} type="submit">
+                  Submit
+                </Button>
+              </Form>
+            ) : (
+              <Form
+                noValidate
+                className="flex flex-col p-10"
+                validated={validatedForm2}
+                onSubmit={handleSubmitOtp}
+              >
+                <Row className="mb-4 flex flex-col">
+                  <span className="pb-2 text-center font-bold">Login</span>
+                  {(usersUniqueList.length || []) > 1 ? (
+                    <SelectInput
+                      defaultSelect={"Select Role"}
+                      options={usersUniqueList}
+                      value={Role}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setRole(e.target.value)
+                      }
+                    />
+                  ) : (
+                    ""
+                  )}
+                  <TextInput
+                    controlId="validationCustom03"
+                    name={"Mobile"}
+                    placeholder={"Mobile"}
+                    value={Mobile}
+                    maxLength={10}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setMobile(e.target.value)
+                    }
+                  />
+                  <TextInput
+                    controlId="validationCustom03"
+                    name={"Otp"}
+                    placeholder={"Enter Otp"}
+                    value={OtpNo}
+                    maxLength={6}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setOtpNo(e.target.value)
+                    }
+                  />
+                  <div className="flex justify-end">
+                    <a
+                      onClick={handleResendOtp}
+                      className={`${
+                        timer < 1
+                          ? "text-red-400 cursor-pointer"
+                          : "pointer-events-none text-gray-600"
+                      }`}
+                    >
+                      RESEND OTP {timer > 0 && `(${timer})`}
+                    </a>
+                  </div>
+                </Row>
+                <Button disabled={isbuttonActive} color="#269DA5" type="submit">
+                  Submit
+                </Button>
+              </Form>
+            )}
+          </Card>
+        </div>
+      </div>
+    // </div>
   );
 }

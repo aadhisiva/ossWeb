@@ -68,6 +68,7 @@ export interface ITableColumns {
 }
 export interface IReportsMasterData {
     DistrictCode?: string;
+    id?: number;
     DistrictName?: string;
     TalukName?:string; 
     TalukCode?:string; 

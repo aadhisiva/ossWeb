@@ -11,6 +11,7 @@ import { CustomTable } from "../../components/common/customTable";
 import { VILLAGE_REPORTS } from "../../utilities/routePaths";
 import { Col, Row } from "react-bootstrap";
 import SpinnerLoader from "../../components/common/spinner/spinner";
+import ResuableHeaders from "../../components/common/resuableHeaders";
 
 export default function GpReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -22,6 +23,7 @@ export default function GpReportComponent() {
 
   const [isLoading, setLoading] = useState(false);
   const [{ userRole, accessOfMasters, userCodes }] = IsAuthenticated();
+  const [{ HGp }] = ResuableHeaders();
 
   useEffect(() => {
     getInitialData();
@@ -57,7 +59,7 @@ export default function GpReportComponent() {
   };
 
   const columns = [
-    { accessor: "GramPanchayatName", label: "GpName" },
+    { accessor: "GramPanchayatName", label: HGp },
     { accessor: "TotalCompleted", label: "TotalCount" },
   ];
 
@@ -65,7 +67,7 @@ export default function GpReportComponent() {
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading}/>
       <Titlebar
-        title={`GramPanchayat`}
+        title={HGp}
         Component={<AvatarDropdown {...roleArrangeMent(userRole)} />}
       />
       <div className="m-4">

@@ -11,6 +11,7 @@ import { Col, Row } from "react-bootstrap";
 import { CustomTable } from "../../components/common/customTable";
 import { GP_REPORTS } from "../../utilities/routePaths";
 import SpinnerLoader from "../../components/common/spinner/spinner";
+import ResuableHeaders from "../../components/common/resuableHeaders";
 
 export default function TalukReportComponent() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -23,6 +24,7 @@ export default function TalukReportComponent() {
   const [isLoading, setLoading] = useState(false);
   const [{ userRole, accessOfMasters, userCodes }] = IsAuthenticated();
   const { currentPath } = useSelector((state: any) => state.path);
+  const [{ HTaluk }] = ResuableHeaders();
 
   useEffect(() => {
     getInitialData();
@@ -56,7 +58,7 @@ export default function TalukReportComponent() {
   };
 
   const columns = [
-    { accessor: "TalukName", label: "Taluk" },
+    { accessor: "TalukName", label: HTaluk },
     { accessor: "TotalCompleted", label: "TotalCount" },
   ];
 
@@ -64,7 +66,7 @@ export default function TalukReportComponent() {
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
       <Titlebar
-        title={`Taluk`}
+        title={HTaluk}
         Component={<AvatarDropdown {...roleArrangeMent(userRole)} />}
       />
       <div className="m-4"> 

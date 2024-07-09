@@ -16,6 +16,7 @@ import { postRequest } from "../../Authentication/axiosrequest";
 import DatePicker from "react-datepicker";
 import { CustomTable } from "../../components/common/customTable";
 import PreviewModal from "./preview";
+import * as XLSX from "xlsx";
 
 export default function SearchReports() {
   const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -297,6 +298,16 @@ export default function SearchReports() {
     { accessor: "Action", label: "Action" },
   ];
 
+  const handleReports = () => {
+    if(originalData.length == 0) return alert("Empty Data.");
+    const worksheet = XLSX.utils.json_to_sheet(originalData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    const getDate = new Date().toJSON().split("T")[0];
+    XLSX.writeFile(workbook, `${getDate}.xlsx`);
+  };
+
+
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
@@ -438,7 +449,7 @@ export default function SearchReports() {
             <SelectInput
               defaultSelect={`Select Mode`}
               name="mode"
-              options={["Ration", "Aadhar", "NoId", "SatsId"]}
+              options={["Ration", "Aadhar", "NoId", "SatsId", "All"]}
               onChange={handleChangeSelect}
               value={mode}
             />
@@ -488,6 +499,14 @@ export default function SearchReports() {
               onClick={() => handleSearchResult()}
             >
               Search Result
+            </Button>
+          </Col>
+          <Col md={3} sm={6}>
+            <Button
+              style={{ backgroundColor: "#13678C" }}
+              onClick={handleReports}
+            >
+              Download Reports
             </Button>
           </Col>
           <Col md={3} sm={6}>

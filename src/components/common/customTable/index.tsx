@@ -14,6 +14,7 @@ interface ITableProps {
   handleCLickModify?: any;
   handleCLickApprove?: any;
   handleChangeRoutes?: any;
+  handleApproveAll?: any;
   title?: string;
   secondTitle?: string;
 }
@@ -31,7 +32,8 @@ export const CustomTable: FC<ITableProps> = ({
   handleChangeRoutes = undefined,
   title,
   secondTitle,
-  handleCLickApprove
+  handleCLickApprove,
+  handleApproveAll = undefined,
 }) => {
   const [activePage, setActivePage] = useState<number>(1);
   const [filters, setFilters] = useState<Record<string, any>>({});
@@ -120,6 +122,8 @@ export const CustomTable: FC<ITableProps> = ({
           <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </Col>
       </Row>
+      {/* {userRole == "RO/RI/ARO" && ( */}
+      {/* )} */}
       <Table responsive size="sm" hover>
         <thead>
           <tr>
@@ -138,7 +142,10 @@ export const CustomTable: FC<ITableProps> = ({
                 }
               };
               return (
-                <th key={`${column.accessor}_${i}`} className="rounded-xl text-sm">
+                <th
+                  key={`${column.accessor}_${i}`}
+                  className="rounded-xl text-sm"
+                >
                   <span>{column.label}</span>
                   <button onClick={() => handleSort(column.accessor)}>
                     {sortIcon()}
@@ -155,7 +162,7 @@ export const CustomTable: FC<ITableProps> = ({
               return (
                 <th key={i}>
                   <input
-                    className="rounded-xl h-7 p-0 text-sm"
+                    className="rounded-xl h-7 p-0 text-[10px]"
                     key={`${column.accessor}-search`}
                     type="search"
                     placeholder={`Search ${column.label}`}
@@ -185,30 +192,67 @@ export const CustomTable: FC<ITableProps> = ({
                     return (
                       <td
                         key={`${column.accessor} - ${i}}`}
-                        className="eachcolumn text-sm flex flex-row"
+                        className="text-sm"
                       >
-                        <Button
-                          style={{ backgroundColor: "#13678C", fontSize: 10 }}
-                          onClick={() => handleCLickModify(row, "Modify")}
-                        >
-                          {title ?? "Modify"}
-                        </Button>
-                        {userRole == "CC/CMC/TMC" && (
-                          secondTitle && (
-                             <Button
-                             style={{ backgroundColor: "#13678C", fontSize: 10 }}
-                             disabled={!row["ApproveBy"] ? false : true}
-                             onClick={() => handleCLickApprove(row, "Modify")}
-                           >
-                             {secondTitle}
-                           </Button>
-                          )
-                        )}
+                        <div className="flex flex-row">
+                          <div>
+                            <Button
+                              style={{
+                                backgroundColor: "#13678C",
+                                fontSize: 10,
+                              }}
+                              onClick={() => handleCLickModify(row, "Modify")}
+                            >
+                              {title ?? "Modify"}
+                            </Button>
+                          </div>
+                          {userRole == "RO/RI/ARO" && secondTitle && (
+                            <>
+                              <div>
+                                <Button
+                                  style={{
+                                    backgroundColor: "#3cb371",
+                                    fontSize: 10,
+                                  }}
+                                  disabled={
+                                    row["ApproveBy"] == "Approved"
+                                      ? true
+                                      : false
+                                  }
+                                  onClick={() =>
+                                    handleCLickApprove(row, "Approved")
+                                  }
+                                >
+                                  {secondTitle}
+                                </Button>
+                              </div>
+                              <div>
+                                <Button
+                                  style={{
+                                    color: "#000000",
+                                    backgroundColor: "#FFC300",
+                                    fontSize: 10,
+                                  }}
+                                  disabled={
+                                    row["ApproveBy"] == "Rejected"
+                                      ? true
+                                      : false
+                                  }
+                                  onClick={() =>
+                                    handleCLickApprove(row, "Rejected")
+                                  }
+                                >
+                                  {"Reject"}
+                                </Button>
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </td>
                     );
                   }
                   return (
-                    <td key={column.accessor} className="text-sm">
+                    <td key={column.accessor} className="text-sm max-w-64 break-words">
                       {row[column.accessor] ?? "N/A"}
                     </td>
                   );
@@ -218,7 +262,13 @@ export const CustomTable: FC<ITableProps> = ({
           })}
         </tbody>
       </Table>
-
+      {userRole == "RO/RI/ARO" && (
+        <Row className="flex flex-row items-end justify-end">
+          <Col md={2} className="text-end">
+            <Button onClick={handleApproveAll}>Aprrove All</Button>
+          </Col>
+        </Row>
+      )}
       {count > 0 ? (
         <Pagination
           activePage={activePage}
