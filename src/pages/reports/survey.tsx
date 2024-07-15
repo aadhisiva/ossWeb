@@ -187,27 +187,11 @@ export default function SurveyReportComponent() {
       {rejectForm ? renderRejectForm() : ""}
       {isLoading ? <SpinnerLoader isLoading={isLoading} /> : ""}
       <div className="m-4">
-        <Row className="flex justify-end m-2">
+        {/* <Row className="flex justify-end m-2">
           <Col md={2}>
             <Button onClick={handleReports}>Download Reports</Button>
           </Col>
-        </Row>
-        {/* <Row className="flex m-1">
-        <Col
-          md={2}
-          xs={12}
-          className="border rounded-xl bg-[#13678C] text-white"
-        >
-          District Name: {urlSearchParam.get("DistrictName")}
-        </Col>
-        <Col
-          md={2}
-          xs={12}
-          className="border rounded-xl bg-[#13678C] text-white"
-        >
-          Zone/Taluk Name: {urlSearchParam.get("TalukName")}
-        </Col>
-      </Row> */}
+        </Row> */}
         <CustomTable
           title="Preview"
           secondTitle="Approve"

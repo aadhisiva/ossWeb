@@ -11,8 +11,8 @@ module.exports = {
   mode: "development", //production
   entry: path.join(__dirname, "src", "index.tsx"),
   output: {
-    publicPath: "/web/",
-    // publicPath: "/",
+    // publicPath: "/web/",
+    publicPath: "/",
     filename: 'widget.[contenthash].js',
     path: path.resolve(__dirname, "build"),
   },

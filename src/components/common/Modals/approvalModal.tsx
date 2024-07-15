@@ -25,7 +25,6 @@ export default function ApprovalModal({
 
   const [{ userRole, Mobile, childRoles }] = IsAuthenticated();
  
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;

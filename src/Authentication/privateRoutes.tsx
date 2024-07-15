@@ -26,6 +26,7 @@ import ChildRoles from "../pages/roles/roles";
 import Access from "../pages/roles/access";
 import Hierarchy from "../pages/roles/hierarchy";
 import { DISTRICT_OPTIONS } from "../utilities/constants";
+import { IsAuthenticated } from "./useAuth";
 
 const ZoneComponent = lazy(() => import("../pages/ossAssignment/urban/zone"));
 const WardComponent = lazy(() => import("../pages/ossAssignment/urban/ward"));
@@ -58,28 +59,21 @@ const DistrictReportsComponent = lazy(() =>
   import("../pages/reports/district")
 );
 
-const GpReportsComponent = lazy(() =>
-  import("../pages/reports/gp")
-);
+const GpReportsComponent = lazy(() => import("../pages/reports/gp"));
 
-const TalukReportsComponent = lazy(() =>
-  import("../pages/reports/taluk")
-);
+const TalukReportsComponent = lazy(() => import("../pages/reports/taluk"));
 
-const VillageReportsComponent = lazy(() =>
-  import("../pages/reports/village")
-);
+const VillageReportsComponent = lazy(() => import("../pages/reports/village"));
 
 const SeacrhReportsComponent = lazy(() =>
   import("../pages/reports/searchReports")
 );
 
-const SurveyReportsComponent = lazy(() =>
-  import("../pages/reports/survey")
-);
-
+const SurveyReportsComponent = lazy(() => import("../pages/reports/survey"));
 
 const PrivateRoutes = () => {
+  const [{ accessOfMasters }] = IsAuthenticated();
+
   return (
     <Routes>
       <Route path={DASHBOARD} Component={Dashboard} />
@@ -112,10 +106,13 @@ const PrivateRoutes = () => {
       <Route path={ASSIGNMENT_ZONE} Component={ZoneComponent} />
       <Route path={ASSIGNMENT_WARD} Component={WardComponent} />
       <Route path={ASSIGNMENT_DIVISION} Component={DivisionComponent} />
-
-      <Route path={"/ChildRoles"} Component={ChildRoles} />
-      <Route path={"/Access"} Component={Access} />
-      <Route path={"/Hierarchy"} Component={Hierarchy} />
+      {/* {accessOfMasters[0]?.Department == "Admin" && ( */}
+        {/* <>
+          <Route path={"/ChildRoles"} Component={ChildRoles} />
+          <Route path={"/Access"} Component={Access} />
+          <Route path={"/Hierarchy"} Component={Hierarchy} />
+        </> */}
+      {/* )} */}
 
       <Route path="/*" element={<Navigate to={DASHBOARD} />} />
     </Routes>

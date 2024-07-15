@@ -28,7 +28,7 @@ function Dasbboard() {
 
   const [isLoading, setLoading] = useState(false);
 
-  const [{ accessOfMasters, userRole, userCodes }] = IsAuthenticated();
+  const [{ accessOfMasters, userRole, userCodes, Mobile }] = IsAuthenticated();
 
   const checkDataType =
     accessOfMasters[0]?.District == "Yes"
@@ -80,12 +80,14 @@ function Dasbboard() {
           <AvatarDropdown {...roleArrangeMent(accessOfMasters, userRole)} />
         }
       />
-      <a
-        onClick={() => navigate("/ChildRoles")}
-        className="float cursor-pointer"
-      >
-        <i className="my-float">Assign</i>
-      </a>
+      {accessOfMasters[0]?.Department == "Admin" && (
+        <a
+          onClick={() => navigate("/ChildRoles")}
+          className="float cursor-pointer"
+        >
+          <i className="my-float">Assign</i>
+        </a>
+      )}
       <div className="m-16 mt-2">
         <Row>
           <Col className="text-right text-blue-600" md={12}>
@@ -120,6 +122,21 @@ function Dasbboard() {
           >
             {`Pending : ${originalData[0]?.Pending || 0}`}
           </Col>
+          {(userRole == "RO/RI/ARO" ||
+            userRole == "DMA Admin" ||
+            userRole == "CC/CMC/TMC") && (
+            <><Col
+              md={2}
+              className="border justify-center items-center text-center border-gray-800 bg-[#2463a2] rounded-xl flex h-32  text-xl"
+            >
+              {`Rejected : ${originalData[0]?.Rejected || 0}`}
+            </Col><Col
+              md={2}
+              className="border justify-center items-center text-center border-gray-800 bg-[#fd7e14] rounded-xl flex h-32  text-xl"
+            >
+                {`Approved : ${originalData[0]?.Approved || 0}`}
+              </Col></>
+          )}
         </Row>
 
         <Row className="flex ml-12 mb-0">
