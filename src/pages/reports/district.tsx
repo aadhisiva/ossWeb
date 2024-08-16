@@ -6,10 +6,11 @@ import { CustomTable } from "../../components/common/customTable";
 import Titlebar from "../../components/common/titlebar";
 import { IReportsMasterData } from "../../utilities/interfacesOrtype";
 import { IsAuthenticated } from "../../Authentication/useAuth";
-import { postRequest } from "../../Authentication/axiosrequest";
+import { postRequest, PostRequestWithdownloadFile } from "../../Authentication/axiosrequest";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { TALUK_REPORTS } from "../../utilities/routePaths";
+import { DownloadTable } from "../../components/common/customTable/downloadTable";
 
 export default function DistrictReports() {
     const [originalData, setOriginalData] = useState<IReportsMasterData[]>([]);
@@ -17,6 +18,7 @@ export default function DistrictReports() {
       IReportsMasterData[]
     >([]);
     const [isLoading, setLoading] = useState(false);
+    const [downloadClick, setDownloadClick] = useState(false);
 
     const [{ userRole, accessOfMasters, userCodes }] = IsAuthenticated();
   
@@ -30,6 +32,13 @@ export default function DistrictReports() {
     { accessor: "DistrictName", label: "District" },
     { accessor: "TotalCompleted", label: "TotalCount" },
   ];
+
+  const EducationColumns = [
+    { accessor: "DistrictName", label: "District" },
+    { accessor: "TotalCompleted", label: "TotalCount" },
+    { accessor: "Type", label: "Type" },
+    { accessor: "Action", label: "Download" },
+  ]
   
   const getInitialData = async () => {
     setLoading(true);
@@ -49,9 +58,15 @@ export default function DistrictReports() {
       alert(apiRes?.response?.data?.message || "Please try again.");
     }
   };
-
+  const handleCLickModify = async (obj: any) => {
+    setDownloadClick(false);
+    setLoading(true);
+    await PostRequestWithdownloadFile("downloadDetailsSNG", {DistrictCode: obj.DistrictCode, Type: obj.Type, DistrictName: obj.DistrictName})
+    setLoading(false);
+  };
 
   const handleChangeRoutes = (obj: IReportsMasterData) => {
+
     navigate(`${TALUK_REPORTS}?DistrictName=${obj?.DistrictCode}`);
   };
   return (
@@ -61,10 +76,11 @@ export default function DistrictReports() {
         title={`District`}
         Component={<AvatarDropdown {...roleArrangeMent(userRole)} />}
       />
-      <CustomTable
-        columns={columns}
+      <DownloadTable
+        columns={accessOfMasters[0]?.Department == "Education" ? EducationColumns : columns}
         rows={originalData}
-        handleChangeRoutes={handleChangeRoutes}
+        handleChangeRoutes={downloadClick ? undefined : handleChangeRoutes}
+        handleCLickModify={handleCLickModify}
       />
     </React.Fragment>
   );

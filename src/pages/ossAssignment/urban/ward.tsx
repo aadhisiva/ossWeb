@@ -146,7 +146,7 @@ export default function WardComponent() {
   };
 
   const handleSubmitForm = async (values: any) => {
-      let res = await postRequest("addToSurveyUser", values);
+      let res = await postRequest("addToSurveyUsers", values);
       if (res.code === 200) {
         setEditForm(false);
         await getAllMaster();

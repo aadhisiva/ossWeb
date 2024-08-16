@@ -189,8 +189,7 @@ export default function PreviewModal({
               disabled={true}
               label="Student Migration dDate"
             />
-          </Col>
-          
+          </Col>        
           <Col md={3}>
             <TextInput
               value={previewData?.StudentMigratedFrom ?? ""}
@@ -198,6 +197,107 @@ export default function PreviewModal({
               label="Student Migration From"
             />
           </Col>
+          {/* sd */}
+          <Col md={3}>
+            <TextInput
+              value={previewData?.ParentGovtIdType ?? ""}
+              disabled={true}
+              label="Parent Govt Id Type"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.ParentGovtIdNo ?? ""}
+              disabled={true}
+              label="Parent Govt Id No"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentAge ?? ""}
+              disabled={true}
+              label="Student Age"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.ParentMotherTongue ?? ""}
+              disabled={true}
+              label="Parent Mother Tongue"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.SchoolManagementType ?? ""}
+              disabled={true}
+              label="School ManageMent Type"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentStayHostel ?? ""}
+              disabled={true}
+              label="Student Stay Hostel"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentFoundArea ?? ""}
+              disabled={true}
+              label="Student Found Area"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentFoundAreaType ?? ""}
+              disabled={true}
+              label="Student Found Area Type"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentMigratedType ?? ""}
+              disabled={true}
+              label="Student Migrated Type"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentMigratedState ?? ""}
+              disabled={true}
+              label="Student Migrated State"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentMigratedDistrict ?? ""}
+              disabled={true}
+              label="Student Migrated District"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentMigratedCountry ?? ""}
+              disabled={true}
+              label="Student Migrated Country"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentMigratedToAddress ?? ""}
+              disabled={true}
+              label="Student Migrated To Address"
+            />
+          </Col>
+          <Col md={3}>
+            <TextInput
+              value={previewData?.StudentDropoutCount ?? ""}
+              disabled={true}
+              label="Student Droupout Count"
+            />
+          </Col>
+          
+          {/* hdf */}
           <Col md={3}>
             <TextInput
               value={previewData?.ApproveBy ?? ""}

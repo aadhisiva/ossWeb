@@ -37,7 +37,7 @@ export default function ApprovalModal({
         TalukCode: stateData?.TalukCode,
         id: stateData?.id,
         GpCode: stateData?.GramPanchayatCode+"_"+stateData?.VillageCode,
-        GpName: stateData?.GramPanchayatCode,
+        GpName: stateData?.GramPanchayatCode+"_"+stateData?.VillageName,
         VillageCode: stateData?.VillageCode,
         CreatedRole: userRole ?? "",
         CreatedMobile: Mobile ?? "",
@@ -48,6 +48,7 @@ export default function ApprovalModal({
       if (title === "Add") {
         delete forApiBody.id;
       }
+      if(!forApiBody?.RoleId) return alert("Please login again or conatct to technical team");
       handleSubmitForm(forApiBody);
     }
     setValidated(true);
