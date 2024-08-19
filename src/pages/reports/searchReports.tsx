@@ -501,14 +501,16 @@ export default function SearchReports() {
               Search Result
             </Button>
           </Col>
-          {/* <Col md={3} sm={6}>
+          {accessOfMasters[0]?.Department == "Education" && (
+          <Col md={3} sm={6}>
             <Button
               style={{ backgroundColor: "#13678C" }}
               onClick={handleReports}
             >
               Download Reports
             </Button>
-          </Col> */}
+          </Col>
+          )}
           <Col md={3} sm={6}>
             <Button
               style={{ backgroundColor: "#13678C" }}

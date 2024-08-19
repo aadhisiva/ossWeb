@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { userLoggedOut } from "../../../redux/actions/userAction";
 import { useNavigate } from "react-router-dom";
 import "./menuDropDown.css";
+import { IsAuthenticated } from "../../../Authentication/useAuth";
 
 export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
   username,
@@ -14,6 +15,7 @@ export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
 
   const dispatch = useDispatch(); // for Dispatch redux functions.
   const navigate = useNavigate();
+  const [{ accessOfMasters }] = IsAuthenticated();
 
   const handleLogout = () => {
     dispatch(userLoggedOut());
@@ -33,13 +35,15 @@ export const AvatarDropdown: React.FC<AvatarDropdownProps> = ({
       </div>
       {dropdownOpen && (
         <div className="dropdown-content">
-          {dropDown.map((obj, i) => (
-            <>
-              <a key={i+1} onClick={() => handleRouting(String(obj.routePath))}>
-                {obj.routeName}
-              </a>
-            </>
-          ))}
+          {accessOfMasters[0]?.Department !== "Education" && (
+            dropDown.map((obj, i) => (
+              <>
+                <a key={i+1} onClick={() => handleRouting(String(obj.routePath))}>
+                  {obj.routeName}
+                </a>
+              </>
+            ))
+          )}
           <a onClick={handleLogout}>Log Out</a>
         </div>
       )}
