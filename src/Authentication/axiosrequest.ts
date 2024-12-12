@@ -1,5 +1,5 @@
 import axios from "axios";
-// const BaseUrl = "http://103.138.196.123/mapi/";
+
 const BaseUrl = "https://childrensurvey.karnataka.gov.in/mapi/admin/";
 // const BaseUrl = "http://localhost:8887/mapi/admin/";
 
@@ -38,7 +38,7 @@ export const PostRequestWithdownloadFile = async (url: string, body: any) => {
       const urlOfFile = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = urlOfFile;
-      link.setAttribute('download', `${body.DistrictName+"_"+body.Type}.xlsx`);
+      link.setAttribute('download', `${body.ReqType !== "District" ? body.DistrictName+"_"+body.Type : body.TalukName}.xlsx`);
 
       // Append to the body and trigger click
       document.body.appendChild(link);

@@ -7,7 +7,9 @@ const initialState = {
     userCodes: [],
     userRole: "",
     childRoles: [],
-    accessOfMasters: []
+    accessOfMasters: [],
+    isDownloadReports: ""    
+
 };
 
 export const userReducers = (state = initialState, action: any) => {
@@ -20,7 +22,7 @@ export const userReducers = (state = initialState, action: any) => {
         case LOGGED_OUT:
             return initialState;
         case ROLE_ACCESS:
-            return {...state, childRoles: payload?.childRoles, accessOfMasters: payload?.accessOfMasters};
+            return {...state, childRoles: payload?.childRoles, accessOfMasters: payload?.accessOfMasters, isDownloadReports: payload.isDownloadReports};
         case OTP_VERIFY:
             return { ...state, isLoggedIn: true, userRole: payload?.userRole, userCodes: payload?.userCodes};
         case CLEAR_TIMEOUT_ID:

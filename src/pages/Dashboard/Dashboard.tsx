@@ -28,7 +28,7 @@ function Dasbboard() {
 
   const [isLoading, setLoading] = useState(false);
 
-  const [{ accessOfMasters, userRole, userCodes, Mobile }] = IsAuthenticated();
+  const [{ accessOfMasters, userRole, userCodes, Mobile, isDownloadReports }] = IsAuthenticated();
 
   const checkDataType =
     accessOfMasters[0]?.District == "Yes"
@@ -70,7 +70,7 @@ function Dasbboard() {
     let getPagePath = reportsAssignment(accessOfMasters, userRole);
     navigate(getPagePath.dropDown[0]?.routePath);
   };
-
+console.log("accessOfMasters[0]?.Department" ,accessOfMasters[0]?.Department !== "Education" || isDownloadReports !== "Yes")
   return (
     <React.Fragment>
       <SpinnerLoader isLoading={isLoading} />
@@ -149,7 +149,8 @@ function Dasbboard() {
           </Col>
         </Row>
         <Row className="flex flex-row justify-evenly border border-solid border-gray-800 gap-y-4 rounded-b-lg rounded-r-lg mt-0 p-3">
-          {accessOfMasters[0]?.Department !== "Education" && (
+          {accessOfMasters[0]?.Department !== "Education" &&
+          isDownloadReports !== "Yes" && 
             <Col
               md={2}
               className="border justify-center items-center text-center border-gray-800 bg-[#007bff] rounded-xl flex h-32  text-xl"
@@ -157,7 +158,7 @@ function Dasbboard() {
             >
               Assignment
             </Col>
-          )}
+          }
           <Col
             md={2}
             className="border justify-center items-center text-center border-gray-800 bg-[#28a745] rounded-xl flex h-32  text-xl"

@@ -55,6 +55,7 @@ export default function SignIn({ auth }: any) {
       let res = await postRequest("checkRoleAndSendOtp", { Mobile });
       // let res = {code: 200, };
       if (res.code === 200) {
+        console.log("res",res.data)
         setUsersData(res?.data?.assignedData);
         setIsOtpValidate(true);
         setButtonActive(false);
@@ -78,10 +79,18 @@ export default function SignIn({ auth }: any) {
         let filterData = usersData.filter(
           (user: any) => user?.AssigningType === Role
         );
+
+        let check = OtpNo === Otp;
+        if (!check) return alert("Otp Verification Failed.");
+      
         if (!Mobile) return alert("Provide Mobile.");
         if (!Role) return alert("Provide Role.");
+        
+        console.log("filterData",filterData)
         let fetchRole = filterData && filterData[0]?.AssigningType;
         let FetchRoleId = filterData && filterData[0]?.RoleId;
+        
+        let isDownloadReports = filterData.find((obj: any) => obj.IsDlReports == "Yes")?.IsDlReports; 
 
         let rolesData = await postRequest("getRolesAndAccessData", {
           RoleId: FetchRoleId,
@@ -105,10 +114,12 @@ export default function SignIn({ auth }: any) {
           );
           dispatch(otpVerification({ userRole: fetchRole, userCodes: codes }));
         }
+        
         dispatch(
           saveUserRolesAndAccess({
             childRoles: rolesData?.data?.roles,
             accessOfMasters: rolesData?.data?.access,
+            isDownloadReports: isDownloadReports
           })
         );
       } else {
@@ -148,6 +159,7 @@ export default function SignIn({ auth }: any) {
           saveUserRolesAndAccess({
             childRoles: rolesData?.data?.roles,
             accessOfMasters: rolesData?.data?.access,
+            isDownloadReports: usersData[0]?.IsDlReports
           })
         );
       }
@@ -212,28 +224,29 @@ export default function SignIn({ auth }: any) {
               >
                 <Row className="mb-4 flex flex-col">
                   <span className="pb-2 text-center font-bold">Login</span>
-                  {(usersUniqueList.length || []) > 1 ? (
-                    <SelectInput
-                      defaultSelect={"Select Role"}
-                      options={usersUniqueList}
-                      value={Role}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                        setRole(e.target.value)
-                      }
-                    />
-                  ) : (
-                    ""
-                  )}
                   <TextInput
                     controlId="validationCustom03"
                     name={"Mobile"}
                     placeholder={"Mobile"}
                     value={Mobile}
                     maxLength={10}
+                    disabled={usersUniqueList.length > 0 ? true : false}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setMobile(e.target.value)
                     }
-                  />
+                    />
+                    {(usersUniqueList.length || []) > 1 ? (
+                      <SelectInput
+                        defaultSelect={"Select Role"}
+                        options={usersUniqueList}
+                        value={Role}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                          setRole(e.target.value)
+                        }
+                      />
+                    ) : (
+                      ""
+                    )}
                   <TextInput
                     controlId="validationCustom03"
                     name={"Otp"}

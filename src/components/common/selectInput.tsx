@@ -12,7 +12,7 @@ function SelectInput({
 }: ISelectInput) {
   return (
     <Form.Group
-      className="flex flex-row"
+      className="flex flex-row mt-4"
       as={Col}
       md="12"
       controlId="validationCustom02"

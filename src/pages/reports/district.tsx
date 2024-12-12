@@ -61,7 +61,7 @@ export default function DistrictReports() {
   const handleCLickModify = async (obj: any) => {
     setDownloadClick(false);
     setLoading(true);
-    await PostRequestWithdownloadFile("downloadDetailsSNG", {DistrictCode: obj.DistrictCode, Type: obj.Type, DistrictName: obj.DistrictName})
+    await PostRequestWithdownloadFile("downloadDetailsSNG", {DistrictCode: obj.DistrictCode, Type: obj.Type, DistrictName: obj.DistrictName, ReqType: "SA",})
     setLoading(false);
   };
 
