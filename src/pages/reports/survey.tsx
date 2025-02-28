@@ -6,7 +6,6 @@ import { postRequest } from "../../Authentication/axiosrequest";
 import Titlebar from "../../components/common/titlebar";
 import { AvatarDropdown } from "../../components/common/menuDropDown";
 import { ASSIGNMENT, roleArrangeMent } from "../../utilities/roles";
-import { Button, Col, Row } from "react-bootstrap";
 import { CustomTable } from "../../components/common/customTable";
 import * as XLSX from "xlsx";
 import SpinnerLoader from "../../components/common/spinner/spinner";
@@ -62,7 +61,7 @@ export default function SurveyReportComponent() {
     { accessor: "SchoolName", label: "SchoolName" },
     { accessor: "ApproveBy", label: "ApproveBy" },
     { accessor: "Action", label: "Action" },
-  ]: [
+  ] : [
     { accessor: "StudentId", label: "StudentId" },
     { accessor: "StudentName", label: "StudentName" },
     { accessor: "StudentClass", label: "StudentClass" },

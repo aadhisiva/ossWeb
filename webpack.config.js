@@ -33,7 +33,7 @@ module.exports = {
   performance: {
     hints: false
   },
-  module: {
+ module: {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,

@@ -21,6 +21,8 @@ export default function ResuableHeaders() {
           HTaluk: "Zone",
           HGp: "Division",
           HVillage: "Ward",
+          HSurveyerName: "Surveyer Name",
+          HSurveyerMobile: "Surveyer Mobile"
         };
 
   return [paceHolders];
