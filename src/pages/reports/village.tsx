@@ -112,20 +112,21 @@ export default function VillageReportComponent() {
           </Accordion.Item>
         </Accordion>
       </div>
+      {accessOfMasters[0]?.TypeOfData == "BBMP" && 
       <div className="m-4">
-        <Accordion defaultActiveKey="">
-          <Accordion.Item eventKey="1">
-            <Accordion.Header>Village And Surveyer Wise Counts - View</Accordion.Header>
-            <Accordion.Body>
-              <CustomTable
-                columns={columnsForSurveyer}
-                rows={surveyerWise}
-                handleChangeRoutes={undefined}
-              />
-            </Accordion.Body>
-          </Accordion.Item>
-        </Accordion>
-      </div>
+      <Accordion defaultActiveKey="1" className="z-0">
+        <Accordion.Item eventKey="1">
+          <Accordion.Header>Village And Surveyer Wise Counts - View</Accordion.Header>
+          <Accordion.Body>
+            <CustomTable
+              columns={columnsForSurveyer}
+              rows={surveyerWise}
+              handleChangeRoutes={undefined}
+            />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+    </div>}
     </React.Fragment>
   );
 }
